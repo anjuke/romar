@@ -20,3 +20,6 @@ url path
 /reload
 
 需要注意的是在更新和删除操作之后，必须调用/reload才会对recommend的结果产生影响
+
+
+样例在script/test.sh中
