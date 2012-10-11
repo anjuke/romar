@@ -7,7 +7,28 @@
     <packaging>jar</packaging>
 
 
-
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 
     <dependencies>
@@ -16,11 +37,22 @@
             <artifactId>mahout-core</artifactId>
             <version>0.7</version>
         </dependency>
-<!--         <dependency> -->
-<!--             <groupId>org.apache.mahout</groupId> -->
-<!--             <artifactId>mahout-integration</artifactId> -->
-<!--             <version>0.7</version> -->
-<!--         </dependency> -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>7.1.6.v20100715</version>
+        </dependency>
+        <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-log4j12</artifactId>
+    <version>1.6.1</version>
+</dependency>
+
+        <!-- <dependency> -->
+        <!-- <groupId>org.apache.mahout</groupId> -->
+        <!-- <artifactId>mahout-integration</artifactId> -->
+        <!-- <version>0.7</version> -->
+        <!-- </dependency> -->
     </dependencies>
     <pluginRepositories>
         <pluginRepository>

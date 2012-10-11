@@ -1,14 +1,14 @@
-package com.anjukeinc.service.recommend.core.impl;
+package com.anjukeinc.service.recommender.core.impl;
 
-import com.anjukeinc.service.recommend.core.RecommendRequest;
+import com.anjukeinc.service.recommender.core.RecommendRequest;
 
-public class SimpleRecommendRequest implements RecommendRequest {
+public class SimpleRecommenderRequest implements RecommendRequest {
     private final String path;
     private long userId;
     private long itemId;
     private float preference;
 
-    public SimpleRecommendRequest(String path) {
+    public SimpleRecommenderRequest(String path) {
         super();
         this.path = path;
     }

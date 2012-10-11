@@ -1,4 +1,4 @@
-package com.anjukeinc.service.recommend.core;
+package com.anjukeinc.service.recommender.core;
 
 public interface RecommendRequest {
     public String getPath();

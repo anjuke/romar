@@ -1,4 +1,4 @@
-package com.anjukeinc.service.recommend.mahout;
+package com.anjukeinc.service.recommender.mahout;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.anjukeinc.service.recommend.mahout;
+package com.anjukeinc.service.recommender.mahout;
 
 import org.apache.mahout.cf.taste.recommender.Recommender;
 
