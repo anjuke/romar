@@ -6,8 +6,7 @@ import com.anjuke.romar.core.RomarResponse;
 import com.anjuke.romar.core.impl.SuccessReplyNoneResponse;
 import com.anjuke.romar.mahout.MahoutService;
 
-public class ReloadHandler extends BaseHandler implements
-        RomarRequestHandler {
+public class ReloadHandler extends BaseHandler implements RomarRequestHandler {
 
     public ReloadHandler(MahoutService service) {
         super(service);

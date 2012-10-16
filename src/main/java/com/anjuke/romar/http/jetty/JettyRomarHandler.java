@@ -2,6 +2,7 @@ package com.anjuke.romar.http.jetty;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -17,14 +18,19 @@ import com.anjuke.romar.core.RomarResponse;
 import com.anjuke.romar.core.RomarCore;
 import com.anjuke.romar.core.impl.ErrorResponse;
 import com.anjuke.romar.core.impl.RecommendResultResponse;
-import com.anjuke.romar.core.impl.SimpleRomarRequest;
+import com.anjuke.romar.core.impl.PreferenceRomarRequest;
 import com.anjuke.romar.core.impl.SuccessReplyNoneResponse;
 
 public class JettyRomarHandler extends AbstractHandler {
     private final RomarCore core;
-
+    private final RequestParser parser;
     public JettyRomarHandler(RomarCore core) {
         this.core = core;
+        parser=new RequestParser();
+        parser.register("/recommend", PreferenceRomarRequest.class, Arrays.asList("userId"));
+        parser.register("/update", PreferenceRomarRequest.class, Arrays.asList("userId","itemId","value"));
+        parser.register("/remove", PreferenceRomarRequest.class, Arrays.asList("userId","itemId"));
+        parser.register("/", requestClass, paramsNames)
     }
 
     @Override
@@ -85,7 +91,7 @@ public class JettyRomarHandler extends AbstractHandler {
 
     private RomarRequest getRequest(String path, HttpServletRequest request)
             throws NumberFormatException {
-        SimpleRomarRequest srr = new SimpleRomarRequest(path);
+        PreferenceRomarRequest srr = new PreferenceRomarRequest(path);
         String rawUserId=request.getParameter("userId");
 
         long userId = rawUserId==null?0:Long.parseLong(rawUserId);

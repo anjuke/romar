@@ -2,13 +2,13 @@ package com.anjuke.romar.core.impl;
 
 import com.anjuke.romar.core.RomarRequest;
 
-public class SimpleRomarRequest implements RomarRequest {
+public class PreferenceRomarRequest implements RomarRequest {
     private final String path;
     private long userId;
     private long itemId;
-    private float preference;
+    private float value;
 
-    public SimpleRomarRequest(String path) {
+    public PreferenceRomarRequest(String path) {
         super();
         this.path = path;
     }
@@ -18,19 +18,16 @@ public class SimpleRomarRequest implements RomarRequest {
         return path;
     }
 
-    @Override
     public long getUserId() {
         return userId;
     }
 
-    @Override
     public long getItemId() {
         return itemId;
     }
 
-    @Override
-    public float getPreference() {
-        return preference;
+    public float getValue() {
+        return value;
     }
 
     public void setUserId(long userId) {
@@ -41,8 +38,8 @@ public class SimpleRomarRequest implements RomarRequest {
         this.itemId = itemId;
     }
 
-    public void setPreference(float preference) {
-        this.preference = preference;
+    public void setValue(float preference) {
+        this.value = preference;
     }
 
 

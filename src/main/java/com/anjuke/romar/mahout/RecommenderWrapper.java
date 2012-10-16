@@ -7,10 +7,12 @@ import org.apache.mahout.cf.taste.common.Refreshable;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.recommender.IDRescorer;
+import org.apache.mahout.cf.taste.recommender.ItemBasedRecommender;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.Recommender;
+import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
 
-public class RecommenderWrapper implements MahoutService{
+public class RecommenderWrapper implements MahoutService {
     private final Recommender recommender;
 
     public RecommenderWrapper(Recommender recommender) {
@@ -56,6 +58,56 @@ public class RecommenderWrapper implements MahoutService{
     @Override
     public void refresh(Collection<Refreshable> alreadyRefreshed) {
         recommender.refresh(alreadyRefreshed);
+    }
+
+    @Override
+    public List<RecommendedItem> mostSimilarItems(long itemID, int howMany)
+            throws TasteException {
+        if (recommender instanceof ItemBasedRecommender) {
+            return ((ItemBasedRecommender) recommender).mostSimilarItems(
+                    itemID, howMany);
+        } else {
+            throw new UnsupportedOperationException(
+                    "ItemBasedRecommender not supported");
+        }
+
+    }
+
+    @Override
+    public List<RecommendedItem> mostSimilarItems(long[] itemIDs, int howMany)
+            throws TasteException {
+        if (recommender instanceof ItemBasedRecommender) {
+            return ((ItemBasedRecommender) recommender).mostSimilarItems(
+                    itemIDs, howMany);
+        } else {
+            throw new UnsupportedOperationException(
+                    "ItemBasedRecommender not supported");
+        }
+
+    }
+
+    @Override
+    public List<RecommendedItem> mostSimilarItems(long[] itemIDs, int howMany,
+            boolean excludeItemIfNotSimilarToAll) throws TasteException {
+        if (recommender instanceof ItemBasedRecommender) {
+            return ((ItemBasedRecommender) recommender).mostSimilarItems(
+                    itemIDs, howMany, excludeItemIfNotSimilarToAll);
+        } else {
+            throw new UnsupportedOperationException(
+                    "ItemBasedRecommender not supported");
+        }
+    }
+
+    @Override
+    public long[] mostSimilarUserIDs(long userID, int howMany)
+            throws TasteException {
+        if (recommender instanceof UserBasedRecommender) {
+            return ((UserBasedRecommender) recommender).mostSimilarUserIDs(
+                    userID, howMany);
+        } else {
+            throw new UnsupportedOperationException(
+                    "UserBasedRecommender not supported");
+        }
     }
 
 }

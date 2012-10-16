@@ -8,18 +8,34 @@ import com.anjuke.romar.core.impl.SimpleRomarDispacher;
 import com.anjuke.romar.mahout.MahoutService;
 import com.anjuke.romar.mahout.MahoutServiceFactory;
 
-public class RomarCoreFactory {
-    public static RomarCore getCore(){
-        MahoutService service=new MahoutServiceFactory().getService();
-        SimpleRomarDispacher dispacher=new SimpleRomarDispacher();
+public class RomarPathProcessFactory {
+
+    public static <T> T createPathProcessor(RomarDefaultPathFactory<T> factory) {
+        factory.init();
+        factory.setRecommend("/recommend");
+        factory.setUpdate("/update");
+        factory.setRemove("/remove");
+        factory.setReload("/reload");
+        T instance = factory.getInstance();
+        return instance;
+    }
+
+    private RomarCore core = new RomarCore();
+
+    public void createInstance() {
+        SimpleRomarDispacher dispacher = new SimpleRomarDispacher();
+        MahoutService service = new MahoutServiceFactory().getService();
         dispacher.registerHandler("/recommend", new RecommendHandler(service));
         dispacher.registerHandler("/update", new UpdateHandler(service));
         dispacher.registerHandler("/remove", new RemoveHandler(service));
         dispacher.registerHandler("/reload", new ReloadHandler(service));
         dispacher.prepare();
-        RomarCore core=new RomarCore();
         core.setDispatcher(dispacher);
         core.setService(service);
+    }
+
+    public RomarCore getCore() {
         return core;
     }
+
 }

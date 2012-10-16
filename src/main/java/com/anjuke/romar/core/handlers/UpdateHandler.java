@@ -1,11 +1,11 @@
 package com.anjuke.romar.core.handlers;
 
-import com.anjuke.romar.core.RomarRequest;
 import com.anjuke.romar.core.RomarResponse;
+import com.anjuke.romar.core.impl.PreferenceRomarRequest;
 import com.anjuke.romar.core.impl.SuccessReplyNoneResponse;
 import com.anjuke.romar.mahout.MahoutService;
 
-public class UpdateHandler extends BaseHandler{
+public class UpdateHandler extends PreferenceBaseHandler {
 
     public UpdateHandler(MahoutService service) {
         super(service);
@@ -13,9 +13,10 @@ public class UpdateHandler extends BaseHandler{
     }
 
     @Override
-    public RomarResponse process(RomarRequest request)
+    public RomarResponse process(PreferenceRomarRequest request)
             throws Exception {
-        service.setPreference(request.getUserId(), request.getItemId(), request.getPreference());
+        service.setPreference(request.getUserId(), request.getItemId(),
+                request.getValue());
         return SuccessReplyNoneResponse.instance;
     }
 }
