@@ -2,8 +2,8 @@ package com.anjuke.romar.core.handlers;
 
 import com.anjuke.romar.core.RomarRequest;
 import com.anjuke.romar.core.RomarResponse;
-import com.anjuke.romar.core.impl.ErrorResponse;
-import com.anjuke.romar.core.impl.PreferenceRomarRequest;
+import com.anjuke.romar.core.impl.request.PreferenceRomarRequest;
+import com.anjuke.romar.core.impl.response.ErrorResponse;
 import com.anjuke.romar.mahout.MahoutService;
 
 public abstract class PreferenceBaseHandler extends BaseHandler {

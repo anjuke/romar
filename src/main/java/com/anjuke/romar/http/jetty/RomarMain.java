@@ -11,7 +11,7 @@ public class RomarMain {
             System.out.println("usage :  java classname $port");
             return;
         }
-        RomarCore core=RomarPathProcessFactory.getCore();
+        RomarCore core=RomarPathProcessFactory.createCore();
         Server server = new Server(Integer.parseInt(args[0]));
         server.setHandler(new JettyRomarHandler(core));
         server.start();

@@ -1,4 +1,4 @@
-package com.anjuke.romar.core.impl;
+package com.anjuke.romar.core.impl.response;
 
 import com.anjuke.romar.core.RomarResponse;
 

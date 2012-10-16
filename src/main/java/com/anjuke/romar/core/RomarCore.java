@@ -5,7 +5,7 @@ import org.apache.mahout.cf.taste.common.NoSuchUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.anjuke.romar.core.impl.ErrorResponse;
+import com.anjuke.romar.core.impl.response.ErrorResponse;
 import com.anjuke.romar.mahout.MahoutService;
 
 public class RomarCore {

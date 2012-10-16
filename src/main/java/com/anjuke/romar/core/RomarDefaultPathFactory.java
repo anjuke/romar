@@ -25,4 +25,8 @@ public abstract class RomarDefaultPathFactory<T> {
     protected void setReload(String path) {
 
     }
+
+    protected void setItemRecommend(String path) {
+
+    }
 }

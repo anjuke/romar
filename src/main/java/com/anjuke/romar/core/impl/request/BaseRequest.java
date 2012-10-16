@@ -1,12 +1,11 @@
-package com.anjuke.romar.core.impl;
+package com.anjuke.romar.core.impl.request;
 
 import com.anjuke.romar.core.RomarRequest;
 
-public class NoneContentRequest implements RomarRequest{
+public abstract class BaseRequest implements RomarRequest {
     private final String path;
 
-    public NoneContentRequest(String path) {
-        super();
+    public BaseRequest(String path) {
         this.path = path;
     }
 
@@ -14,6 +13,4 @@ public class NoneContentRequest implements RomarRequest{
     public String getPath() {
         return path;
     }
-
-
 }

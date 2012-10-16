@@ -1,5 +1,6 @@
 package com.anjuke.romar.core;
 
+import com.anjuke.romar.core.handlers.ItemRecommendHandler;
 import com.anjuke.romar.core.handlers.RecommendHandler;
 import com.anjuke.romar.core.handlers.ReloadHandler;
 import com.anjuke.romar.core.handlers.RemoveHandler;
@@ -16,26 +17,55 @@ public class RomarPathProcessFactory {
         factory.setUpdate("/update");
         factory.setRemove("/remove");
         factory.setReload("/reload");
+        factory.setItemRecommend("/item/recommend");
         T instance = factory.getInstance();
         return instance;
     }
 
-    private RomarCore core = new RomarCore();
-
-    public void createInstance() {
+    private static class RomarCoreFactory extends RomarDefaultPathFactory<RomarCore> {
+        RomarCore core = new RomarCore();
         SimpleRomarDispacher dispacher = new SimpleRomarDispacher();
         MahoutService service = new MahoutServiceFactory().getService();
-        dispacher.registerHandler("/recommend", new RecommendHandler(service));
-        dispacher.registerHandler("/update", new UpdateHandler(service));
-        dispacher.registerHandler("/remove", new RemoveHandler(service));
-        dispacher.registerHandler("/reload", new ReloadHandler(service));
-        dispacher.prepare();
-        core.setDispatcher(dispacher);
-        core.setService(service);
+        @Override
+        protected RomarCore getInstance() {
+            dispacher.prepare();
+            core.setDispatcher(dispacher);
+            core.setService(service);
+            return core;
+        }
+
+        @Override
+        protected void setRecommend(String path) {
+            dispacher.registerHandler(path, new RecommendHandler(service));
+
+
+
+        }
+
+        @Override
+        protected void setUpdate(String path) {
+             dispacher.registerHandler(path, new UpdateHandler(service));
+        }
+
+        @Override
+        protected void setRemove(String path) {
+            dispacher.registerHandler(path, new RemoveHandler(service));
+        }
+
+        @Override
+        protected void setReload(String path) {
+             dispacher.registerHandler(path, new ReloadHandler(service));
+        }
+
+        @Override
+        protected void setItemRecommend(String path) {
+            dispacher.registerHandler(path, new ItemRecommendHandler(service));
+        }
     }
 
-    public RomarCore getCore() {
-        return core;
+
+    public static RomarCore createCore() {
+        return createPathProcessor(new RomarCoreFactory());
     }
 
 }

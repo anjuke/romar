@@ -2,7 +2,6 @@ package com.anjuke.romar.http.jetty;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,24 +12,20 @@ import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+import com.anjuke.romar.core.RomarCore;
 import com.anjuke.romar.core.RomarRequest;
 import com.anjuke.romar.core.RomarResponse;
-import com.anjuke.romar.core.RomarCore;
-import com.anjuke.romar.core.impl.ErrorResponse;
-import com.anjuke.romar.core.impl.RecommendResultResponse;
-import com.anjuke.romar.core.impl.PreferenceRomarRequest;
-import com.anjuke.romar.core.impl.SuccessReplyNoneResponse;
+import com.anjuke.romar.core.impl.request.BadRequest;
+import com.anjuke.romar.core.impl.response.ErrorResponse;
+import com.anjuke.romar.core.impl.response.RecommendResultResponse;
+import com.anjuke.romar.core.impl.response.SuccessReplyNoneResponse;
 
 public class JettyRomarHandler extends AbstractHandler {
     private final RomarCore core;
     private final RequestParser parser;
     public JettyRomarHandler(RomarCore core) {
         this.core = core;
-        parser=new RequestParser();
-        parser.register("/recommend", PreferenceRomarRequest.class, Arrays.asList("userId"));
-        parser.register("/update", PreferenceRomarRequest.class, Arrays.asList("userId","itemId","value"));
-        parser.register("/remove", PreferenceRomarRequest.class, Arrays.asList("userId","itemId"));
-        parser.register("/", requestClass, paramsNames)
+        parser= RequestParser.createParser();
     }
 
     @Override
@@ -41,13 +36,10 @@ public class JettyRomarHandler extends AbstractHandler {
         System.out.println(path);
 
         RomarRequest recomRequest;
-        try {
-            recomRequest = getRequest(path, request);
-        } catch (NumberFormatException nfe) {
-            response.setStatus(404);
-            return;
+        recomRequest = getRequest(path, request);
+        if(recomRequest instanceof BadRequest){
+            //TODO
         }
-
         RomarResponse recomResponse = core.execute(recomRequest);
 
         if (recomResponse instanceof ErrorResponse) {
@@ -89,22 +81,8 @@ public class JettyRomarHandler extends AbstractHandler {
 
     }
 
-    private RomarRequest getRequest(String path, HttpServletRequest request)
-            throws NumberFormatException {
-        PreferenceRomarRequest srr = new PreferenceRomarRequest(path);
-        String rawUserId=request.getParameter("userId");
-
-        long userId = rawUserId==null?0:Long.parseLong(rawUserId);
-        String rawItemId=request.getParameter("itemId");
-        long itemId = rawItemId==null?0:Long.parseLong(rawItemId);
-        String rawValue=request.getParameter("value");
-
-        float preference =rawValue==null?0f:Float.parseFloat(request.getParameter("value"));
-
-        srr.setUserId(userId);
-        srr.setItemId(itemId);
-        srr.setPreference(preference);
-        return srr;
+    private RomarRequest getRequest(String path, HttpServletRequest request){
+        return parser.parseRequest(path, request);
     }
 
     private static void writeXML(HttpServletResponse response,

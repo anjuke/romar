@@ -1,6 +1,8 @@
 package com.anjuke.romar.http.jetty;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,10 +13,59 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.mahout.common.ClassUtils;
 
+import com.anjuke.romar.core.RomarDefaultPathFactory;
+import com.anjuke.romar.core.RomarPathProcessFactory;
 import com.anjuke.romar.core.RomarRequest;
-import com.anjuke.romar.core.impl.BadRequest;
+import com.anjuke.romar.core.impl.request.BadRequest;
+import com.anjuke.romar.core.impl.request.MultiItemIdRequest;
+import com.anjuke.romar.core.impl.request.NoneContentRequest;
+import com.anjuke.romar.core.impl.request.PreferenceRomarRequest;
 
 public class RequestParser {
+
+    private static class RequestParserFactory extends RomarDefaultPathFactory<RequestParser>{
+        RequestParser parser=new RequestParser();
+        @Override
+        protected RequestParser getInstance() {
+            return parser;
+        }
+
+
+        @Override
+        protected void setRecommend(String path) {
+            parser.register(path, PreferenceRomarRequest.class, Arrays.asList("userId"));
+
+        }
+
+        @Override
+        protected void setUpdate(String path) {
+            parser.register(path, PreferenceRomarRequest.class, Arrays.asList("userId","itemId","value"));
+
+        }
+
+        @Override
+        protected void setRemove(String path) {
+            parser.register(path, PreferenceRomarRequest.class, Arrays.asList("userId","itemId"));
+
+        }
+
+        @Override
+        protected void setReload(String path) {
+            parser.register(path, NoneContentRequest.class, Collections.<String>emptyList());
+        }
+
+        @Override
+        protected void setItemRecommend(String path) {
+            parser.register(path, MultiItemIdRequest.class, Arrays.asList("itemId"));
+        }
+
+    }
+
+    public static RequestParser createParser(){
+        return RomarPathProcessFactory.createPathProcessor(new RequestParserFactory());
+    }
+
+
 
     private static class ParamMeta {
         Class<? extends RomarRequest> clazz;
@@ -29,7 +80,7 @@ public class RequestParser {
 
     Map<String, ParamMeta> params = new HashMap<String, ParamMeta>();
 
-    public void register(String path,
+    private void register(String path,
             Class<? extends RomarRequest> requestClass, List<String> paramsNames) {
         params.put(path, new ParamMeta(requestClass, paramsNames));
     }
@@ -43,8 +94,15 @@ public class RequestParser {
                     RomarRequest.class, new Class<?>[] { String.class },
                     new Object[] { path });
             for (String name : meta.list) {
+                String[] values=request.getParameterValues(name);
+
+
                 try {
-                    BeanUtils.setProperty(romarRequest, name, name);
+                    if(values.length==1){
+                        BeanUtils.setProperty(romarRequest, name, values[0]);
+                    }else{
+                        BeanUtils.setProperty(romarRequest, name, values);
+                    }
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 } catch (InvocationTargetException e) {

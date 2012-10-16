@@ -1,4 +1,4 @@
-package com.anjuke.romar.core.impl;
+package com.anjuke.romar.core.impl.response;
 
 import java.util.Collections;
 import java.util.List;

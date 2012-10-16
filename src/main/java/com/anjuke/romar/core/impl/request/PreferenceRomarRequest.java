@@ -1,21 +1,14 @@
-package com.anjuke.romar.core.impl;
+package com.anjuke.romar.core.impl.request;
 
 import com.anjuke.romar.core.RomarRequest;
 
-public class PreferenceRomarRequest implements RomarRequest {
-    private final String path;
+public class PreferenceRomarRequest  extends BaseRequest implements RomarRequest {
     private long userId;
     private long itemId;
     private float value;
 
     public PreferenceRomarRequest(String path) {
-        super();
-        this.path = path;
-    }
-
-    @Override
-    public String getPath() {
-        return path;
+        super(path);
     }
 
     public long getUserId() {
