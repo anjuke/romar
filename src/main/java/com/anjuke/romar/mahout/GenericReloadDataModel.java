@@ -92,6 +92,7 @@ public class GenericReloadDataModel implements DataModel {
                                 newPrefs.set(j, prefs.get(i));
                             }
                         }
+                        data.put(userID, newPrefs);
                     }
                 }
             }
