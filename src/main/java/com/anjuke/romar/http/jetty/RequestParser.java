@@ -95,7 +95,9 @@ public class RequestParser {
                     new Object[] { path });
             for (String name : meta.list) {
                 String[] values=request.getParameterValues(name);
-
+                if(values==null){
+                    return new BadRequest(path);
+                }
 
                 try {
                     if(values.length==1){
