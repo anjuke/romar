@@ -10,7 +10,7 @@ import com.anjuke.romar.mahout.MahoutService;
 
 public class RomarCore {
 
-    public static Logger log = LoggerFactory.getLogger(RomarCore.class);
+    private static final Logger log = LoggerFactory.getLogger(RomarCore.class);
 
     private RomarDispatcher dispatcher;
 

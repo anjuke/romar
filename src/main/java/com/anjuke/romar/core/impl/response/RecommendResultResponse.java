@@ -19,6 +19,4 @@ public class RecommendResultResponse implements RomarResponse{
         return list;
     }
 
-
-
 }

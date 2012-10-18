@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.jfree.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.anjuke.romar.core.RomarCore;
 import com.anjuke.romar.core.RomarRequest;
@@ -21,6 +24,8 @@ import com.anjuke.romar.core.impl.response.RecommendResultResponse;
 import com.anjuke.romar.core.impl.response.SuccessReplyNoneResponse;
 
 public class JettyRomarHandler extends AbstractHandler {
+    private static final Logger log = LoggerFactory.getLogger(JettyRomarHandler.class);
+
     private final RomarCore core;
     private final RequestParser parser;
     public JettyRomarHandler(RomarCore core) {
@@ -33,8 +38,7 @@ public class JettyRomarHandler extends AbstractHandler {
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         String path=request.getPathInfo();
-        System.out.println(path);
-
+        log.debug(path);
         RomarRequest recomRequest;
         recomRequest = getRequest(path, request);
         if(recomRequest instanceof BadRequest){
