@@ -28,3 +28,5 @@ url path
 
 
 样例在script/test.sh中
+
+相关配置，修改romar.yaml

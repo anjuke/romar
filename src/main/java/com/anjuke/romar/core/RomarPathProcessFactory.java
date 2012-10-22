@@ -7,7 +7,7 @@ import com.anjuke.romar.core.handlers.RemoveHandler;
 import com.anjuke.romar.core.handlers.UpdateHandler;
 import com.anjuke.romar.core.impl.SimpleRomarDispacher;
 import com.anjuke.romar.mahout.MahoutService;
-import com.anjuke.romar.mahout.MahoutServiceFactory;
+import com.anjuke.romar.mahout.factory.MahoutServiceFactory;
 
 public class RomarPathProcessFactory {
 
@@ -23,9 +23,11 @@ public class RomarPathProcessFactory {
     }
 
     private static class RomarCoreFactory extends RomarDefaultPathFactory<RomarCore> {
+        RomarConfig config=RomarConfig.getInstance();
+        MahoutServiceFactory serviceFactory=config.getMahoutServiceFactory();
         RomarCore core = new RomarCore();
         SimpleRomarDispacher dispacher = new SimpleRomarDispacher();
-        MahoutService service = new MahoutServiceFactory().getService();
+        MahoutService service = serviceFactory.createService();
         @Override
         protected RomarCore getInstance() {
             dispacher.prepare();

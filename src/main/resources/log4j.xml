@@ -12,7 +12,9 @@
     <logger name="com.anjuke">
         <level value="debug" />
     </logger>
-
+    <logger name="org.apache.mahout.cf.taste.impl.common">
+        <level value="warn" />
+    </logger>
     <root>
         <priority value="info" />
         <appender-ref ref="console" />

@@ -1,0 +1,43 @@
+#value can only be item,user or common
+#common type for those recommender only need dataModel like SlopeOne, ItemUserAverage,ItemAverage
+  recommendType: item
+
+  useSimilarityCache: true
+
+  similarityCacheSize: 10240
+
+
+#item similarity can only be
+#  EuclideanDistanceSimilarity
+#  PearsonCorrelationSimilarity
+#  UncenteredCosineSimilarity
+#  CityBlockSimilarity
+#  LogLikelihoodSimilarity
+#  TanimotoCoefficientSimilarity
+  itemSimilarityClass: PearsonCorrelationSimilarity
+
+#user similarity can only be
+#  EuclideanDistanceSimilarity
+#  PearsonCorrelationSimilarity
+#  UncenteredCosineSimilarity
+#  CityBlockSimilarity
+#  LogLikelihoodSimilarity
+#  TanimotoCoefficientSimilarity
+#  SpearmanCorrelationSimilarity
+  userSimilarityClass: PearsonCorrelationSimilarity
+
+#  NearestNUserNeighborhood
+#
+  userNeighborhoodClass: NearestNUserNeighborhood
+
+  userNeighborhoodNearestN: 50
+
+#ItemAverageRecommender
+#ItemUserAverageRecommender
+#SlopeOneRecommender
+#
+#for now SlopeOne will throw exception
+  commonRecommenderClass: ItemUserAverageRecommender
+
+
+

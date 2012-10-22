@@ -29,11 +29,11 @@ public class RomarCore {
             return handler.process(request);
         }catch(NoSuchUserException e){
             log.error(e.getMessage(), e);
-            return new ErrorResponse(500, "internal error: no such user "
+            return new ErrorResponse(500, "no such user id "
                     + e.getMessage());
         }catch(NoSuchItemException e){
              log.error(e.getMessage(), e);
-             return new ErrorResponse(500, "internal error: no such item "
+             return new ErrorResponse(500, "no such item id "
                      + e.getMessage());
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
