@@ -18,8 +18,8 @@ url path
 删除
 /remove?userId=1&itemId=1
 
-重加载
-/reload
+提交更新
+/commit
 
 根据多个Item推荐
 /item/recommend?itemId=1&itemId=2

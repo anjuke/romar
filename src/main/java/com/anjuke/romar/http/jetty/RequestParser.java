@@ -50,7 +50,7 @@ public class RequestParser {
         }
 
         @Override
-        protected void setReload(String path) {
+        protected void setCommit(String path) {
             parser.register(path, NoneContentRequest.class, Collections.<String>emptyList());
         }
 

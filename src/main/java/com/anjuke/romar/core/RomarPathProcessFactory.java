@@ -2,7 +2,7 @@ package com.anjuke.romar.core;
 
 import com.anjuke.romar.core.handlers.ItemRecommendHandler;
 import com.anjuke.romar.core.handlers.RecommendHandler;
-import com.anjuke.romar.core.handlers.ReloadHandler;
+import com.anjuke.romar.core.handlers.CommitHandler;
 import com.anjuke.romar.core.handlers.RemoveHandler;
 import com.anjuke.romar.core.handlers.UpdateHandler;
 import com.anjuke.romar.core.impl.SimpleRomarDispacher;
@@ -16,7 +16,7 @@ public class RomarPathProcessFactory {
         factory.setRecommend("/recommend");
         factory.setUpdate("/update");
         factory.setRemove("/remove");
-        factory.setReload("/reload");
+        factory.setCommit("/commit");
         factory.setItemRecommend("/item/recommend");
         T instance = factory.getInstance();
         return instance;
@@ -55,8 +55,8 @@ public class RomarPathProcessFactory {
         }
 
         @Override
-        protected void setReload(String path) {
-             dispacher.registerHandler(path, new ReloadHandler(service));
+        protected void setCommit(String path) {
+             dispacher.registerHandler(path, new CommitHandler(service));
         }
 
         @Override

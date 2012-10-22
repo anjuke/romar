@@ -22,7 +22,7 @@ public abstract class RomarDefaultPathFactory<T> {
 
     }
 
-    protected void setReload(String path) {
+    protected void setCommit(String path) {
 
     }
 
