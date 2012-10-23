@@ -5,7 +5,7 @@ import com.anjuke.romar.core.handlers.RecommendHandler;
 import com.anjuke.romar.core.handlers.CommitHandler;
 import com.anjuke.romar.core.handlers.RemoveHandler;
 import com.anjuke.romar.core.handlers.UpdateHandler;
-import com.anjuke.romar.core.impl.SimpleRomarDispacher;
+import com.anjuke.romar.core.impl.SimpleRomarDispatcher;
 import com.anjuke.romar.mahout.MahoutService;
 import com.anjuke.romar.mahout.factory.MahoutServiceFactory;
 
@@ -26,19 +26,19 @@ public class RomarPathProcessFactory {
         RomarConfig config=RomarConfig.getInstance();
         MahoutServiceFactory serviceFactory=config.getMahoutServiceFactory();
         RomarCore core = new RomarCore();
-        SimpleRomarDispacher dispacher = new SimpleRomarDispacher();
+        SimpleRomarDispatcher dispatcher = new SimpleRomarDispatcher();
         MahoutService service = serviceFactory.createService();
         @Override
         protected RomarCore getInstance() {
-            dispacher.prepare();
-            core.setDispatcher(dispacher);
+            dispatcher.prepare();
+            core.setDispatcher(dispatcher);
             core.setService(service);
             return core;
         }
 
         @Override
         protected void setRecommend(String path) {
-            dispacher.registerHandler(path, new RecommendHandler(service));
+            dispatcher.registerHandler(path, new RecommendHandler(service));
 
 
 
@@ -46,22 +46,22 @@ public class RomarPathProcessFactory {
 
         @Override
         protected void setUpdate(String path) {
-             dispacher.registerHandler(path, new UpdateHandler(service));
+             dispatcher.registerHandler(path, new UpdateHandler(service));
         }
 
         @Override
         protected void setRemove(String path) {
-            dispacher.registerHandler(path, new RemoveHandler(service));
+            dispatcher.registerHandler(path, new RemoveHandler(service));
         }
 
         @Override
         protected void setCommit(String path) {
-             dispacher.registerHandler(path, new CommitHandler(service));
+             dispatcher.registerHandler(path, new CommitHandler(service));
         }
 
         @Override
         protected void setItemRecommend(String path) {
-            dispacher.registerHandler(path, new ItemRecommendHandler(service));
+            dispatcher.registerHandler(path, new ItemRecommendHandler(service));
         }
     }
 

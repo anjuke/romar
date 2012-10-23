@@ -7,7 +7,7 @@ import com.anjuke.romar.core.RomarDispatcher;
 import com.anjuke.romar.core.RomarRequest;
 import com.anjuke.romar.core.RomarRequestHandler;
 
-public class SimpleRomarDispacher implements RomarDispatcher{
+public class SimpleRomarDispatcher implements RomarDispatcher{
 
     private Map<String,RomarRequestHandler> handlers=new HashMap<String, RomarRequestHandler>();
 
