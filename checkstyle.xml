@@ -4,21 +4,23 @@
     <property name="charset" value="UTF-8"/>
     <property name="severity" value="warning" />
     <module name="TreeWalker">
-        <module name="ConstantName" />
+        <module name="ConstantName">
+            <property name="applyToPrivate" value="false" />
+        </module>
         <module name="LocalFinalVariableName" />
         <module name="LocalVariableName" />
         <module name="MemberName">
-            <!--
             <property name="format" value="^_[a-z][a-zA-Z0-9]*$" />
-            -->
+            <property name="applyToPublic" value="false" />
+            <property name="applyToProtected" value="false" />
         </module>
         <module name="MethodName" />
         <module name="PackageName" />
         <module name="ParameterName" />
         <module name="StaticVariableName">
-            <!--
             <property name="format" value="^_[a-z][a-zA-Z0-9]*$" />
-            -->
+            <property name="applyToPublic" value="false" />
+            <property name="applyToProtected" value="false" />
         </module>
         <module name="TypeName" />
         <module name="AvoidStarImport" />
@@ -61,7 +63,9 @@
         <module name="FinalClass" />
         <module name="HideUtilityClassConstructor" />
         <module name="InterfaceIsType" />
-        <module name="VisibilityModifier" />
+        <module name="VisibilityModifier">
+            <property name="packageAllowed" value="true" />
+        </module>
         <module name="ArrayTypeStyle" />
         <module name="TodoComment" />
         <module name="UpperEll" />
@@ -74,6 +78,8 @@
     <module name="RegexpSingleline">
         <property name="format" value="\s+$" />
     </module>
-    <module name="NewlineAtEndOfFile" />
+    <module name="NewlineAtEndOfFile">
+        <property name="lineSeparator" value="lf"/>
+    </module>
     <module name="Translation" />
 </module>
