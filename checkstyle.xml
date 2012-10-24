@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="Checker">
+    <property name="charset" value="UTF-8"/>
     <property name="severity" value="warning" />
     <module name="TreeWalker">
         <module name="ConstantName" />
         <module name="LocalFinalVariableName" />
         <module name="LocalVariableName" />
         <module name="MemberName">
+            <!--
             <property name="format" value="^_[a-z][a-zA-Z0-9]*$" />
+            -->
         </module>
         <module name="MethodName" />
         <module name="PackageName" />
         <module name="ParameterName" />
         <module name="StaticVariableName">
+            <!--
             <property name="format" value="^_[a-z][a-zA-Z0-9]*$" />
+            -->
         </module>
         <module name="TypeName" />
         <module name="AvoidStarImport" />
         <module name="IllegalImport" />
         <module name="RedundantImport" />
         <module name="UnusedImports" />
-        <module name="FileLength" />
         <module name="MethodLength" />
         <module name="ParameterNumber" />
         <module name="EmptyForIteratorPad" />
@@ -30,7 +34,6 @@
         <module name="OperatorWrap" />
         <module name="ParenPad" />
         <module name="TypecastParenPad" />
-        <module name="TabCharacter" />
         <module name="WhitespaceAfter">
             <property name="tokens" value="COMMA, SEMI" />
         </module>
@@ -60,15 +63,16 @@
         <module name="InterfaceIsType" />
         <module name="VisibilityModifier" />
         <module name="ArrayTypeStyle" />
-        <module name="GenericIllegalRegexp">
-            <property name="format" value="\s+$" />
-            <property name="message" value="Line has trailing spaces." />
-        </module>
         <module name="TodoComment" />
         <module name="UpperEll" />
         <module name="LineLength">
             <property name="max" value="120" />
         </module>
+    </module>
+    <module name="FileLength" />
+    <module name="FileTabCharacter" />
+    <module name="RegexpSingleline">
+        <property name="format" value="\s+$" />
     </module>
     <module name="NewlineAtEndOfFile" />
     <module name="Translation" />
