@@ -10,27 +10,27 @@ public abstract class RomarDefaultPathFactory<T> {
 
     }
 
-    protected void setRecommend(String path) {
+    protected void setRecommend(RequestPath path) {
 
     }
 
-    protected void setUpdate(String path) {
+    protected void setUpdate(RequestPath path) {
 
     }
 
-    protected void setRemove(String path) {
+    protected void setRemove(RequestPath path) {
 
     }
 
-    protected void setCommit(String path) {
+    protected void setCommit(RequestPath path) {
 
     }
 
-    protected void setItemRecommend(String path) {
+    protected void setItemRecommend(RequestPath path) {
 
     }
 
-    protected void setCompact(String path){
+    protected void setCompact(RequestPath path){
 
     }
 }

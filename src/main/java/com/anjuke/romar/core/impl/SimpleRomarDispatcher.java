@@ -3,13 +3,14 @@ package com.anjuke.romar.core.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.anjuke.romar.core.RequestPath;
 import com.anjuke.romar.core.RomarDispatcher;
 import com.anjuke.romar.core.RomarRequest;
 import com.anjuke.romar.core.RomarRequestHandler;
 
 public class SimpleRomarDispatcher implements RomarDispatcher {
 
-    private Map<String, RomarRequestHandler> handlers = new HashMap<String, RomarRequestHandler>();
+    private Map<RequestPath, RomarRequestHandler> handlers = new HashMap<RequestPath, RomarRequestHandler>();
 
     private boolean prepared = false;
 
@@ -18,7 +19,7 @@ public class SimpleRomarDispatcher implements RomarDispatcher {
         return handlers.get(request.getPath());
     }
 
-    public void registerHandler(String path, RomarRequestHandler handler) {
+    public void registerHandler(RequestPath path, RomarRequestHandler handler) {
         checkNotPrepared();
         handlers.put(path, handler);
     }

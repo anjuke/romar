@@ -1,12 +1,13 @@
 package com.anjuke.romar.core.impl.request;
 
+import com.anjuke.romar.core.RequestPath;
 import com.anjuke.romar.core.RomarRequest;
 
 public class MultiItemIdRequest  extends BaseRequest implements RomarRequest{
 
     private long[] itemId;
 
-    public MultiItemIdRequest(String path) {
+    public MultiItemIdRequest(RequestPath path) {
         super(path);
     }
 

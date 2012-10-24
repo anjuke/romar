@@ -12,15 +12,15 @@ public class RomarCore {
 
     private static final Logger log = LoggerFactory.getLogger(RomarCore.class);
 
-    private RomarDispatcher dispatcher;
+    private RomarDispatcher _dispatcher;
 
-    private MahoutService service;
+    private MahoutService _service;
 
     private static final ErrorResponse PATH_404_ERROR = new ErrorResponse(
             404, "path unavailable");
 
     public RomarResponse execute(RomarRequest request) {
-        RomarRequestHandler handler = dispatcher.getHandler(request);
+        RomarRequestHandler handler = _dispatcher.getHandler(request);
         if (handler == null) {
             return PATH_404_ERROR;
         }
@@ -43,15 +43,15 @@ public class RomarCore {
     }
 
     public void setDispatcher(RomarDispatcher dispatcher) {
-        this.dispatcher = dispatcher;
+        this._dispatcher = dispatcher;
     }
 
     public MahoutService getService() {
-        return service;
+        return _service;
     }
 
     public void setService(MahoutService service) {
-        this.service = service;
+        this._service = service;
     }
 
 }

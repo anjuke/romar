@@ -1,5 +1,6 @@
 package com.anjuke.romar.core;
 
+import com.anjuke.romar.core.handlers.CompactHandler;
 import com.anjuke.romar.core.handlers.ItemRecommendHandler;
 import com.anjuke.romar.core.handlers.RecommendHandler;
 import com.anjuke.romar.core.handlers.CommitHandler;
@@ -13,11 +14,12 @@ public class RomarPathProcessFactory {
 
     public static <T> T createPathProcessor(RomarDefaultPathFactory<T> factory) {
         factory.init();
-        factory.setRecommend("/recommend");
-        factory.setUpdate("/update");
-        factory.setRemove("/remove");
-        factory.setCommit("/commit");
-        factory.setItemRecommend("/item/recommend");
+        factory.setRecommend(RequestPath.RECOMMEND);
+        factory.setUpdate(RequestPath.UPDATE);
+        factory.setRemove(RequestPath.REMOVE);
+        factory.setCommit(RequestPath.COMMIT);
+        factory.setItemRecommend(RequestPath.ITEM_RECOMMEND);
+        factory.setCompact(RequestPath.COMPACT);
         T instance = factory.getInstance();
         return instance;
     }
@@ -39,28 +41,33 @@ public class RomarPathProcessFactory {
         }
 
         @Override
-        protected void setRecommend(String path) {
+        protected void setRecommend(RequestPath path) {
             dispatcher.registerHandler(path, new RecommendHandler(service));
         }
 
         @Override
-        protected void setUpdate(String path) {
+        protected void setUpdate(RequestPath path) {
             dispatcher.registerHandler(path, new UpdateHandler(service));
         }
 
         @Override
-        protected void setRemove(String path) {
+        protected void setRemove(RequestPath path) {
             dispatcher.registerHandler(path, new RemoveHandler(service));
         }
 
         @Override
-        protected void setCommit(String path) {
+        protected void setCommit(RequestPath path) {
             dispatcher.registerHandler(path, new CommitHandler(service));
         }
 
         @Override
-        protected void setItemRecommend(String path) {
+        protected void setItemRecommend(RequestPath path) {
             dispatcher.registerHandler(path, new ItemRecommendHandler(service));
+        }
+
+        @Override
+        protected void setCompact(RequestPath path) {
+            dispatcher.registerHandler(path, new CompactHandler(service));
         }
     }
 
