@@ -28,7 +28,7 @@ import com.anjuke.romar.mahout.factory.MahoutServiceUserRecommendFactory;
 
 public class RomarConfig {
 
-    private static final RomarConfig instance;
+    private static final RomarConfig INSTANCE;
 
     private static final String CONF_PATH_KEY = "romar.config";
 
@@ -57,7 +57,7 @@ public class RomarConfig {
             }
 
             RomarConfigHolder holder = yaml.loadAs(is, RomarConfigHolder.class);
-            instance = new RomarConfig(holder);
+            INSTANCE = new RomarConfig(holder);
 
         } catch (Exception e) {
             throw new Error(e);
@@ -73,7 +73,7 @@ public class RomarConfig {
     }
 
     public static RomarConfig getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     private enum RecommendType {

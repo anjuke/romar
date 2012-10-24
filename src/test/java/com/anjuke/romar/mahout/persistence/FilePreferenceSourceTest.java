@@ -73,16 +73,6 @@ public class FilePreferenceSourceTest {
     }
 
     @Test
-    public void testRemovePreferenceByUserId() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void testRemovePreferenceByItemId() {
-        fail("Not yet implemented");
-    }
-
-    @Test
     public void testGetPreferenceData() {
         source.setPreference(2, 3, 2);
         source.removePreference(2, 3);
@@ -170,21 +160,21 @@ public class FilePreferenceSourceTest {
         source.setPreference(1, 1, 1);
         source.commit();
         source.compact();
-        assertEquals(1, source.listLogFileNamesAndSorted().size());
+        assertEquals(2, source.listLogFileNamesAndSorted().size());
         assertEquals(1, source.listSnapshotFileNamesAndSorted().size());
         assertEquals(1,source.getLogFileVersion(source.getLatestLogFile()));
         assertEquals(0,source.getSnapshotFileVersion(source.getLatestSnapshotFile()));
         source.commit();
         source.compact();
-        assertEquals(1, source.listLogFileNamesAndSorted().size());
+        assertEquals(2, source.listLogFileNamesAndSorted().size());
         assertEquals(1, source.listSnapshotFileNamesAndSorted().size());
         source.commit();
         source.compact();
-        assertEquals(1, source.listLogFileNamesAndSorted().size());
+        assertEquals(2, source.listLogFileNamesAndSorted().size());
         assertEquals(1, source.listSnapshotFileNamesAndSorted().size());
         source.commit();
         source.compact();
-        assertEquals(1, source.listLogFileNamesAndSorted().size());
+        assertEquals(2, source.listLogFileNamesAndSorted().size());
         assertEquals(1, source.listSnapshotFileNamesAndSorted().size());
         assertEquals(1,source.getLogFileVersion(source.getLatestLogFile()));
         assertEquals(0,source.getSnapshotFileVersion(source.getLatestSnapshotFile()));

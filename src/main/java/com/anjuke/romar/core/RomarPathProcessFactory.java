@@ -22,12 +22,14 @@ public class RomarPathProcessFactory {
         return instance;
     }
 
-    private static class RomarCoreFactory extends RomarDefaultPathFactory<RomarCore> {
-        RomarConfig config=RomarConfig.getInstance();
-        MahoutServiceFactory serviceFactory=config.getMahoutServiceFactory();
-        RomarCore core = new RomarCore();
-        SimpleRomarDispatcher dispatcher = new SimpleRomarDispatcher();
-        MahoutService service = serviceFactory.createService();
+    private static class RomarCoreFactory extends
+            RomarDefaultPathFactory<RomarCore> {
+        private RomarConfig config = RomarConfig.getInstance();
+        private MahoutServiceFactory serviceFactory = config.getMahoutServiceFactory();
+        private RomarCore core = new RomarCore();
+        private SimpleRomarDispatcher dispatcher = new SimpleRomarDispatcher();
+        private MahoutService service = serviceFactory.createService();
+
         @Override
         protected RomarCore getInstance() {
             dispatcher.prepare();
@@ -39,14 +41,11 @@ public class RomarPathProcessFactory {
         @Override
         protected void setRecommend(String path) {
             dispatcher.registerHandler(path, new RecommendHandler(service));
-
-
-
         }
 
         @Override
         protected void setUpdate(String path) {
-             dispatcher.registerHandler(path, new UpdateHandler(service));
+            dispatcher.registerHandler(path, new UpdateHandler(service));
         }
 
         @Override
@@ -56,7 +55,7 @@ public class RomarPathProcessFactory {
 
         @Override
         protected void setCommit(String path) {
-             dispatcher.registerHandler(path, new CommitHandler(service));
+            dispatcher.registerHandler(path, new CommitHandler(service));
         }
 
         @Override
@@ -64,7 +63,6 @@ public class RomarPathProcessFactory {
             dispatcher.registerHandler(path, new ItemRecommendHandler(service));
         }
     }
-
 
     public static RomarCore createCore() {
         return createPathProcessor(new RomarCoreFactory());

@@ -16,9 +16,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.mahout.cf.taste.impl.common.FastByIDMap;
 import org.apache.mahout.cf.taste.impl.model.GenericPreference;
@@ -32,7 +29,7 @@ import com.anjuke.romar.mahout.util.Util;
 
 public class FilePreferenceSource extends AbstractFilePreferenceSource
         implements PreferenceSource {
-    private static final Logger log = LoggerFactory
+    private static final Logger LOG = LoggerFactory
             .getLogger(JettyRomarHandler.class);
     private PrintWriter writer;
     private long logCount = 0;
@@ -134,12 +131,14 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
     public void compact() {
         // 避免过长的时间持有对象锁
         final long version = getCurrentVersion() - 1;
-        if (version < 0)
+        if (version < 0) {
             return;
+        }
         File latestSnapshotFile = getLatestSnapshotFile();
         if (latestSnapshotFile != null
-                && getSnapshotFileVersion(latestSnapshotFile) == version)
+                && getSnapshotFileVersion(latestSnapshotFile) == version) {
             return;
+        }
 
         synchronized (snapshotWriterLock) {
             PrintWriter snapshotWriter = createWriter(getSnapshotFile(version));
@@ -183,43 +182,39 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
         }
     }
 
-
-    private void removeFile(){
-        List<File> snapshotFiles=listSnapshotFileNamesAndSorted();
-        if(snapshotFiles.size()<2)
+    private void removeFile() {
+        List<File> snapshotFiles = listSnapshotFileNamesAndSorted();
+        if (snapshotFiles.size() < 2) {
             return;
-        long version=-1;
-        for(int i=0,length=snapshotFiles.size();i<length-2;i++){
-            File file=snapshotFiles.get(i);
-            version=getSnapshotFileVersion(file);
+        }
+        long version = -1;
+        for (int i = 0, length = snapshotFiles.size(); i < length - 2; i++) {
+            File file = snapshotFiles.get(i);
+            version = getSnapshotFileVersion(file);
             file.delete();
         }
 
-        if(version>0){
-            List<File> logs=getLogFileListUntilVersion(version);
-            for(File file:logs){
+        if (version > 0) {
+            List<File> logs = getLogFileListUntilVersion(version);
+            for (File file : logs) {
                 file.delete();
             }
 
         }
 
-
     }
 
+    private static class LogFileIterator implements PreferenceIterator {
+        private Iterator<File> fileIt;
 
-    static class LogFileIterator implements PreferenceIterator {
-        List<File> list;
-        Iterator<File> fileIt;
+        private BufferedReader currentReader = null;
+        private Preference preference;
+        private PreferenceType type;
 
         public LogFileIterator(List<File> list) {
             super();
-            this.list = list;
             fileIt = list.iterator();
         }
-
-        BufferedReader currentReader = null;
-        Preference preference;
-        PreferenceType type;
 
         BufferedReader createReader() {
             if (!fileIt.hasNext()) {
@@ -227,7 +222,7 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
             } else {
                 // create reader
                 File file = fileIt.next();
-                log.info("read file " + file.getAbsolutePath());
+                LOG.info("read file " + file.getAbsolutePath());
                 return FilePreferenceSource.createReader(file);
             }
         }
@@ -236,8 +231,9 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
         public boolean hasNext() {
             if (currentReader == null) {
                 currentReader = createReader();
-                if (currentReader == null)
+                if (currentReader == null) {
                     return false;
+                }
             }
 
             String line;
@@ -245,8 +241,9 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
                 while ((line = currentReader.readLine()) == null) {
                     close();
                     currentReader = createReader();
-                    if (currentReader == null)
+                    if (currentReader == null) {
                         return false;
+                    }
                 }
             } catch (IOException e) {
                 close();
@@ -290,6 +287,7 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
                 try {
                     currentReader.close();
                 } catch (IOException e) {
+                    LOG.info(e.getMessage(), e);
                 }
             }
         }
@@ -303,12 +301,17 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
     @Override
     public FastByIDMap<PreferenceArray> getPreferenceUserData() {
         File snapshotFile = getLatestSnapshotFile();
-        long version = snapshotFile == null ? 0
-                : getSnapshotFileVersion(snapshotFile);
+        long version;
+        if (snapshotFile == null) {
+            version = 0;
+        } else {
+            version = getSnapshotFileVersion(snapshotFile);
+        }
         final List<File> list = new ArrayList<File>(
                 getLogFileListFromVersion(version));
-        if (snapshotFile != null)
+        if (snapshotFile != null) {
             list.add(0, snapshotFile);
+        }
         PreferenceIterator it = new LogFileIterator(list);
         FastByIDMap<PreferenceArray> data = new FastByIDMap<PreferenceArray>();
         while (it.hasNext()) {

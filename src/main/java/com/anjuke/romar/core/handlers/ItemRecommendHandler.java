@@ -10,7 +10,7 @@ import com.anjuke.romar.core.impl.request.MultiItemIdRequest;
 import com.anjuke.romar.core.impl.response.RecommendResultResponse;
 import com.anjuke.romar.mahout.MahoutService;
 
-public class ItemRecommendHandler extends BaseHandler{
+public class ItemRecommendHandler extends BaseHandler {
 
     public ItemRecommendHandler(MahoutService service) {
         super(service);
@@ -18,8 +18,9 @@ public class ItemRecommendHandler extends BaseHandler{
 
     @Override
     public RomarResponse process(RomarRequest request) throws Exception {
-        MultiItemIdRequest mr=(MultiItemIdRequest)request;
-        List<RecommendedItem> list=service.mostSimilarItems(mr.getItemId(), 5);
+        MultiItemIdRequest mr = (MultiItemIdRequest) request;
+        List<RecommendedItem> list = service
+                .mostSimilarItems(mr.getItemId(), 5);
         return new RecommendResultResponse(list);
     }
 

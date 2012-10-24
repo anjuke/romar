@@ -23,9 +23,10 @@ public class MahoutServiceUserRecommendFactory extends AbstractMahoutServiceFact
         UserSimilarity similarity = ClassUtils.instantiateAs(
                 config.getUserSimilarityClass(), UserSimilarity.class,
                 new Class<?>[] { DataModel.class }, new Object[] { dataModel });
-        if (config.isUseSimilariyCache())
+        if (config.isUseSimilariyCache()){
             similarity = new CachingUserSimilarity(similarity,
                     config.getSimilarityCacheSize());
+        }
         UserNeighborhood neighborhood = ClassUtils.instantiateAs(
                 config.getUserNeighborhoodClass(), UserNeighborhood.class,
                 new Class<?>[] { int.class, UserSimilarity.class,

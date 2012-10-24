@@ -4,7 +4,7 @@ import com.anjuke.romar.core.RomarRequest;
 
 public class MultiItemIdRequest  extends BaseRequest implements RomarRequest{
 
-    private long itemId[];
+    private long[] itemId;
 
     public MultiItemIdRequest(String path) {
         super(path);
@@ -14,8 +14,8 @@ public class MultiItemIdRequest  extends BaseRequest implements RomarRequest{
         return itemId;
     }
 
-    public void setItemId(long[] itemId) {
-        this.itemId = itemId;
+    public void setItemId(long[] theItemId) {
+        this.itemId = theItemId;
     }
 
 }

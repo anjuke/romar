@@ -7,11 +7,11 @@ import com.anjuke.romar.core.RomarPathProcessFactory;
 
 public class RomarMain {
     public static void main(String[] args) throws Exception {
-        if(args.length!=1){
+        if (args.length != 1) {
             System.out.println("usage :  java classname $port");
             return;
         }
-        RomarCore core=RomarPathProcessFactory.createCore();
+        RomarCore core = RomarPathProcessFactory.createCore();
         Server server = new Server(Integer.parseInt(args[0]));
         server.setHandler(new JettyRomarHandler(core));
         server.start();

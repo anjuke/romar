@@ -38,9 +38,8 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
         }
     }
 
-    protected File getSnapshotFile(long version){
-        File tmpFile=
-            new File(path,SNAPSHOT_FILE+version);
+    protected File getSnapshotFile(long version) {
+        File tmpFile = new File(path, SNAPSHOT_FILE + version);
         return tmpFile;
     }
 
@@ -64,20 +63,20 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
         return file;
     }
 
-
-    protected synchronized File getLatestSnapshotFile(){
-        List<File> list=listSnapshotFileNamesAndSorted();
-        if(list.isEmpty())
+    protected synchronized File getLatestSnapshotFile() {
+        List<File> list = listSnapshotFileNamesAndSorted();
+        if (list.isEmpty()) {
             return null;
-        else
-            return list.get(list.size()-1);
+        } else {
+            return list.get(list.size() - 1);
+        }
     }
 
     protected synchronized long getCurrentVersion() {
         return version;
     }
 
-    protected List<File> listSnapshotFileNamesAndSorted(){
+    protected List<File> listSnapshotFileNamesAndSorted() {
 
         File[] files = path.listFiles(new FilenameFilter() {
             @Override
@@ -133,22 +132,23 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
 
     /**
      * include version
+     *
      * @param version
      * @return
      */
-    protected List<File> getLogFileListUntilVersion(long version){
-        if(version<0){
+    protected List<File> getLogFileListUntilVersion(long version) {
+        if (version < 0) {
             return Collections.emptyList();
         }
         List<File> list = listLogFileNamesAndSorted();
-        if(list.isEmpty()){
+        if (list.isEmpty()) {
             return Collections.emptyList();
         }
-        final List<File> logFileList=new ArrayList<File>(list.size()-1);
+        final List<File> logFileList = new ArrayList<File>(list.size() - 1);
 
-        for(File file:list){
-            long fileVersion=getLogFileVersion(file);
-            if(fileVersion>version){
+        for (File file : list) {
+            long fileVersion = getLogFileVersion(file);
+            if (fileVersion > version) {
                 break;
             }
             logFileList.add(file);
@@ -157,18 +157,18 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
     }
 
     protected List<File> getLogFileListFromVersion(long version) {
-        if(version<0){
+        if (version < 0) {
             return Collections.emptyList();
         }
         List<File> list = listLogFileNamesAndSorted();
-        final List<File> logFileList=new ArrayList<File>(list.size()-1);
+        final List<File> logFileList = new ArrayList<File>(list.size() - 1);
 
-        for(File file:list){
-            long fileVersion=getLogFileVersion(file);
-            if(fileVersion<=version){
+        for (File file : list) {
+            long fileVersion = getLogFileVersion(file);
+            if (fileVersion <= version) {
                 continue;
             }
-            if(fileVersion>=this.version){
+            if (fileVersion >= this.version) {
                 break;
             }
             logFileList.add(file);

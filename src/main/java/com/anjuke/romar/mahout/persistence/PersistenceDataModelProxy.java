@@ -10,14 +10,16 @@ import org.apache.mahout.cf.taste.model.PreferenceArray;
 import com.anjuke.romar.mahout.ForwardingDataModel;
 import com.anjuke.romar.mahout.PreferenceDataModel;
 
-public class PersistenceDataModelProxy extends ForwardingDataModel implements PreferenceDataModel{
+public class PersistenceDataModelProxy extends ForwardingDataModel implements
+        PreferenceDataModel {
     private static final long serialVersionUID = 1L;
 
-    private final PreferenceSource source ;
+    private final PreferenceSource source;
 
-    public PersistenceDataModelProxy(PreferenceDataModel dataModel,PreferenceSource source) {
+    public PersistenceDataModelProxy(PreferenceDataModel dataModel,
+            PreferenceSource source) {
         super(dataModel);
-        this.source=source;
+        this.source = source;
     }
 
     @Override
@@ -37,9 +39,8 @@ public class PersistenceDataModelProxy extends ForwardingDataModel implements Pr
     public void removePreference(long userID, long itemID)
             throws TasteException {
         super.removePreference(userID, itemID);
-        source.removePreference(userID,itemID);
+        source.removePreference(userID, itemID);
     }
-
 
     /**
      * data could be none
@@ -52,9 +53,5 @@ public class PersistenceDataModelProxy extends ForwardingDataModel implements Pr
     public void compact() {
         source.compact();
     }
-
-
-
-
 
 }
