@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+<module name="Checker">
+    <property name="severity" value="warning" />
+    <module name="TreeWalker">
+        <module name="ConstantName" />
+        <module name="LocalFinalVariableName" />
+        <module name="LocalVariableName" />
+        <module name="MemberName">
+            <property name="format" value="^_[a-z][a-zA-Z0-9]*$" />
+        </module>
+        <module name="MethodName" />
+        <module name="PackageName" />
+        <module name="ParameterName" />
+        <module name="StaticVariableName">
+            <property name="format" value="^_[a-z][a-zA-Z0-9]*$" />
+        </module>
+        <module name="TypeName" />
+        <module name="AvoidStarImport" />
+        <module name="IllegalImport" />
+        <module name="RedundantImport" />
+        <module name="UnusedImports" />
+        <module name="FileLength" />
+        <module name="MethodLength" />
+        <module name="ParameterNumber" />
+        <module name="EmptyForIteratorPad" />
+        <module name="MethodParamPad" />
+        <module name="NoWhitespaceAfter" />
+        <module name="NoWhitespaceBefore" />
+        <module name="OperatorWrap" />
+        <module name="ParenPad" />
+        <module name="TypecastParenPad" />
+        <module name="TabCharacter" />
+        <module name="WhitespaceAfter">
+            <property name="tokens" value="COMMA, SEMI" />
+        </module>
+        <module name="WhitespaceAround">
+            <property name="tokens" value="ASSIGN" />
+        </module>
+        <module name="RedundantModifier" />
+        <module name="AvoidNestedBlocks" />
+        <module name="EmptyBlock" />
+        <module name="LeftCurly" />
+        <module name="NeedBraces" />
+        <module name="RightCurly" />
+        <module name="AvoidInlineConditionals" />
+        <module name="DoubleCheckedLocking" />
+        <module name="EmptyStatement" />
+        <module name="EqualsHashCode" />
+        <module name="HiddenField" />
+        <module name="IllegalInstantiation" />
+        <module name="InnerAssignment" />
+        <module name="MagicNumber" />
+        <module name="MissingSwitchDefault" />
+        <module name="RedundantThrows" />
+        <module name="SimplifyBooleanExpression" />
+        <module name="SimplifyBooleanReturn" />
+        <module name="FinalClass" />
+        <module name="HideUtilityClassConstructor" />
+        <module name="InterfaceIsType" />
+        <module name="VisibilityModifier" />
+        <module name="ArrayTypeStyle" />
+        <module name="GenericIllegalRegexp">
+            <property name="format" value="\s+$" />
+            <property name="message" value="Line has trailing spaces." />
+        </module>
+        <module name="TodoComment" />
+        <module name="UpperEll" />
+        <module name="LineLength">
+            <property name="max" value="120" />
+        </module>
+    </module>
+    <module name="NewlineAtEndOfFile" />
+    <module name="Translation" />
+</module>
