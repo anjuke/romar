@@ -30,3 +30,6 @@
   userNeighborhoodClass: NearestNUserNeighborhood
 
   userNeighborhoodNearestN: 50
+
+  persistencePath: /tmp/romar/instance
+

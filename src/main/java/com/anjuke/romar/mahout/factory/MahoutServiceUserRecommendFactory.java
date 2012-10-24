@@ -13,13 +13,13 @@ import com.anjuke.romar.mahout.GenericReloadDataModel;
 import com.anjuke.romar.mahout.MahoutService;
 import com.anjuke.romar.mahout.RecommenderWrapper;
 
-public class MahoutServiceUserRecommendFactory implements MahoutServiceFactory {
+public class MahoutServiceUserRecommendFactory extends AbstractMahoutServiceFactory  implements MahoutServiceFactory {
 
     @Override
     public MahoutService createService() {
         RomarConfig config = RomarConfig.getInstance();
         Recommender recommender;
-        DataModel dataModel = new GenericReloadDataModel();
+        DataModel dataModel = wrapDataModel( new GenericReloadDataModel());
         UserSimilarity similarity = ClassUtils.instantiateAs(
                 config.getUserSimilarityClass(), UserSimilarity.class,
                 new Class<?>[] { DataModel.class }, new Object[] { dataModel });

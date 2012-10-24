@@ -9,13 +9,13 @@ import com.anjuke.romar.mahout.GenericReloadDataModel;
 import com.anjuke.romar.mahout.MahoutService;
 import com.anjuke.romar.mahout.RecommenderWrapper;
 
-public class MahoutServiceCommonRecommendFactory implements MahoutServiceFactory {
+public class MahoutServiceCommonRecommendFactory extends AbstractMahoutServiceFactory implements MahoutServiceFactory {
 
     @Override
     public MahoutService createService() {
         RomarConfig config = RomarConfig.getInstance();
         Recommender recommender;
-        DataModel dataModel = new GenericReloadDataModel();
+        DataModel dataModel =wrapDataModel( new GenericReloadDataModel());
 
         recommender = ClassUtils.instantiateAs(
                 config.getCommonRecommenderClass(), Recommender.class,

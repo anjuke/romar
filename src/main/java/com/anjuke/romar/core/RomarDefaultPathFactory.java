@@ -29,4 +29,8 @@ public abstract class RomarDefaultPathFactory<T> {
     protected void setItemRecommend(String path) {
 
     }
+
+    protected void setCompact(String path){
+
+    }
 }

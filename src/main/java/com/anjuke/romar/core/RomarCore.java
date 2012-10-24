@@ -28,11 +28,11 @@ public class RomarCore {
         try {
             return handler.process(request);
         }catch(NoSuchUserException e){
-            log.error(e.getMessage(), e);
+            log.info(e.getMessage(), e);
             return new ErrorResponse(500, "no such user id "
                     + e.getMessage());
         }catch(NoSuchItemException e){
-             log.error(e.getMessage(), e);
+             log.info(e.getMessage(), e);
              return new ErrorResponse(500, "no such item id "
                      + e.getMessage());
         } catch (Throwable e) {

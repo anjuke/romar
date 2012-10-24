@@ -41,6 +41,7 @@ public class RomarConfig {
         public UserNeighborhoodClass userNeighborhoodClass;
         public int userNeighborhoodNearestN;
         public CommonRecommenderClass commonRecommenderClass;
+        public String persistencePath;
     }
 
     static {
@@ -194,6 +195,10 @@ public class RomarConfig {
 
     public Class<? extends Recommender> getCommonRecommenderClass(){
         return holder.commonRecommenderClass.getClazz();
+    }
+
+    public String getPersistencePath(){
+        return holder.persistencePath;
     }
 
     public static void main(String[] args) {

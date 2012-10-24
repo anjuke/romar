@@ -59,6 +59,15 @@ public class RequestParser {
             parser.register(path, MultiItemIdRequest.class, Arrays.asList("itemId"));
         }
 
+
+        @Override
+        protected void setCompact(String path) {
+             parser.register(path, NoneContentRequest.class, Collections.<String>emptyList());
+        }
+
+
+
+
     }
 
     public static RequestParser createParser(){
