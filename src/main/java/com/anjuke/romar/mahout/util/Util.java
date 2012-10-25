@@ -5,7 +5,10 @@ import org.apache.mahout.cf.taste.impl.model.GenericUserPreferenceArray;
 import org.apache.mahout.cf.taste.model.Preference;
 import org.apache.mahout.cf.taste.model.PreferenceArray;
 
-public class Util {
+public final class Util {
+    private Util() {
+    }
+
     public static void applyAdd(FastByIDMap<PreferenceArray> data,
             Preference addPreference) {
         long userID = addPreference.getUserID();

@@ -23,7 +23,7 @@ public class MahoutServiceItemRecommendFactory extends
 
         ItemSimilarity similarity = ClassUtils.instantiateAs(
                 config.getItemSimilarityClass(), ItemSimilarity.class,
-                new Class<?>[] { DataModel.class }, new Object[] { dataModel });
+                new Class<?>[] {DataModel.class}, new Object[] {dataModel});
         if (config.isUseSimilariyCache()) {
             similarity = new CachingItemSimilarity(similarity,
                     config.getSimilarityCacheSize());
