@@ -21,27 +21,27 @@ import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.yaml.snakeyaml.Yaml;
 
+import com.anjuke.romar.mahout.factory.MahoutServiceCommonRecommendFactory;
 import com.anjuke.romar.mahout.factory.MahoutServiceFactory;
 import com.anjuke.romar.mahout.factory.MahoutServiceItemRecommendFactory;
-import com.anjuke.romar.mahout.factory.MahoutServiceCommonRecommendFactory;
 import com.anjuke.romar.mahout.factory.MahoutServiceUserRecommendFactory;
 
-public class RomarConfig {
+public final class RomarConfig {
 
     private static final RomarConfig INSTANCE;
 
     private static final String CONF_PATH_KEY = "romar.config";
 
     private static class RomarConfigHolder {
-        public RecommendType recommendType;
-        public boolean useSimilarityCache;
-        public int similarityCacheSize;
-        public ItemSimilarityClass itemSimilarityClass;
-        public UserSimilarityClass userSimilarityClass;
-        public UserNeighborhoodClass userNeighborhoodClass;
-        public int userNeighborhoodNearestN;
-        public CommonRecommenderClass commonRecommenderClass;
-        public String persistencePath;
+        private RecommendType _recommendType;
+        private boolean _useSimilarityCache;
+        private int _similarityCacheSize;
+        private ItemSimilarityClass _itemSimilarityClass;
+        private UserSimilarityClass _userSimilarityClass;
+        private UserNeighborhoodClass _userNeighborhoodClass;
+        private int _userNeighborhoodNearestN;
+        private CommonRecommenderClass _commonRecommenderClass;
+        private String _persistencePath;
     }
 
     static {
@@ -61,14 +61,14 @@ public class RomarConfig {
 
         } catch (Exception e) {
             throw new Error(e);
-        } finally {
-            if (is != null) {
-                try {
-                    // is.close();
-                } catch (Exception e) {
-
-                }
-            }
+//        } finally {
+//            if (is != null) {
+//                try {
+//                    // is.close();
+//                } catch (Exception e) {
+//
+//                }
+//            }
         }
     }
 
@@ -77,128 +77,130 @@ public class RomarConfig {
     }
 
     private enum RecommendType {
-        item(new MahoutServiceItemRecommendFactory()), user(
-                new MahoutServiceUserRecommendFactory()),common(new MahoutServiceCommonRecommendFactory());
+        item(new MahoutServiceItemRecommendFactory()),
+        user(new MahoutServiceUserRecommendFactory()),
+        common(new MahoutServiceCommonRecommendFactory());
 
-        private MahoutServiceFactory factory;
+        private MahoutServiceFactory _factory;
 
         private RecommendType(MahoutServiceFactory factory) {
-            this.factory = factory;
+            _factory = factory;
         }
 
     }
 
     private enum ItemSimilarityClass {
-        EuclideanDistanceSimilarity(EuclideanDistanceSimilarity.class), PearsonCorrelationSimilarity(
-                PearsonCorrelationSimilarity.class), UncenteredCosineSimilarity(
-                UncenteredCosineSimilarity.class), CityBlockSimilarity(
-                CityBlockSimilarity.class), LogLikelihoodSimilarity(
-                LogLikelihoodSimilarity.class), TanimotoCoefficientSimilarity(
-                TanimotoCoefficientSimilarity.class);
+        EuclideanDistanceSimilarity(EuclideanDistanceSimilarity.class),
+        PearsonCorrelationSimilarity(PearsonCorrelationSimilarity.class),
+        UncenteredCosineSimilarity(UncenteredCosineSimilarity.class),
+        CityBlockSimilarity(CityBlockSimilarity.class),
+        LogLikelihoodSimilarity(LogLikelihoodSimilarity.class),
+        TanimotoCoefficientSimilarity(TanimotoCoefficientSimilarity.class);
 
-        private Class<? extends ItemSimilarity> clazz;
+        private Class<? extends ItemSimilarity> _clazz;
 
         private ItemSimilarityClass(Class<? extends ItemSimilarity> clazz) {
-            this.clazz = clazz;
+            _clazz = clazz;
         }
 
         public Class<? extends ItemSimilarity> getClazz() {
-            return clazz;
+            return _clazz;
         }
 
     }
 
     private enum UserSimilarityClass {
-        EuclideanDistanceSimilarity(EuclideanDistanceSimilarity.class), PearsonCorrelationSimilarity(
-                PearsonCorrelationSimilarity.class), UncenteredCosineSimilarity(
-                UncenteredCosineSimilarity.class), CityBlockSimilarity(
-                CityBlockSimilarity.class), LogLikelihoodSimilarity(
-                LogLikelihoodSimilarity.class), TanimotoCoefficientSimilarity(
-                TanimotoCoefficientSimilarity.class), SpearmanCorrelationSimilarity(
-                SpearmanCorrelationSimilarity.class);
+        EuclideanDistanceSimilarity(EuclideanDistanceSimilarity.class),
+        PearsonCorrelationSimilarity(PearsonCorrelationSimilarity.class),
+        UncenteredCosineSimilarity(UncenteredCosineSimilarity.class),
+        CityBlockSimilarity(CityBlockSimilarity.class),
+        LogLikelihoodSimilarity(LogLikelihoodSimilarity.class),
+        TanimotoCoefficientSimilarity(TanimotoCoefficientSimilarity.class),
+        SpearmanCorrelationSimilarity(SpearmanCorrelationSimilarity.class);
 
-        private Class<? extends UserSimilarity> clazz;
+        private Class<? extends UserSimilarity> _clazz;
 
         private UserSimilarityClass(Class<? extends UserSimilarity> clazz) {
-            this.clazz = clazz;
+            _clazz = clazz;
         }
 
         public Class<? extends UserSimilarity> getClazz() {
-            return clazz;
+            return _clazz;
         }
 
     }
 
     private enum UserNeighborhoodClass {
-        NearestNUserNeighborhood(NearestNUserNeighborhood.class), ThresholdUserNeighborhood(
-                ThresholdUserNeighborhood.class);
+        NearestNUserNeighborhood(NearestNUserNeighborhood.class),
+        ThresholdUserNeighborhood(ThresholdUserNeighborhood.class);
 
-        private Class<? extends UserNeighborhood> clazz;
+        private Class<? extends UserNeighborhood> _clazz;
 
         private UserNeighborhoodClass(Class<? extends UserNeighborhood> clazz) {
-            this.clazz = clazz;
+            _clazz = clazz;
         }
 
         public Class<? extends UserNeighborhood> getClazz() {
-            return clazz;
+            return _clazz;
         }
     }
 
     private enum CommonRecommenderClass {
-        ItemAverageRecommender(ItemAverageRecommender.class), ItemUserAverageRecommender(
-                ItemUserAverageRecommender.class), SlopeOneRecommender(
-                SlopeOneRecommender.class);
-        private Class<? extends Recommender> clazz;
+        ItemAverageRecommender(ItemAverageRecommender.class),
+        ItemUserAverageRecommender(ItemUserAverageRecommender.class),
+        SlopeOneRecommender(SlopeOneRecommender.class);
+
+        private Class<? extends Recommender> _clazz;
 
         private CommonRecommenderClass(Class<? extends Recommender> clazz) {
-            this.clazz = clazz;
+            _clazz = clazz;
         }
 
         public Class<? extends Recommender> getClazz() {
-            return clazz;
+            return _clazz;
         }
     }
 
-    private final RomarConfigHolder holder;
+    private final RomarConfigHolder _holder;
 
     private RomarConfig(RomarConfigHolder holder) {
-        this.holder = holder;
+        _holder = holder;
     }
 
     public MahoutServiceFactory getMahoutServiceFactory() {
-        return holder.recommendType.factory;
+        return _holder._recommendType._factory;
     }
 
     public boolean isUseSimilariyCache() {
-        return holder.useSimilarityCache;
+        return _holder._useSimilarityCache;
     }
 
     public int getSimilarityCacheSize() {
-        return holder.similarityCacheSize;
+        return _holder._similarityCacheSize;
     }
 
     public Class<? extends ItemSimilarity> getItemSimilarityClass() {
-        return holder.itemSimilarityClass.getClazz();
+        return _holder._itemSimilarityClass.getClazz();
     }
 
     public Class<? extends UserSimilarity> getUserSimilarityClass() {
-        return holder.userSimilarityClass.getClazz();
+        return _holder._userSimilarityClass.getClazz();
     }
 
     public Class<? extends UserNeighborhood> getUserNeighborhoodClass() {
-        return holder.userNeighborhoodClass.getClazz();
+        return _holder._userNeighborhoodClass.getClazz();
     }
 
     public int getUserNeighborhoodNearestN() {
-        return holder.userNeighborhoodNearestN;
+        return _holder._userNeighborhoodNearestN;
     }
 
     public Class<? extends Recommender> getCommonRecommenderClass(){
-        return holder.commonRecommenderClass.getClazz();
+        return _holder._commonRecommenderClass.getClazz();
     }
 
     public String getPersistencePath(){
-        return holder.persistencePath;
+        return _holder._persistencePath;
     }
 
     public static void main(String[] args) {

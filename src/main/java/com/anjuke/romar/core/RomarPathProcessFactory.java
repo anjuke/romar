@@ -26,48 +26,48 @@ public class RomarPathProcessFactory {
 
     private static class RomarCoreFactory extends
             RomarDefaultPathFactory<RomarCore> {
-        private RomarConfig config = RomarConfig.getInstance();
-        private MahoutServiceFactory serviceFactory = config.getMahoutServiceFactory();
-        private RomarCore core = new RomarCore();
-        private SimpleRomarDispatcher dispatcher = new SimpleRomarDispatcher();
-        private MahoutService service = serviceFactory.createService();
+        private RomarConfig _config = RomarConfig.getInstance();
+        private MahoutServiceFactory _serviceFactory = _config.getMahoutServiceFactory();
+        private RomarCore _core = new RomarCore();
+        private SimpleRomarDispatcher _dispatcher = new SimpleRomarDispatcher();
+        private MahoutService _service = _serviceFactory.createService();
 
         @Override
         protected RomarCore getInstance() {
-            dispatcher.prepare();
-            core.setDispatcher(dispatcher);
-            core.setService(service);
-            return core;
+            _dispatcher.prepare();
+            _core.setDispatcher(_dispatcher);
+            _core.setService(_service);
+            return _core;
         }
 
         @Override
         protected void setRecommend(RequestPath path) {
-            dispatcher.registerHandler(path, new RecommendHandler(service));
+            _dispatcher.registerHandler(path, new RecommendHandler(_service));
         }
 
         @Override
         protected void setUpdate(RequestPath path) {
-            dispatcher.registerHandler(path, new UpdateHandler(service));
+            _dispatcher.registerHandler(path, new UpdateHandler(_service));
         }
 
         @Override
         protected void setRemove(RequestPath path) {
-            dispatcher.registerHandler(path, new RemoveHandler(service));
+            _dispatcher.registerHandler(path, new RemoveHandler(_service));
         }
 
         @Override
         protected void setCommit(RequestPath path) {
-            dispatcher.registerHandler(path, new CommitHandler(service));
+            _dispatcher.registerHandler(path, new CommitHandler(_service));
         }
 
         @Override
         protected void setItemRecommend(RequestPath path) {
-            dispatcher.registerHandler(path, new ItemRecommendHandler(service));
+            _dispatcher.registerHandler(path, new ItemRecommendHandler(_service));
         }
 
         @Override
         protected void setCompact(RequestPath path) {
-            dispatcher.registerHandler(path, new CompactHandler(service));
+            _dispatcher.registerHandler(path, new CompactHandler(_service));
         }
     }
 
