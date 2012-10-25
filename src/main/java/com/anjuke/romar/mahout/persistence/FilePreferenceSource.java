@@ -31,37 +31,37 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
         implements PreferenceSource {
     private static final Logger LOG = LoggerFactory
             .getLogger(JettyRomarHandler.class);
-    private PrintWriter writer;
-    private long logCount = 0;
-    private final Object snapshotWriterLock = new Object();
+    private PrintWriter _writer;
+    private long _logCount = 0;
+    private final Object _snapshotWriterLock = new Object();
 
     public FilePreferenceSource(File path) {
         super(path);
-        writer = createWriter();
+        _writer = createWriter();
     }
 
     @Override
     public void setPreference(long userID, long itemID, float value) {
         synchronized (this) {
-            logCount++;
-            writer.print(userID);
-            writer.print(',');
-            writer.print(itemID);
-            writer.print(',');
-            writer.println(value);
-            writer.flush();
+            _logCount++;
+            _writer.print(userID);
+            _writer.print(',');
+            _writer.print(itemID);
+            _writer.print(',');
+            _writer.println(value);
+            _writer.flush();
         }
     }
 
     @Override
     public void removePreference(long userID, long itemID) {
         synchronized (this) {
-            logCount++;
-            writer.print(userID);
-            writer.print(',');
-            writer.print(itemID);
-            writer.println(',');
-            writer.flush();
+            _logCount++;
+            _writer.print(userID);
+            _writer.print(',');
+            _writer.print(itemID);
+            _writer.println(',');
+            _writer.flush();
         }
     }
 
@@ -81,11 +81,11 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
     @Override
     public void commit() {
         synchronized (this) {
-            if (logCount > 0) {
-                writer.flush();
-                writer.close();
-                writer = createWriter();
-                logCount = 0;
+            if (_logCount > 0) {
+                _writer.flush();
+                _writer.close();
+                _writer = createWriter();
+                _logCount = 0;
             }
         }
     }
@@ -140,7 +140,7 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
             return;
         }
 
-        synchronized (snapshotWriterLock) {
+        synchronized (_snapshotWriterLock) {
             PrintWriter snapshotWriter = createWriter(getSnapshotFile(version));
             try {
                 final List<File> logFileList = getLogFileListUntilVersion(version);
@@ -205,23 +205,23 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
     }
 
     private static class LogFileIterator implements PreferenceIterator {
-        private Iterator<File> fileIt;
+        private Iterator<File> _fileIt;
 
-        private BufferedReader currentReader = null;
-        private Preference preference;
-        private PreferenceType type;
+        private BufferedReader _currentReader = null;
+        private Preference _preference;
+        private PreferenceType _type;
 
         public LogFileIterator(List<File> list) {
             super();
-            fileIt = list.iterator();
+            _fileIt = list.iterator();
         }
 
         BufferedReader createReader() {
-            if (!fileIt.hasNext()) {
+            if (!_fileIt.hasNext()) {
                 return null;
             } else {
                 // create reader
-                File file = fileIt.next();
+                File file = _fileIt.next();
                 LOG.info("read file " + file.getAbsolutePath());
                 return FilePreferenceSource.createReader(file);
             }
@@ -229,19 +229,19 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
 
         @Override
         public boolean hasNext() {
-            if (currentReader == null) {
-                currentReader = createReader();
-                if (currentReader == null) {
+            if (_currentReader == null) {
+                _currentReader = createReader();
+                if (_currentReader == null) {
                     return false;
                 }
             }
 
             String line;
             try {
-                while ((line = currentReader.readLine()) == null) {
+                while ((line = _currentReader.readLine()) == null) {
                     close();
-                    currentReader = createReader();
-                    if (currentReader == null) {
+                    _currentReader = createReader();
+                    if (_currentReader == null) {
                         return false;
                     }
                 }
@@ -255,21 +255,21 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
             float value;
             if (tmp.length == 2 || "".equals(tmp[2])) {
                 value = 0;
-                type = PreferenceType.DELETE;
+                _type = PreferenceType.DELETE;
             } else {
                 value = Float.parseFloat(tmp[2]);
-                type = PreferenceType.ADD;
+                _type = PreferenceType.ADD;
             }
-            preference = new GenericPreference(userID, itemID, value);
+            _preference = new GenericPreference(userID, itemID, value);
             return true;
         }
 
         @Override
         public Preference next() {
-            if (preference == null) {
+            if (_preference == null) {
                 throw new NoSuchElementException();
             }
-            return preference;
+            return _preference;
         }
 
         @Override
@@ -279,13 +279,13 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
 
         @Override
         public PreferenceType getType() {
-            return type;
+            return _type;
         }
 
         void close() {
-            if (currentReader != null) {
+            if (_currentReader != null) {
                 try {
-                    currentReader.close();
+                    _currentReader.close();
                 } catch (IOException e) {
                     LOG.info(e.getMessage(), e);
                 }
@@ -295,7 +295,7 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
 
     @Override
     public void close() {
-        writer.close();
+        _writer.close();
     }
 
     @Override

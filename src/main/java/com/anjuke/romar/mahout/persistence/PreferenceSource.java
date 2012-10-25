@@ -6,20 +6,20 @@ import org.apache.mahout.cf.taste.model.PreferenceArray;
 
 public interface PreferenceSource {
 
-    public void commit();
+    void commit();
 
-    public void compact();
+    void compact();
 
-    public void setPreference(long userID, long itemID, float value);
+    void setPreference(long userID, long itemID, float value);
 
-    public void removePreference(long userID, long itemID);
+    void removePreference(long userID, long itemID);
 
-    public void removePreferenceByUserId(long userID);
+    void removePreferenceByUserId(long userID);
 
-    public void removePreferenceByItemId(long itemID);
+    void removePreferenceByItemId(long itemID);
 
-    public void close();
+    void close();
 
-    public FastByIDMap<PreferenceArray> getPreferenceUserData();
+    FastByIDMap<PreferenceArray> getPreferenceUserData();
 
 }

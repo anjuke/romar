@@ -14,44 +14,44 @@ public class PersistenceDataModelProxy extends ForwardingDataModel implements
         PreferenceDataModel {
     private static final long serialVersionUID = 1L;
 
-    private final PreferenceSource source;
+    private final PreferenceSource _source;
 
     public PersistenceDataModelProxy(PreferenceDataModel dataModel,
             PreferenceSource source) {
         super(dataModel);
-        this.source = source;
+        this._source = source;
     }
 
     @Override
     public void refresh(Collection<Refreshable> alreadyRefreshed) {
         super.refresh(alreadyRefreshed);
-        source.commit();
+        _source.commit();
     }
 
     @Override
     public void setPreference(long userID, long itemID, float value)
             throws TasteException {
         super.setPreference(userID, itemID, value);
-        source.setPreference(userID, itemID, value);
+        _source.setPreference(userID, itemID, value);
     }
 
     @Override
     public void removePreference(long userID, long itemID)
             throws TasteException {
         super.removePreference(userID, itemID);
-        source.removePreference(userID, itemID);
+        _source.removePreference(userID, itemID);
     }
 
     /**
      * data could be none
      */
     public void reload(FastByIDMap<PreferenceArray> data) {
-        super.reload(source.getPreferenceUserData());
+        super.reload(_source.getPreferenceUserData());
     }
 
     @Override
     public void compact() {
-        source.compact();
+        _source.compact();
     }
 
 }

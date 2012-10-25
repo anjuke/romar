@@ -10,36 +10,36 @@ import java.util.Comparator;
 import java.util.List;
 
 public abstract class AbstractFilePreferenceSource implements PreferenceSource {
-    protected final File path;
+    private final File _path;
     public static final String LOG_FILE_PREFIX = "romar.log.";
     public static final String SNAPSHOT_FILE = "romar.snapshot.";
-    private long version;
+    private long _version;
 
     public AbstractFilePreferenceSource(File path) {
         if (!path.exists()) {
             if (!path.mkdirs()) {
-                throw new IllegalStateException("cannot mkdirs on path "
+                throw new IllegalStateException("cannot mkdirs on _path "
                         + path.getAbsolutePath());
             }
         } else if (!path.isDirectory()) {
             throw new IllegalStateException(path.getAbsolutePath()
                     + " must be directory");
         }
-        this.path = path;
+        _path = path;
         verifyNewestVersion();
     }
 
     protected synchronized void verifyNewestVersion() {
         List<File> logFileList = listLogFileNamesAndSorted();
         if (logFileList.isEmpty()) {
-            version = -1;
+            _version = -1;
         } else {
-            version = getLogFileVersion(logFileList.get(logFileList.size() - 1));
+            _version = getLogFileVersion(logFileList.get(logFileList.size() - 1));
         }
     }
 
     protected File getSnapshotFile(long version) {
-        File tmpFile = new File(path, SNAPSHOT_FILE + version);
+        File tmpFile = new File(_path, SNAPSHOT_FILE + version);
         return tmpFile;
     }
 
@@ -53,8 +53,8 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
     }
 
     protected synchronized File createNewLogFile() {
-        version++;
-        File file = new File(path, LOG_FILE_PREFIX + version);
+        _version++;
+        File file = new File(_path, LOG_FILE_PREFIX + _version);
         try {
             file.createNewFile();
         } catch (IOException e) {
@@ -73,12 +73,12 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
     }
 
     protected synchronized long getCurrentVersion() {
-        return version;
+        return _version;
     }
 
     protected List<File> listSnapshotFileNamesAndSorted() {
 
-        File[] files = path.listFiles(new FilenameFilter() {
+        File[] files = _path.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
                 return name.startsWith(SNAPSHOT_FILE);
@@ -100,7 +100,7 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
     }
 
     protected List<File> listLogFileNamesAndSorted() {
-        File[] files = path.listFiles(new FilenameFilter() {
+        File[] files = _path.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
                 return name.startsWith(LOG_FILE_PREFIX);
@@ -168,7 +168,7 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
             if (fileVersion <= version) {
                 continue;
             }
-            if (fileVersion >= this.version) {
+            if (fileVersion >= _version) {
                 break;
             }
             logFileList.add(file);
