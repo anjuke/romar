@@ -6,10 +6,8 @@ import com.anjuke.romar.mahout.MahoutService;
 public abstract class BaseHandler implements RomarRequestHandler{
     protected final MahoutService service;
 
-    public BaseHandler(MahoutService service) {
+    public BaseHandler(MahoutService theService) {
         super();
-        this.service = service;
+        this.service = theService;
     }
-
-
 }
