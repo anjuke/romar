@@ -11,124 +11,124 @@ import org.apache.mahout.cf.taste.model.PreferenceArray;
 
 public class ForwardingDataModel implements PreferenceDataModel {
     private static final long serialVersionUID = -3702872370562680832L;
-    protected final PreferenceDataModel dataModel;
+
+    private final PreferenceDataModel _dataModel;
 
     protected ForwardingDataModel(PreferenceDataModel dataModel) {
         super();
-        this.dataModel = dataModel;
+        this._dataModel = dataModel;
     }
 
     @Override
     public PreferenceArray getPreferencesFromUser(long userID)
             throws TasteException {
-        return dataModel.getPreferencesFromUser(userID);
+        return _dataModel.getPreferencesFromUser(userID);
     }
 
     @Override
     public FastIDSet getItemIDsFromUser(long userID) throws TasteException {
-        return dataModel.getItemIDsFromUser(userID);
+        return _dataModel.getItemIDsFromUser(userID);
     }
 
     @Override
     public LongPrimitiveIterator getItemIDs() throws TasteException {
-        return dataModel.getItemIDs();
+        return _dataModel.getItemIDs();
     }
 
     @Override
     public PreferenceArray getPreferencesForItem(long itemID)
             throws TasteException {
-        return dataModel.getPreferencesForItem(itemID);
+        return _dataModel.getPreferencesForItem(itemID);
     }
 
     @Override
     public Float getPreferenceValue(long userID, long itemID)
             throws TasteException {
-        return dataModel.getPreferenceValue(userID, itemID);
+        return _dataModel.getPreferenceValue(userID, itemID);
     }
 
     @Override
     public Long getPreferenceTime(long userID, long itemID)
             throws TasteException {
-        return dataModel.getPreferenceTime(userID, itemID);
+        return _dataModel.getPreferenceTime(userID, itemID);
     }
 
     @Override
     public int getNumItems() throws TasteException {
-        return dataModel.getNumItems();
+        return _dataModel.getNumItems();
     }
 
     @Override
     public int getNumUsers() throws TasteException {
-        return dataModel.getNumUsers();
+        return _dataModel.getNumUsers();
     }
 
     @Override
     public int getNumUsersWithPreferenceFor(long itemID) throws TasteException {
-        return dataModel.getNumUsersWithPreferenceFor(itemID);
+        return _dataModel.getNumUsersWithPreferenceFor(itemID);
     }
 
     @Override
     public int getNumUsersWithPreferenceFor(long itemID1, long itemID2)
             throws TasteException {
-        return dataModel.getNumUsersWithPreferenceFor(itemID1, itemID2);
+        return _dataModel.getNumUsersWithPreferenceFor(itemID1, itemID2);
     }
 
     @Override
     public boolean hasPreferenceValues() {
-        return dataModel.hasPreferenceValues();
+        return _dataModel.hasPreferenceValues();
     }
 
     @Override
     public float getMaxPreference() {
-        return dataModel.getMaxPreference();
+        return _dataModel.getMaxPreference();
     }
 
     @Override
     public float getMinPreference() {
-        return dataModel.getMinPreference();
+        return _dataModel.getMinPreference();
     }
 
     @Override
     public LongPrimitiveIterator getUserIDs() throws TasteException {
-        return dataModel.getUserIDs();
+        return _dataModel.getUserIDs();
     }
 
     @Override
     public void refresh(Collection<Refreshable> alreadyRefreshed) {
-        dataModel.refresh(alreadyRefreshed);
+        _dataModel.refresh(alreadyRefreshed);
 
     }
 
     @Override
     public void setPreference(long userID, long itemID, float value)
             throws TasteException {
-        dataModel.setPreference(userID, itemID, value);
+        _dataModel.setPreference(userID, itemID, value);
     }
 
     @Override
     public void removePreference(long userID, long itemID)
             throws TasteException {
-        dataModel.removePreference(userID, itemID);
+        _dataModel.removePreference(userID, itemID);
     }
 
     @Override
     public FastByIDMap<PreferenceArray> getRawUserData(){
-        return dataModel.getRawUserData();
+        return _dataModel.getRawUserData();
     }
 
     @Override
     public FastByIDMap<PreferenceArray> getRawItemData() {
-        return dataModel.getRawItemData();
+        return _dataModel.getRawItemData();
     }
 
     @Override
     public void reload(FastByIDMap<PreferenceArray> data) {
-        dataModel.reload(data);
+        _dataModel.reload(data);
     }
 
     @Override
     public void compact() {
-        dataModel.compact();
+        _dataModel.compact();
     }
-
 }
