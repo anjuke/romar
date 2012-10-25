@@ -1,13 +1,12 @@
 package com.anjuke.romar.http.jetty;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.mahout.common.ClassUtils;
@@ -31,56 +30,56 @@ public class RequestParser {
 
     private static class RequestParserFactory extends
             RomarDefaultPathFactory<RequestParser> {
-        RequestParser parser = new RequestParser();
+        RequestParser _parser = new RequestParser();
 
         @Override
         protected RequestParser getInstance() {
-            return parser;
+            return _parser;
         }
 
         @Override
         protected void setRecommend(RequestPath path) {
-            parser.stringToPathMap.put(RECOMMEND, path);
-            parser.register(RECOMMEND, PreferenceRomarRequest.class,
+            _parser._stringToPathMap.put(RECOMMEND, path);
+            _parser.register(RECOMMEND, PreferenceRomarRequest.class,
                     Arrays.asList("userId"));
 
         }
 
         @Override
         protected void setUpdate(RequestPath path) {
-            parser.stringToPathMap.put(UPDATE, path);
-            parser.register(UPDATE, PreferenceRomarRequest.class,
+            _parser._stringToPathMap.put(UPDATE, path);
+            _parser.register(UPDATE, PreferenceRomarRequest.class,
                     Arrays.asList("userId", "itemId", "value"));
 
         }
 
         @Override
         protected void setRemove(RequestPath path) {
-            parser.stringToPathMap.put(REMOVE, path);
-            parser.register(REMOVE, PreferenceRomarRequest.class,
+            _parser._stringToPathMap.put(REMOVE, path);
+            _parser.register(REMOVE, PreferenceRomarRequest.class,
                     Arrays.asList("userId", "itemId"));
 
         }
 
         @Override
         protected void setCommit(RequestPath path) {
-            parser.stringToPathMap.put(COMMIT, path);
-            parser.register(COMMIT, NoneContentRequest.class,
-                    Collections.<String> emptyList());
+            _parser._stringToPathMap.put(COMMIT, path);
+            _parser.register(COMMIT, NoneContentRequest.class,
+                    Collections.<String>emptyList());
         }
 
         @Override
         protected void setItemRecommend(RequestPath path) {
-            parser.stringToPathMap.put(ITEM_RECOMMEND, path);
-            parser.register(ITEM_RECOMMEND, MultiItemIdRequest.class,
+            _parser._stringToPathMap.put(ITEM_RECOMMEND, path);
+            _parser.register(ITEM_RECOMMEND, MultiItemIdRequest.class,
                     Arrays.asList("itemId"));
         }
 
         @Override
         protected void setCompact(RequestPath path) {
-            parser.stringToPathMap.put(COMPACT, path);
-            parser.register(COMPACT, NoneContentRequest.class,
-                    Collections.<String> emptyList());
+            _parser._stringToPathMap.put(COMPACT, path);
+            _parser.register(COMPACT, NoneContentRequest.class,
+                    Collections.<String>emptyList());
         }
 
     }
@@ -93,35 +92,39 @@ public class RequestParser {
             .createPathProcessor(new RequestParserFactory());
 
     private static class ParamMeta {
-        Class<? extends RomarRequest> clazz;
-        List<String> list;
+        Class<? extends RomarRequest> _clazz;
+        List<String> _list;
 
-        public ParamMeta(Class<? extends RomarRequest> clazz, List<String> list) {
+        public ParamMeta(Class<? extends RomarRequest> clazz,
+                         List<String> list) {
             super();
-            this.clazz = clazz;
-            this.list = list;
+            _clazz = clazz;
+            _list = list;
         }
     }
 
-    private final Map<String, ParamMeta> params = new HashMap<String, ParamMeta>();
+    private final Map<String, ParamMeta> _params
+            = new HashMap<String, ParamMeta>();
 
-    private final Map<String, RequestPath> stringToPathMap = new HashMap<String, RequestPath>();
+    private final Map<String, RequestPath> _stringToPathMap
+            = new HashMap<String, RequestPath>();
 
     private void register(String path,
-            Class<? extends RomarRequest> requestClass, List<String> paramsNames) {
-        params.put(path, new ParamMeta(requestClass, paramsNames));
+            Class<? extends RomarRequest> requestClass,
+            List<String> paramsNames) {
+        _params.put(path, new ParamMeta(requestClass, paramsNames));
     }
 
     public RomarRequest parseRequest(String path, HttpServletRequest request) {
-        ParamMeta meta = params.get(path);
-        RequestPath requestPath = stringToPathMap.get(path);
+        ParamMeta meta = _params.get(path);
+        RequestPath requestPath = _stringToPathMap.get(path);
         if (meta == null) {
             return new BadRequest(requestPath);
         } else {
-            RomarRequest romarRequest = ClassUtils.instantiateAs(meta.clazz,
+            RomarRequest romarRequest = ClassUtils.instantiateAs(meta._clazz,
                     RomarRequest.class, new Class<?>[] {RequestPath.class},
                     new Object[] {requestPath});
-            for (String name : meta.list) {
+            for (String name : meta._list) {
                 String[] values = request.getParameterValues(name);
                 if (values == null) {
                     return new BadRequest(requestPath);

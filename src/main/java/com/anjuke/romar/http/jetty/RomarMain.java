@@ -5,7 +5,9 @@ import org.eclipse.jetty.server.Server;
 import com.anjuke.romar.core.RomarCore;
 import com.anjuke.romar.core.RomarPathProcessFactory;
 
-public class RomarMain {
+public final class RomarMain {
+    private RomarMain() {}
+
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
             System.out.println("usage :  java classname $port");

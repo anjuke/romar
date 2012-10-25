@@ -1,70 +1,68 @@
 package com.anjuke.romar.http.jetty;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
+import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.jfree.util.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.anjuke.romar.core.RomarCore;
 import com.anjuke.romar.core.RomarRequest;
 import com.anjuke.romar.core.RomarResponse;
-import com.anjuke.romar.core.impl.request.BadRequest;
 import com.anjuke.romar.core.impl.response.ErrorResponse;
 import com.anjuke.romar.core.impl.response.RecommendResultResponse;
 import com.anjuke.romar.core.impl.response.SuccessReplyNoneResponse;
 
 public class JettyRomarHandler extends AbstractHandler {
-    private static final Logger log = LoggerFactory.getLogger(JettyRomarHandler.class);
+    private static final Logger _logger = LoggerFactory.getLogger(JettyRomarHandler.class);
 
-    private final RomarCore core;
-    private final RequestParser parser;
+    private final RomarCore _core;
+    private final RequestParser _parser;
     public JettyRomarHandler(RomarCore core) {
-        this.core = core;
-        parser= RequestParser.createParser();
+        _core = core;
+        _parser = RequestParser.createParser();
     }
 
     @Override
     public void handle(String target, Request baseRequest,
             HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        String path=request.getPathInfo();
-        log.debug(path);
-        RomarRequest recomRequest;
-        recomRequest = getRequest(path, request);
-        if(recomRequest instanceof BadRequest){
-            //TODO
-        }
-        RomarResponse recomResponse = core.execute(recomRequest);
+        String path = request.getPathInfo();
+        _logger.debug(path);
+        RomarRequest romarRequest;
+        romarRequest = getRequest(path, request);
+        // if (romarRequest instanceof BadRequest) {
+        //    //TODO
+        //}
+        RomarResponse romarResponse = _core.execute(romarRequest);
 
-        if (recomResponse instanceof ErrorResponse) {
+        if (romarResponse instanceof ErrorResponse) {
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
             response.setHeader("Cache-Control", "no-cache");
-            response.setStatus(((ErrorResponse) recomResponse).getCode());
+            response.setStatus(((ErrorResponse) romarResponse).getCode());
             response.getWriter().println(
-                    ((ErrorResponse) recomResponse).getMessage());
+                    ((ErrorResponse) romarResponse).getMessage());
             response.getWriter().flush();
 
-        } else if (recomResponse instanceof SuccessReplyNoneResponse) {
+        } else if (romarResponse instanceof SuccessReplyNoneResponse) {
             response.setContentType("text/plain");
             response.setCharacterEncoding("UTF-8");
             response.setHeader("Cache-Control", "no-cache");
-            response.setStatus(200);
+            response.setStatus(HttpStatus.OK_200);
             response.getWriter().println("success");
             response.getWriter().flush();
-        } else if (recomResponse instanceof RecommendResultResponse) {
-            response.setStatus(200);
-            List<RecommendedItem> items = ((RecommendResultResponse) recomResponse)
+        } else if (romarResponse instanceof RecommendResultResponse) {
+            response.setStatus(HttpStatus.OK_200);
+            List<RecommendedItem> items = ((RecommendResultResponse) romarResponse)
                     .getList();
             String format = request.getParameter("format");
             if (format == null) {
@@ -86,7 +84,7 @@ public class JettyRomarHandler extends AbstractHandler {
     }
 
     private RomarRequest getRequest(String path, HttpServletRequest request){
-        return parser.parseRequest(path, request);
+        return _parser.parseRequest(path, request);
     }
 
     private static void writeXML(HttpServletResponse response,
@@ -113,9 +111,9 @@ public class JettyRomarHandler extends AbstractHandler {
         response.setHeader("Cache-Control", "no-cache");
         PrintWriter writer = response.getWriter();
         writer.print("{\"recommendedItems\":{\"item\":[");
-        int i=0;
+        int i = 0;
         for (RecommendedItem recommendedItem : items) {
-            if(i>0){
+            if (i > 0){
                 writer.print(',');
             }
             i++;
