@@ -65,6 +65,7 @@
         <module name="InterfaceIsType" />
         <module name="VisibilityModifier">
             <property name="packageAllowed" value="true" />
+            <property name="protectedAllowed" value="true" />
         </module>
         <module name="ArrayTypeStyle" />
         <module name="TodoComment" />
