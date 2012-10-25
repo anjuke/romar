@@ -16,7 +16,7 @@ public class ForwardingDataModel implements PreferenceDataModel {
 
     protected ForwardingDataModel(PreferenceDataModel dataModel) {
         super();
-        this._dataModel = dataModel;
+        _dataModel = dataModel;
     }
 
     @Override

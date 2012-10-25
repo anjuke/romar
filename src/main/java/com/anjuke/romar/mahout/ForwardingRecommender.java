@@ -12,42 +12,42 @@ import org.apache.mahout.cf.taste.recommender.Recommender;
 
 public class ForwardingRecommender implements Recommender {
 
-    protected Recommender recommender;
+    private Recommender _recommender;
 
     public ForwardingRecommender(Recommender recommender) {
-        this.recommender = recommender;
+        _recommender = recommender;
     }
 
     public List<RecommendedItem> recommend(long userID, int howMany)
             throws TasteException {
-        return recommender.recommend(userID, howMany);
+        return _recommender.recommend(userID, howMany);
     }
 
     public List<RecommendedItem> recommend(long userID, int howMany,
             IDRescorer rescorer) throws TasteException {
-        return recommender.recommend(userID, howMany, rescorer);
+        return _recommender.recommend(userID, howMany, rescorer);
     }
 
     public float estimatePreference(long userID, long itemID)
             throws TasteException {
-        return recommender.estimatePreference(userID, itemID);
+        return _recommender.estimatePreference(userID, itemID);
     }
 
     public void setPreference(long userID, long itemID, float value)
             throws TasteException {
-        recommender.setPreference(userID, itemID, value);
+        _recommender.setPreference(userID, itemID, value);
     }
 
     public void removePreference(long userID, long itemID)
             throws TasteException {
-        recommender.removePreference(userID, itemID);
+        _recommender.removePreference(userID, itemID);
     }
 
     public DataModel getDataModel() {
-        return recommender.getDataModel();
+        return _recommender.getDataModel();
     }
 
     public void refresh(Collection<Refreshable> alreadyRefreshed) {
-        recommender.refresh(alreadyRefreshed);
+        _recommender.refresh(alreadyRefreshed);
     }
 }

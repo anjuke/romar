@@ -6,14 +6,15 @@ import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.model.PreferenceArray;
 
 public interface PreferenceDataModel extends DataModel {
-    public FastByIDMap<PreferenceArray> getRawUserData();
+    FastByIDMap<PreferenceArray> getRawUserData();
 
-    public FastByIDMap<PreferenceArray> getRawItemData();
+    FastByIDMap<PreferenceArray> getRawItemData();
 
-    public void compact();
+    void compact();
+
     /**
      * remove all memory data and load the given data
      * @param data
      */
-    public void reload(FastByIDMap<PreferenceArray> data);
+    void reload(FastByIDMap<PreferenceArray> data);
 }
