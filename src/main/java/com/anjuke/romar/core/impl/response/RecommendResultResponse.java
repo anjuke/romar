@@ -8,15 +8,15 @@ import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import com.anjuke.romar.core.RomarResponse;
 
 public class RecommendResultResponse implements RomarResponse{
-    private final List<RecommendedItem> list;
+    private final List<RecommendedItem> _list;
 
     public RecommendResultResponse(List<RecommendedItem> list) {
         super();
-        this.list = Collections.unmodifiableList(list);
+        _list = Collections.unmodifiableList(list);
     }
 
     public List<RecommendedItem> getList() {
-        return list;
+        return _list;
     }
 
 }

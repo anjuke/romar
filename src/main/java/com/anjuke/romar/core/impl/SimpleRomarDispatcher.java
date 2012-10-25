@@ -10,32 +10,32 @@ import com.anjuke.romar.core.RomarRequestHandler;
 
 public class SimpleRomarDispatcher implements RomarDispatcher {
 
-    private Map<RequestPath, RomarRequestHandler> handlers = new HashMap<RequestPath, RomarRequestHandler>();
+    private Map<RequestPath, RomarRequestHandler> _handlers = new HashMap<RequestPath, RomarRequestHandler>();
 
-    private boolean prepared = false;
+    private boolean _prepared = false;
 
     public RomarRequestHandler getHandler(RomarRequest request) {
         checkPrepared();
-        return handlers.get(request.getPath());
+        return _handlers.get(request.getPath());
     }
 
     public void registerHandler(RequestPath path, RomarRequestHandler handler) {
         checkNotPrepared();
-        handlers.put(path, handler);
+        _handlers.put(path, handler);
     }
 
     public void prepare() {
-        prepared = true;
+        _prepared = true;
     }
 
     private void checkPrepared() {
-        if (!prepared) {
+        if (!_prepared) {
             throw new IllegalStateException("not prepared");
         }
     }
 
     private void checkNotPrepared() {
-        if (prepared) {
+        if (_prepared) {
             throw new IllegalStateException("already prepared");
         }
     }
