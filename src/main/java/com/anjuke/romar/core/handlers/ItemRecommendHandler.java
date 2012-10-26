@@ -20,7 +20,7 @@ public class ItemRecommendHandler extends BaseHandler {
     public RomarResponse process(RomarRequest request) throws Exception {
         MultiItemIdRequest mr = (MultiItemIdRequest) request;
         List<RecommendedItem> list = service
-                .mostSimilarItems(mr.getItemId(), 5);
+                .mostSimilarItems(mr.getItemId(), PreferenceBaseHandler.DEFAULT_HOW_MANY);
         return new RecommendResultResponse(list);
     }
 

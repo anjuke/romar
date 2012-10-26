@@ -8,6 +8,8 @@ import com.anjuke.romar.mahout.MahoutService;
 
 public abstract class PreferenceBaseHandler extends BaseHandler {
 
+    static final int DEFAULT_HOW_MANY = 5;
+
     public PreferenceBaseHandler(MahoutService service) {
         super(service);
     }
@@ -17,7 +19,8 @@ public abstract class PreferenceBaseHandler extends BaseHandler {
         if (request instanceof PreferenceRomarRequest) {
             return process((PreferenceRomarRequest) request);
         } else {
-            return new ErrorResponse(400, "Invalid Request Format");
+            return new ErrorResponse(ErrorResponse.RESOURCE_NOT_FOUND,
+                    "Invalid Request Format");
         }
     }
 

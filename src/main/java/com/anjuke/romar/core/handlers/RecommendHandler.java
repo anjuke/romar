@@ -18,7 +18,7 @@ public class RecommendHandler extends PreferenceBaseHandler {
     @Override
     public RomarResponse process(PreferenceRomarRequest request)
             throws Exception {
-        List<RecommendedItem> list = service.recommend(request.getUserId(), 5);
+        List<RecommendedItem> list = service.recommend(request.getUserId(), DEFAULT_HOW_MANY);
         return new RecommendResultResponse(list);
     }
 

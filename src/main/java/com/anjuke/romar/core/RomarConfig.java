@@ -19,6 +19,8 @@ import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
 import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import com.anjuke.romar.mahout.factory.MahoutServiceCommonRecommendFactory;
@@ -28,11 +30,14 @@ import com.anjuke.romar.mahout.factory.MahoutServiceUserRecommendFactory;
 
 public final class RomarConfig {
 
+    private static final Logger LOG = LoggerFactory
+            .getLogger(RomarConfig.class);
+
     private static final RomarConfig INSTANCE;
 
     private static final String CONF_PATH_KEY = "romar.config";
 
-    private static class RomarConfigHolder {
+    public static class RomarConfigHolder {
         private RecommendType _recommendType;
         private boolean _useSimilarityCache;
         private int _similarityCacheSize;
@@ -42,6 +47,82 @@ public final class RomarConfig {
         private int _userNeighborhoodNearestN;
         private CommonRecommenderClass _commonRecommenderClass;
         private String _persistencePath;
+
+        public RecommendType getRecommendType() {
+            return _recommendType;
+        }
+
+        public void setRecommendType(RecommendType recommendType) {
+            _recommendType = recommendType;
+        }
+
+        public boolean isUseSimilarityCache() {
+            return _useSimilarityCache;
+        }
+
+        public void setUseSimilarityCache(boolean useSimilarityCache) {
+            _useSimilarityCache = useSimilarityCache;
+        }
+
+        public int getSimilarityCacheSize() {
+            return _similarityCacheSize;
+        }
+
+        public void setSimilarityCacheSize(int similarityCacheSize) {
+            _similarityCacheSize = similarityCacheSize;
+        }
+
+        public ItemSimilarityClass getItemSimilarityClass() {
+            return _itemSimilarityClass;
+        }
+
+        public void setItemSimilarityClass(
+                ItemSimilarityClass itemSimilarityClass) {
+            _itemSimilarityClass = itemSimilarityClass;
+        }
+
+        public UserSimilarityClass getUserSimilarityClass() {
+            return _userSimilarityClass;
+        }
+
+        public void setUserSimilarityClass(
+                UserSimilarityClass userSimilarityClass) {
+            _userSimilarityClass = userSimilarityClass;
+        }
+
+        public UserNeighborhoodClass getUserNeighborhoodClass() {
+            return _userNeighborhoodClass;
+        }
+
+        public void setUserNeighborhoodClass(
+                UserNeighborhoodClass userNeighborhoodClass) {
+            _userNeighborhoodClass = userNeighborhoodClass;
+        }
+
+        public int getUserNeighborhoodNearestN() {
+            return _userNeighborhoodNearestN;
+        }
+
+        public void setUserNeighborhoodNearestN(int userNeighborhoodNearestN) {
+            _userNeighborhoodNearestN = userNeighborhoodNearestN;
+        }
+
+        public CommonRecommenderClass getCommonRecommenderClass() {
+            return _commonRecommenderClass;
+        }
+
+        public void setCommonRecommenderClass(
+                CommonRecommenderClass commonRecommenderClass) {
+            _commonRecommenderClass = commonRecommenderClass;
+        }
+
+        public String getPersistencePath() {
+            return _persistencePath;
+        }
+
+        public void setPersistencePath(String persistencePath) {
+            _persistencePath = persistencePath;
+        }
     }
 
     static {
@@ -61,14 +142,14 @@ public final class RomarConfig {
 
         } catch (Exception e) {
             throw new Error(e);
-//        } finally {
-//            if (is != null) {
-//                try {
-//                    // is.close();
-//                } catch (Exception e) {
-//
-//                }
-//            }
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
         }
     }
 
@@ -195,11 +276,11 @@ public final class RomarConfig {
         return _holder._userNeighborhoodNearestN;
     }
 
-    public Class<? extends Recommender> getCommonRecommenderClass(){
+    public Class<? extends Recommender> getCommonRecommenderClass() {
         return _holder._commonRecommenderClass.getClazz();
     }
 
-    public String getPersistencePath(){
+    public String getPersistencePath() {
         return _holder._persistencePath;
     }
 

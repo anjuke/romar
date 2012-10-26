@@ -10,7 +10,11 @@ import com.anjuke.romar.core.impl.SimpleRomarDispatcher;
 import com.anjuke.romar.mahout.MahoutService;
 import com.anjuke.romar.mahout.factory.MahoutServiceFactory;
 
-public class RomarPathProcessFactory {
+public final class RomarPathProcessFactory {
+
+    private RomarPathProcessFactory(){
+
+    }
 
     public static <T> T createPathProcessor(RomarDefaultPathFactory<T> factory) {
         factory.init();

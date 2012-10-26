@@ -17,7 +17,7 @@ public class RomarCore {
     private MahoutService _service;
 
     private static final ErrorResponse PATH_404_ERROR = new ErrorResponse(
-            404, "path unavailable");
+            ErrorResponse.RESOURCE_NOT_FOUND, "path unavailable");
 
     public RomarResponse execute(RomarRequest request) {
         RomarRequestHandler handler = _dispatcher.getHandler(request);
@@ -29,15 +29,15 @@ public class RomarCore {
             return handler.process(request);
         }catch(NoSuchUserException e){
             log.info(e.getMessage(), e);
-            return new ErrorResponse(500, "no such user id "
+            return new ErrorResponse(ErrorResponse.INTERNAL_ERROR, "no such user id "
                     + e.getMessage());
         }catch(NoSuchItemException e){
              log.info(e.getMessage(), e);
-             return new ErrorResponse(500, "no such item id "
+             return new ErrorResponse(ErrorResponse.INTERNAL_ERROR, "no such item id "
                      + e.getMessage());
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
-            return new ErrorResponse(500, "internal error: "
+            return new ErrorResponse(ErrorResponse.INTERNAL_ERROR, "internal error: "
                     + e.getMessage());
         }
     }
