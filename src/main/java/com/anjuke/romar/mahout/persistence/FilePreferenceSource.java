@@ -303,7 +303,7 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
         File snapshotFile = getLatestSnapshotFile();
         long version;
         if (snapshotFile == null) {
-            version = 0;
+            version = -1;
         } else {
             version = getSnapshotFileVersion(snapshotFile);
         }

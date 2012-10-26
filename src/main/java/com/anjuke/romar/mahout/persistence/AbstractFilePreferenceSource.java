@@ -157,9 +157,6 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
     }
 
     protected List<File> getLogFileListFromVersion(long version) {
-        if (version < 0) {
-            return Collections.emptyList();
-        }
         List<File> list = listLogFileNamesAndSorted();
         final List<File> logFileList = new ArrayList<File>(list.size() - 1);
 
