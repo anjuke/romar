@@ -112,6 +112,11 @@
             <version>7.1.6.v20100715</version>
         </dependency>
         <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>7.1.6.v20100715</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.6.1</version>
@@ -131,6 +136,11 @@
             <groupId>com.sleepycat</groupId>
             <artifactId>je</artifactId>
             <version>5.0.58</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>1.9</version>
         </dependency>
     </dependencies>
 
