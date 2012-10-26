@@ -127,6 +127,11 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.11</version>
         </dependency>
+        <dependency>
+            <groupId>com.sleepycat</groupId>
+            <artifactId>je</artifactId>
+            <version>5.0.58</version>
+        </dependency>
     </dependencies>
 
     <pluginRepositories>
@@ -149,6 +154,13 @@
             <name>SnakeYAML repository</name>
             <url>http://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>oracleReleases</id>
+            <name>Oracle Released Java Packages</name>
+            <url>http://download.oracle.com/maven</url>
+            <layout>default</layout>
+        </repository>
     </repositories>
+
 
 </project>
