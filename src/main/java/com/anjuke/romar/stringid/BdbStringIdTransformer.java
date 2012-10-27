@@ -46,12 +46,23 @@ public class BdbStringIdTransformer implements StringIdTransformer {
         _sequence = createIdSequence(_primary);
     }
 
-    @Override
-    protected void finalize() throws Throwable {
+    public void Close() {
+        if (null == _environment) {
+            return;
+        }
         _sequence.close();
         _secondary.close();
         _primary.close();
         _environment.close();
+        _sequence = null;
+        _secondary = null;
+        _primary = null;
+        _environment = null;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        Close();
         super.finalize();
     }
 
