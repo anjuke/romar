@@ -22,14 +22,60 @@ public class GenericReloadDataModel implements PreferenceDataModel {
 
     private volatile GenericDataModel _currentModel;
 
-    private final List<Preference> _addData;
-    private final List<Preference> _removeData;
+    private final List<PreferenceValue> _data;
+
+    private static class PreferenceValue implements Preference{
+
+
+        public PreferenceValue(long userID, long itemID) {
+            super();
+            _add = false;
+            _userID = userID;
+            _itemID = itemID;
+        }
+        public PreferenceValue( long userID, long itemID, float value) {
+            super();
+            _add = true;
+            _userID = userID;
+            _itemID = itemID;
+            _value = value;
+        }
+        private boolean _add;
+        private long _userID;
+        private long _itemID;
+        private float _value;
+        public boolean isAdd() {
+            return _add;
+        }
+        public void setAdd(boolean add) {
+            _add = add;
+        }
+        public long getUserID() {
+            return _userID;
+        }
+        public void setUserID(long userID) {
+            _userID = userID;
+        }
+        public long getItemID() {
+            return _itemID;
+        }
+        public void setItemID(long itemID) {
+            _itemID = itemID;
+        }
+        public float getValue() {
+            return _value;
+        }
+        public void setValue(float value) {
+            _value = value;
+        }
+
+
+    }
 
     public GenericReloadDataModel() {
         super();
         _currentModel = new GenericDataModel(new FastByIDMap<PreferenceArray>());
-        _addData = new LinkedList<Preference>();
-        _removeData = new LinkedList<Preference>();
+        _data = new LinkedList<PreferenceValue>();
     }
 
     /**
@@ -38,37 +84,29 @@ public class GenericReloadDataModel implements PreferenceDataModel {
     @Override
     public void setPreference(long userID, long itemID,
             float preferenceValue) throws TasteException {
-        _addData.add(new GenericPreference(userID, itemID, preferenceValue));
+        _data.add(new PreferenceValue(userID, itemID, preferenceValue));
     }
 
     /** See the warning at {@link #setPreference(long, long, float)}. */
     @Override
     public void removePreference(long userID, long itemID)
             throws TasteException {
-        _removeData.add(new BooleanPreference(userID, itemID));
+        _data.add(new PreferenceValue(userID, itemID));
     }
 
     @Override
     public void refresh(Collection<Refreshable> alreadyRefreshed) {
         FastByIDMap<PreferenceArray> data = _currentModel.getRawUserData()
                 .clone();
-        applyAddData(data);
-        applyRemoveData(data);
+        for (PreferenceValue value : _data) {
+            if(value.isAdd()){
+                  Util.applyAdd(data, value);
+            }else{
+                Util.applyRemove(data, value);
+            }
+        }
+
         _currentModel = new GenericDataModel(data);
-    }
-
-    private void applyRemoveData(FastByIDMap<PreferenceArray> data){
-        for (Preference removePreference : _removeData) {
-            Util.applyRemove(data, removePreference);
-        }
-        _removeData.clear();
-    }
-
-    private void applyAddData(FastByIDMap<PreferenceArray> data) {
-        for (Preference addPreference : _addData) {
-            Util.applyAdd(data, addPreference);
-        }
-        _addData.clear();
     }
 
     @Override
