@@ -141,7 +141,7 @@ public class BDBIDMigrator extends AbstractIDMigrator {
 
     private Database _primary;
 
-    protected final static LockMode LOCK_MODE = LockMode.DEFAULT;
+    protected final static LockMode LOCK_MODE = LockMode.READ_UNCOMMITTED;
 
     private final static Logger _logger =
             LoggerFactory.getLogger(BDBIDMigrator.class);
