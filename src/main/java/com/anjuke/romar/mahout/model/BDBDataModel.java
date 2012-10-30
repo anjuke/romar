@@ -211,7 +211,8 @@ public class BDBDataModel implements DataModel {
         OperationStatus status = _preferencesDB.get(null, key, data,
                 LockMode.READ_UNCOMMITTED);
         if (status == OperationStatus.SUCCESS) {
-            return new TupleInput(data.getData()).readFloat();
+            return new TupleInput(data.getData(), DATA_VALUE_OFFSET,
+                    FLOAT_BYTES).readFloat();
         }
         return null;
     }
@@ -219,6 +220,14 @@ public class BDBDataModel implements DataModel {
     @Override
     public Long getPreferenceTime(long userID, long itemID)
             throws TasteException {
+        DatabaseEntry key = preferencePK(userID, itemID);
+        DatabaseEntry data = new DatabaseEntry();
+        OperationStatus status = _preferencesDB.get(null, key, data,
+                LockMode.READ_UNCOMMITTED);
+        if (status == OperationStatus.SUCCESS) {
+            return new TupleInput(data.getData(), DATA_TIMESTAMP_OFFSET,
+                    TIMESTAMP_BYTES).readUnsignedInt();
+        }
         return null;
     }
 
@@ -300,7 +309,7 @@ public class BDBDataModel implements DataModel {
     public void setPreference(long userID, long itemID, float value)
             throws TasteException {
         _preferencesDB.put(null, preferencePK(userID, itemID),
-                preferenceValue(value));
+                preferenceData(value));
 
         DatabaseEntry userIDEntry = new DatabaseEntry();
         LongBinding.longToEntry(userID, userIDEntry);
@@ -496,10 +505,10 @@ public class BDBDataModel implements DataModel {
         return new DatabaseEntry(bytes);
     }
 
-    protected static DatabaseEntry preferenceValue(float value) {
-        byte[] bytes = new byte[FLOAT_BYTES];
+    protected static DatabaseEntry preferenceData(float value) {
+        byte[] bytes = new byte[FLOAT_BYTES + TIMESTAMP_BYTES];
         TupleOutput output = new TupleOutput(bytes);
-        output.writeFloat(value);
+        output.writeFloat(value).writeUnsignedInt(System.currentTimeMillis());
         return new DatabaseEntry(bytes);
     }
 
@@ -558,6 +567,9 @@ public class BDBDataModel implements DataModel {
     private final static int PK_ITEM_ID_OFFSET = 8;
     private final static int LONG_BYTES = 8;
     private final static int FLOAT_BYTES = 4;
+    private final static int TIMESTAMP_BYTES = 4;
+    private final static int DATA_VALUE_OFFSET = 0;
+    private final static int DATA_TIMESTAMP_OFFSET = 4;
 
     private final static Logger _logger = LoggerFactory.getLogger(
             BDBDataModel.class);
