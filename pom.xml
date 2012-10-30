@@ -5,6 +5,9 @@
     <artifactId>romar-core</artifactId>
     <version>1.0.0-snapshot</version>
     <packaging>jar</packaging>
+    <name>romar</name>
+    <url>https://github.com/erning/romar</url>
+    <description>Anjuke Recommend Enginee</description>
 
 
     <build>
