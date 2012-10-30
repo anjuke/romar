@@ -2,10 +2,19 @@ package com.anjuke.romar.mahout.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.common.LongPrimitiveIterator;
+import org.apache.mahout.cf.taste.impl.neighborhood.NearestNUserNeighborhood;
+import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
+import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
+import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.model.PreferenceArray;
+import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
+import org.apache.mahout.cf.taste.recommender.RecommendedItem;
+import org.apache.mahout.cf.taste.recommender.Recommender;
+import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,9 +24,9 @@ import org.slf4j.LoggerFactory;
 
 public class BDBDataModelTest {
     @Before
-    public void setUp() throws TasteException {
-        _bdbDir = createTempDir();
-        _dataModel = new BDBDataModel(_bdbDir.getAbsolutePath(), CACHE_SIZE);
+    public void setUp() throws TasteException, IOException {
+        _bdbDir = BDBTestUtils.createTempDir();
+        _dataModel = new BDBDataModel(_bdbDir.getCanonicalPath(), CACHE_SIZE);
 
         _dataModel.setPreference(101, 11, 1);
         _dataModel.setPreference(102, 11, 2);
@@ -34,13 +43,13 @@ public class BDBDataModelTest {
     @After
     public void TearDown() throws IOException {
         _dataModel.close();
-        deleteRecursively(_bdbDir);
+        BDBTestUtils.deleteRecursively(_bdbDir);
     }
 
     @Test
     public void testGetPreferenceValue() throws TasteException {
-        Assert.assertEquals(Float.valueOf(10),  _dataModel.getPreferenceValue(104, 14));
-        Assert.assertEquals(Float.valueOf(5),  _dataModel.getPreferenceValue(103, 12));
+        Assert.assertEquals(Float.valueOf(10), _dataModel.getPreferenceValue(104, 14));
+        Assert.assertEquals(Float.valueOf(5), _dataModel.getPreferenceValue(103, 12));
         Assert.assertEquals(Float.valueOf(2), _dataModel.getPreferenceValue(102, 11));
     }
 
@@ -143,6 +152,80 @@ public class BDBDataModelTest {
         Assert.assertEquals(4, _dataModel.getNumItems());
     }
 
+    @Test
+    public void testRecommender() throws TasteException, IOException {
+        File dir = BDBTestUtils.createTempDir();
+        try {
+            BDBDataModel model = new BDBDataModel(dir.getAbsolutePath(), CACHE_SIZE);
+
+            // following data from http://manning.com/owen/ intro.csv
+            model.setMinPreference(0);
+            model.setMaxPreference(5);
+
+            model.setPreference(1, 101, 5.0F);
+            model.setPreference(1, 102, 3.0F);
+            model.setPreference(1, 103, 2.5F);
+
+            model.setPreference(2, 101, 2.0F);
+            model.setPreference(2, 102, 2.5F);
+            model.setPreference(2, 103, 5.0F);
+            model.setPreference(2, 104, 2.0F);
+
+            model.setPreference(3, 101, 2.5F);
+            model.setPreference(3, 104, 4.0F);
+            model.setPreference(3, 105, 4.5F);
+            model.setPreference(3, 107, 5.0F);
+
+            model.setPreference(4, 101, 5.5F);
+            model.setPreference(4, 103, 3.0F);
+            model.setPreference(4, 104, 4.5F);
+            model.setPreference(4, 106, 4.0F);
+
+            model.setPreference(5, 101, 4.0F);
+            model.setPreference(5, 102, 3.0F);
+            model.setPreference(5, 103, 2.0F);
+            model.setPreference(5, 104, 4.0F);
+            model.setPreference(5, 105, 3.5F);
+            model.setPreference(5, 106, 4.0F);
+
+            RecommendedItem ri1 = recommenderIntro(model);
+            _logger.info("Recommender: with new data model: " + ri1);
+            Assert.assertEquals(104, ri1.getItemID());
+            Assert.assertEquals(4.257081, ri1.getValue(), 0.001);
+            model.close();
+
+            BDBDataModel newModel = new BDBDataModel(dir.getAbsolutePath(), CACHE_SIZE);
+            _logger.info("Recommender: with exist data model: " + ri1);
+            RecommendedItem ri2 = recommenderIntro(newModel);
+            Assert.assertEquals(ri1, ri2);
+            newModel.close();
+        } finally {
+            BDBTestUtils.deleteRecursively(dir);
+        }
+    }
+
+    private RecommendedItem recommenderIntro(DataModel model) throws TasteException {
+        // following code from http://manning.com/owen/ RecommenderIntro.java
+
+        UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
+        UserNeighborhood neighborhood =
+                new NearestNUserNeighborhood(2, similarity, model);
+
+        Recommender recommender = new GenericUserBasedRecommender(
+                model, neighborhood, similarity);
+
+        List<RecommendedItem> recommendations =
+                recommender.recommend(1, 1);
+
+//        for (RecommendedItem recommendation : recommendations) {
+//                System.out.println(recommendation);
+//        }
+
+        return recommendations.get(0);
+
+        //[item:104, value:4.257081]
+    }
+
     //
     //
     //
@@ -153,49 +236,4 @@ public class BDBDataModelTest {
 
     private final static Logger _logger = LoggerFactory.getLogger(
             BDBDataModelTest.class);
-
-    //
-    //
-    //
-
-    /** Maximum loop count when creating temp directories. */
-    private static final int TEMP_DIR_ATTEMPTS = 10000;
-
-    private static File createTempDir() {
-        File baseDir = new File(System.getProperty("java.io.tmpdir"));
-        String baseName = System.currentTimeMillis() + "-";
-
-        for (int counter = 0; counter < TEMP_DIR_ATTEMPTS; counter++) {
-            File tempDir = new File(baseDir, baseName + counter);
-            if (tempDir.mkdir()) {
-                return tempDir;
-            }
-        }
-        throw new IllegalStateException("Failed to create directory within "
-                + TEMP_DIR_ATTEMPTS + " attempts (tried "
-                + baseName + "0 to " + baseName + (TEMP_DIR_ATTEMPTS - 1) + ')');
-    }
-
-    public static void deleteDirectoryContents(File directory)
-            throws IOException {
-        if (!directory.getCanonicalPath().equals(directory.getAbsolutePath())) {
-            // return;
-        }
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new IOException("Error listing files for " + directory);
-        }
-        for (File file : files) {
-            deleteRecursively(file);
-        }
-    }
-
-    public static void deleteRecursively(File file) throws IOException {
-        if (file.isDirectory()) {
-            deleteDirectoryContents(file);
-        }
-        if (!file.delete()) {
-            throw new IOException("Failed to delete " + file);
-        }
-    }
 }

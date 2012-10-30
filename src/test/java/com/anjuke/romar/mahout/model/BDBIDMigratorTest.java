@@ -25,15 +25,15 @@ public class BDBIDMigratorTest {
     }
 
     @Before
-    public void setUp() {
-        _bdbDir = createTempDir();
+    public void setUp() throws IOException {
+        _bdbDir = BDBTestUtils.createTempDir();
         _idMigrator = createIDMigrator(_bdbDir.getAbsolutePath());
     }
 
     @After
     public void TearDown() throws IOException {
         _idMigrator.close();
-        deleteRecursively(_bdbDir);
+        BDBTestUtils.deleteRecursively(_bdbDir);
     }
 
     @Test
@@ -115,10 +115,10 @@ public class BDBIDMigratorTest {
         long t5 = System.currentTimeMillis();
 
         _logger.info("COUNT:" + COUNT + ", total time: " + (t5 - t1) / 1000.0);
-        _logger.info(String.format("not exist string to long: around %d transform per second", Math.round((double)COUNT / (t2 - t1) * 1000)));
-        _logger.info(String.format("    exist long to string: around %d transform per second", Math.round((double)COUNT / (t3 - t2) * 1000)));
-        _logger.info(String.format("    exist string to long: around %d transform per second", Math.round((double)COUNT / (t4 - t3) * 1000)));
-        _logger.info(String.format("not exist long to string: around %d transform per second", Math.round((double)COUNT / (t5 - t4) * 1000)));
+        _logger.info(String.format("not exist string to long: around %d transform per second", Math.round((double) COUNT / (t2 - t1) * 1000)));
+        _logger.info(String.format("    exist long to string: around %d transform per second", Math.round((double) COUNT / (t3 - t2) * 1000)));
+        _logger.info(String.format("    exist string to long: around %d transform per second", Math.round((double) COUNT / (t4 - t3) * 1000)));
+        _logger.info(String.format("not exist long to string: around %d transform per second", Math.round((double) COUNT / (t5 - t4) * 1000)));
     }
 
     //
@@ -130,49 +130,4 @@ public class BDBIDMigratorTest {
     protected static final long CACHE_SIZE = 1024 * 1024 * 32;
 
     private final Logger _logger;
-
-    //
-    //
-    //
-
-    /** Maximum loop count when creating temp directories. */
-    private static final int TEMP_DIR_ATTEMPTS = 10000;
-
-    private static File createTempDir() {
-        File baseDir = new File(System.getProperty("java.io.tmpdir"));
-        String baseName = System.currentTimeMillis() + "-";
-
-        for (int counter = 0; counter < TEMP_DIR_ATTEMPTS; counter++) {
-            File tempDir = new File(baseDir, baseName + counter);
-            if (tempDir.mkdir()) {
-                return tempDir;
-            }
-        }
-        throw new IllegalStateException("Failed to create directory within "
-                + TEMP_DIR_ATTEMPTS + " attempts (tried "
-                + baseName + "0 to " + baseName + (TEMP_DIR_ATTEMPTS - 1) + ')');
-    }
-
-    public static void deleteDirectoryContents(File directory)
-            throws IOException {
-        if (!directory.getCanonicalPath().equals(directory.getAbsolutePath())) {
-            // return;
-        }
-        File[] files = directory.listFiles();
-        if (files == null) {
-            throw new IOException("Error listing files for " + directory);
-        }
-        for (File file : files) {
-            deleteRecursively(file);
-        }
-    }
-
-    public static void deleteRecursively(File file) throws IOException {
-        if (file.isDirectory()) {
-            deleteDirectoryContents(file);
-        }
-        if (!file.delete()) {
-            throw new IOException("Failed to delete " + file);
-        }
-    }
 }
