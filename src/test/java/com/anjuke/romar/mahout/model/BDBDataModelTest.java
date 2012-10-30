@@ -153,6 +153,28 @@ public class BDBDataModelTest {
     }
 
     @Test
+    public void testRemoveUser() throws TasteException {
+        _dataModel.removeUser(104);
+        Assert.assertEquals(3, _dataModel.getNumUsers());
+        Assert.assertEquals(3, _dataModel.getNumItems());
+
+        _dataModel.removeUser(101);
+        Assert.assertEquals(2, _dataModel.getNumUsers());
+        Assert.assertEquals(3, _dataModel.getNumItems());
+    }
+
+    @Test
+    public void testRemoveItem() throws TasteException {
+        _dataModel.removeItem(11);
+        Assert.assertEquals(3, _dataModel.getNumUsers());
+        Assert.assertEquals(3, _dataModel.getNumItems());
+
+        _dataModel.removeItem(14);
+        Assert.assertEquals(3, _dataModel.getNumUsers());
+        Assert.assertEquals(2, _dataModel.getNumItems());
+    }
+
+    @Test
     public void testRecommender() throws TasteException, IOException {
         File dir = BDBTestUtils.createTempDir();
         try {

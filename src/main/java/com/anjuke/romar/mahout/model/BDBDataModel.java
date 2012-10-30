@@ -361,6 +361,7 @@ public class BDBDataModel implements DataModel {
 
     @Override
     public void refresh(Collection<Refreshable> alreadyRefreshed) {
+        _logger.debug("refreshing");
     }
 
     //
@@ -375,14 +376,18 @@ public class BDBDataModel implements DataModel {
         _minPreference = value;
     }
 
-    public void removeUser(long userID) {
-        // TODO:
-        throw new UnsupportedOperationException();
+    public void removeUser(long userID) throws TasteException {
+        // TODO: it's ugly and slow, should be removed from database directly
+        for (long itemID : getItemIDsFromUser(userID)) {
+            removePreference(userID, itemID);
+        }
     }
 
-    public void removeItem(long itemID) {
-        // TODO:
-        throw new UnsupportedOperationException();
+    public void removeItem(long itemID) throws TasteException {
+        // TODO: it's ugly and slow, should be removed from database directly
+        for (Preference p : getPreferencesForItem(itemID)) {
+            removePreference(p.getUserID(), itemID);
+        }
     }
 
     //
