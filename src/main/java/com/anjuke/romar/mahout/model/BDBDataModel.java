@@ -308,8 +308,13 @@ public class BDBDataModel implements DataModel {
     @Override
     public void setPreference(long userID, long itemID, float value)
             throws TasteException {
-        _preferencesDB.put(null, preferencePK(userID, itemID),
-                preferenceData(value));
+        OperationStatus status = _preferencesDB.put(null,
+                preferencePK(userID, itemID), preferenceData(value));
+
+        if (status != OperationStatus.SUCCESS) {
+            // TODO
+            return;
+        }
 
         DatabaseEntry userIDEntry = new DatabaseEntry();
         LongBinding.longToEntry(userID, userIDEntry);
@@ -632,6 +637,10 @@ public class BDBDataModel implements DataModel {
 
         @Override
         public long peek() {
+            if (_cursor == null) {
+                throw new IllegalStateException(
+                        "cursor for the iterator has been closed");
+            }
             return _current;
         }
 
