@@ -29,7 +29,6 @@ import org.apache.mahout.cf.taste.common.Refreshable;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.common.FastIDSet;
 import org.apache.mahout.cf.taste.impl.common.LongPrimitiveIterator;
-import org.apache.mahout.cf.taste.impl.model.AbstractDataModel;
 import org.apache.mahout.cf.taste.impl.model.GenericItemPreferenceArray;
 import org.apache.mahout.cf.taste.impl.model.GenericPreference;
 import org.apache.mahout.cf.taste.impl.model.GenericUserPreferenceArray;
@@ -39,9 +38,11 @@ import org.apache.mahout.cf.taste.model.PreferenceArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BDBDataModel extends AbstractDataModel implements DataModel {
+public class BDBDataModel implements DataModel {
 
     public BDBDataModel(String directory, long cacheSize) {
+        setMinPreference(Float.MIN_VALUE);
+        setMaxPreference(Float.MAX_VALUE);
         _environment = createEnvironment(directory, cacheSize, false);
         _preferencesDB = createPreferencesDB(_environment);
         _preferencesFromUserDB = createPreferencesFromUserDB(_preferencesDB);
@@ -340,7 +341,29 @@ public class BDBDataModel extends AbstractDataModel implements DataModel {
     }
 
     @Override
+    public float getMaxPreference() {
+        return _maxPreference;
+    }
+
+    @Override
+    public float getMinPreference() {
+        return _minPreference;
+    }
+
+    @Override
     public void refresh(Collection<Refreshable> alreadyRefreshed) {
+    }
+
+    //
+    //
+    //
+
+    public void setMaxPreference(float value) {
+        _maxPreference = value;
+    }
+
+    public void setMinPreference(float value) {
+        _minPreference = value;
     }
 
     public void removeUser(long userID) {
@@ -507,6 +530,10 @@ public class BDBDataModel extends AbstractDataModel implements DataModel {
     //
     //
     //
+
+    private float _maxPreference;
+
+    private float _minPreference;
 
     private Environment _environment;
 
