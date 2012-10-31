@@ -1,0 +1,35 @@
+#value can only be item,user or common
+  recommendType: item
+
+  useSimilarityCache: true
+
+  similarityCacheSize: 10240
+
+
+#item similarity can only be
+#  EuclideanDistanceSimilarity
+#  PearsonCorrelationSimilarity
+#  UncenteredCosineSimilarity
+#  CityBlockSimilarity
+#  LogLikelihoodSimilarity
+#  TanimotoCoefficientSimilarity
+  itemSimilarityClass: TanimotoCoefficientSimilarity
+
+#user similarity can only be
+#  EuclideanDistanceSimilarity
+#  PearsonCorrelationSimilarity
+#  UncenteredCosineSimilarity
+#  CityBlockSimilarity
+#  LogLikelihoodSimilarity
+#  TanimotoCoefficientSimilarity
+#  SpearmanCorrelationSimilarity
+  userSimilarityClass: PearsonCorrelationSimilarity
+
+#  NearestNUserNeighborhood
+#
+  userNeighborhoodClass: NearestNUserNeighborhood
+
+  userNeighborhoodNearestN: 50
+
+  persistencePath:
+

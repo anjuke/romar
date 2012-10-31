@@ -1,6 +1,7 @@
 package com.anjuke.romar.core;
 
 import com.anjuke.romar.core.handlers.CompactHandler;
+import com.anjuke.romar.core.handlers.EstimateHandler;
 import com.anjuke.romar.core.handlers.ItemRecommendHandler;
 import com.anjuke.romar.core.handlers.RecommendHandler;
 import com.anjuke.romar.core.handlers.CommitHandler;
@@ -24,6 +25,7 @@ public final class RomarPathProcessFactory {
         factory.setCommit(RequestPath.COMMIT);
         factory.setItemRecommend(RequestPath.ITEM_RECOMMEND);
         factory.setCompact(RequestPath.COMPACT);
+        factory.setEstimate(RequestPath.ESTIMATE);
         T instance = factory.getInstance();
         return instance;
     }
@@ -72,6 +74,11 @@ public final class RomarPathProcessFactory {
         @Override
         protected void setCompact(RequestPath path) {
             _dispatcher.registerHandler(path, new CompactHandler(_service));
+        }
+
+        @Override
+        protected void setEstimate(RequestPath path) {
+            _dispatcher.registerHandler(path, new EstimateHandler(_service));
         }
     }
 

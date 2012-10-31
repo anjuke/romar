@@ -8,13 +8,15 @@ import com.anjuke.romar.mahout.persistence.FilePreferenceSource;
 import com.anjuke.romar.mahout.persistence.PersistenceDataModelProxy;
 import com.anjuke.romar.mahout.persistence.PreferenceSource;
 
-public abstract class AbstractMahoutServiceFactory implements
-        MahoutServiceFactory {
+public abstract class AbstractMahoutServiceFactory implements MahoutServiceFactory {
     protected PreferenceDataModel wrapDataModel(PreferenceDataModel dataModel) {
-        final PreferenceSource source = new FilePreferenceSource(new File(
-                RomarConfig.getInstance().getPersistencePath()));
-        PreferenceDataModel model = new PersistenceDataModelProxy(dataModel,
-                source);
+        String persistencePath = RomarConfig.getInstance().getPersistencePath();
+        if (persistencePath == null || persistencePath.isEmpty()) {
+            return dataModel;
+        }
+        final PreferenceSource source = new FilePreferenceSource(
+                new File(persistencePath));
+        PreferenceDataModel model = new PersistenceDataModelProxy(dataModel, source);
         model.reload(null);
 
         Runtime.getRuntime().addShutdownHook(new Thread() {

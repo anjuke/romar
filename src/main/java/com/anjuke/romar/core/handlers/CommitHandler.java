@@ -14,7 +14,7 @@ public class CommitHandler extends BaseHandler implements RomarRequestHandler {
 
     @Override
     public RomarResponse process(RomarRequest request) throws Exception {
-        service.refresh(null);
+        _service.refresh(null);
         return SuccessReplyNoneResponse.INSTANCE;
     }
 

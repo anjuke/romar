@@ -6,7 +6,8 @@ import com.anjuke.romar.core.RomarCore;
 import com.anjuke.romar.core.RomarPathProcessFactory;
 
 public final class RomarMain {
-    private RomarMain() {}
+    private RomarMain() {
+    }
 
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {

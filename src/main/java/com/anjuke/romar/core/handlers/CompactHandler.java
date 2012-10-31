@@ -15,7 +15,7 @@ public class CompactHandler  extends BaseHandler implements RomarRequestHandler 
 
     @Override
     public RomarResponse process(RomarRequest request) throws Exception {
-        ((PreferenceDataModel) service.getDataModel()).compact();
+        ((PreferenceDataModel) _service.getDataModel()).compact();
         return SuccessReplyNoneResponse.INSTANCE;
     }
 

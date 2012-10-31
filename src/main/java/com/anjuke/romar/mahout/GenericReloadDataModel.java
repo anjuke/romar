@@ -9,9 +9,7 @@ import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.common.FastByIDMap;
 import org.apache.mahout.cf.taste.impl.common.FastIDSet;
 import org.apache.mahout.cf.taste.impl.common.LongPrimitiveIterator;
-import org.apache.mahout.cf.taste.impl.model.BooleanPreference;
 import org.apache.mahout.cf.taste.impl.model.GenericDataModel;
-import org.apache.mahout.cf.taste.impl.model.GenericPreference;
 import org.apache.mahout.cf.taste.model.Preference;
 import org.apache.mahout.cf.taste.model.PreferenceArray;
 
@@ -24,8 +22,7 @@ public class GenericReloadDataModel implements PreferenceDataModel {
 
     private final List<PreferenceValue> _data;
 
-    private static class PreferenceValue implements Preference{
-
+    private static class PreferenceValue implements Preference {
 
         public PreferenceValue(long userID, long itemID) {
             super();
@@ -33,42 +30,51 @@ public class GenericReloadDataModel implements PreferenceDataModel {
             _userID = userID;
             _itemID = itemID;
         }
-        public PreferenceValue( long userID, long itemID, float value) {
+
+        public PreferenceValue(long userID, long itemID, float value) {
             super();
             _add = true;
             _userID = userID;
             _itemID = itemID;
             _value = value;
         }
+
         private boolean _add;
         private long _userID;
         private long _itemID;
         private float _value;
+
         public boolean isAdd() {
             return _add;
         }
+
         public void setAdd(boolean add) {
             _add = add;
         }
+
         public long getUserID() {
             return _userID;
         }
+
         public void setUserID(long userID) {
             _userID = userID;
         }
+
         public long getItemID() {
             return _itemID;
         }
+
         public void setItemID(long itemID) {
             _itemID = itemID;
         }
+
         public float getValue() {
             return _value;
         }
+
         public void setValue(float value) {
             _value = value;
         }
-
 
     }
 
@@ -82,26 +88,24 @@ public class GenericReloadDataModel implements PreferenceDataModel {
      * until refresh called , these data will not be used
      */
     @Override
-    public void setPreference(long userID, long itemID,
-            float preferenceValue) throws TasteException {
+    public void setPreference(long userID, long itemID, float preferenceValue)
+            throws TasteException {
         _data.add(new PreferenceValue(userID, itemID, preferenceValue));
     }
 
     /** See the warning at {@link #setPreference(long, long, float)}. */
     @Override
-    public void removePreference(long userID, long itemID)
-            throws TasteException {
+    public void removePreference(long userID, long itemID) throws TasteException {
         _data.add(new PreferenceValue(userID, itemID));
     }
 
     @Override
     public void refresh(Collection<Refreshable> alreadyRefreshed) {
-        FastByIDMap<PreferenceArray> data = _currentModel.getRawUserData()
-                .clone();
+        FastByIDMap<PreferenceArray> data = _currentModel.getRawUserData().clone();
         for (PreferenceValue value : _data) {
-            if(value.isAdd()){
-                  Util.applyAdd(data, value);
-            }else{
+            if (value.isAdd()) {
+                Util.applyAdd(data, value);
+            } else {
                 Util.applyRemove(data, value);
             }
         }
@@ -110,7 +114,7 @@ public class GenericReloadDataModel implements PreferenceDataModel {
     }
 
     @Override
-    public FastByIDMap<PreferenceArray> getRawUserData(){
+    public FastByIDMap<PreferenceArray> getRawUserData() {
         return _currentModel.getRawUserData();
     }
 
@@ -120,8 +124,7 @@ public class GenericReloadDataModel implements PreferenceDataModel {
     }
 
     @Override
-    public PreferenceArray getPreferencesFromUser(long userID)
-            throws TasteException {
+    public PreferenceArray getPreferencesFromUser(long userID) throws TasteException {
         return _currentModel.getPreferencesFromUser(userID);
     }
 
@@ -136,20 +139,17 @@ public class GenericReloadDataModel implements PreferenceDataModel {
     }
 
     @Override
-    public PreferenceArray getPreferencesForItem(long itemID)
-            throws TasteException {
+    public PreferenceArray getPreferencesForItem(long itemID) throws TasteException {
         return _currentModel.getPreferencesForItem(itemID);
     }
 
     @Override
-    public Float getPreferenceValue(long userID, long itemID)
-            throws TasteException {
+    public Float getPreferenceValue(long userID, long itemID) throws TasteException {
         return _currentModel.getPreferenceValue(userID, itemID);
     }
 
     @Override
-    public Long getPreferenceTime(long userID, long itemID)
-            throws TasteException {
+    public Long getPreferenceTime(long userID, long itemID) throws TasteException {
         return _currentModel.getPreferenceTime(userID, itemID);
     }
 
@@ -196,7 +196,7 @@ public class GenericReloadDataModel implements PreferenceDataModel {
 
     @Override
     public void reload(FastByIDMap<PreferenceArray> data) {
-         _currentModel = new GenericDataModel(data);
+        _currentModel = new GenericDataModel(data);
     }
 
     @Override

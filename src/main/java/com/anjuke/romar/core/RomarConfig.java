@@ -141,6 +141,7 @@ public final class RomarConfig {
             INSTANCE = new RomarConfig(holder);
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Error(e);
         } finally {
             if (is != null) {

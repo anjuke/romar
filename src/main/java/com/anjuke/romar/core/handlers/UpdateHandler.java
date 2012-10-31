@@ -15,7 +15,7 @@ public class UpdateHandler extends PreferenceBaseHandler {
     @Override
     public RomarResponse process(PreferenceRomarRequest request)
             throws Exception {
-        service.setPreference(request.getUserId(), request.getItemId(),
+        _service.setPreference(request.getUserId(), request.getItemId(),
                 request.getValue());
         return SuccessReplyNoneResponse.INSTANCE;
     }

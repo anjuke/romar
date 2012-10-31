@@ -33,4 +33,8 @@ public abstract class RomarDefaultPathFactory<T> {
     protected void setCompact(RequestPath path){
 
     }
+
+    protected void setEstimate(RequestPath path){
+
+    }
 }

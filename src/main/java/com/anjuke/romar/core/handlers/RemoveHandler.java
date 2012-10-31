@@ -14,7 +14,7 @@ public class RemoveHandler extends PreferenceBaseHandler {
     @Override
     public RomarResponse process(PreferenceRomarRequest request)
             throws Exception {
-        service.removePreference(request.getUserId(), request.getItemId());
+        _service.removePreference(request.getUserId(), request.getItemId());
         return SuccessReplyNoneResponse.INSTANCE;
     }
 
