@@ -1,40 +1,25 @@
 package com.anjuke.romar.core;
 
-public abstract class RomarDefaultPathFactory<T> {
+public interface RomarDefaultPathFactory<T> {
+    T getInstance();
 
-    protected T getInstance(){
-        throw new UnsupportedOperationException();
-    }
+    void init();
 
-    protected void init(){
+    void setRecommend(RequestPath path);
 
-    }
+    void setUpdate(RequestPath path);
 
-    protected void setRecommend(RequestPath path) {
+    void setRemove(RequestPath path);
 
-    }
+    void setCommit(RequestPath path);
 
-    protected void setUpdate(RequestPath path) {
+    void setItemRecommend(RequestPath path);
 
-    }
+    void setOptimize(RequestPath path);
 
-    protected void setRemove(RequestPath path) {
+    void setEstimate(RequestPath path);
 
-    }
+    void setRemoveUser(RequestPath path);
 
-    protected void setCommit(RequestPath path) {
-
-    }
-
-    protected void setItemRecommend(RequestPath path) {
-
-    }
-
-    protected void setCompact(RequestPath path){
-
-    }
-
-    protected void setEstimate(RequestPath path){
-
-    }
+    void setRemoveItem(RequestPath path);
 }

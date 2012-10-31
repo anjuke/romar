@@ -20,6 +20,7 @@ import com.anjuke.romar.core.RomarResponse;
 import com.anjuke.romar.core.impl.response.ErrorResponse;
 import com.anjuke.romar.core.impl.response.RecommendResultResponse;
 import com.anjuke.romar.core.impl.response.SuccessReplyNoneResponse;
+import com.anjuke.romar.core.impl.response.ValueResponse;
 
 public class JettyRomarHandler extends AbstractHandler {
     private static final Logger _logger = LoggerFactory.getLogger(JettyRomarHandler.class);
@@ -78,6 +79,13 @@ public class JettyRomarHandler extends AbstractHandler {
             } else {
                 throw new ServletException("Bad format parameter: " + format);
             }
+            response.getWriter().flush();
+        }else if(romarResponse instanceof ValueResponse){
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setStatus(HttpStatus.OK_200);
+            response.getWriter().println(((ValueResponse) romarResponse).getValue());
             response.getWriter().flush();
         }
 

@@ -1,11 +1,13 @@
 package com.anjuke.romar.core;
 
+import com.anjuke.romar.core.handlers.CommitHandler;
 import com.anjuke.romar.core.handlers.CompactHandler;
 import com.anjuke.romar.core.handlers.EstimateHandler;
 import com.anjuke.romar.core.handlers.ItemRecommendHandler;
 import com.anjuke.romar.core.handlers.RecommendHandler;
-import com.anjuke.romar.core.handlers.CommitHandler;
 import com.anjuke.romar.core.handlers.RemoveHandler;
+import com.anjuke.romar.core.handlers.RemoveItemHandler;
+import com.anjuke.romar.core.handlers.RemoveUserHandler;
 import com.anjuke.romar.core.handlers.UpdateHandler;
 import com.anjuke.romar.core.impl.SimpleRomarDispatcher;
 import com.anjuke.romar.mahout.MahoutService;
@@ -13,7 +15,7 @@ import com.anjuke.romar.mahout.factory.MahoutServiceFactory;
 
 public final class RomarPathProcessFactory {
 
-    private RomarPathProcessFactory(){
+    private RomarPathProcessFactory() {
 
     }
 
@@ -24,14 +26,15 @@ public final class RomarPathProcessFactory {
         factory.setRemove(RequestPath.REMOVE);
         factory.setCommit(RequestPath.COMMIT);
         factory.setItemRecommend(RequestPath.ITEM_RECOMMEND);
-        factory.setCompact(RequestPath.COMPACT);
+        factory.setOptimize(RequestPath.OPTIMIZE);
         factory.setEstimate(RequestPath.ESTIMATE);
+        factory.setRemoveUser(RequestPath.REMOVE_USER);
+        factory.setRemoveItem(RequestPath.REMOVE_ITEM);
         T instance = factory.getInstance();
         return instance;
     }
 
-    private static class RomarCoreFactory extends
-            RomarDefaultPathFactory<RomarCore> {
+    private static class RomarCoreFactory implements RomarDefaultPathFactory<RomarCore> {
         private RomarConfig _config = RomarConfig.getInstance();
         private MahoutServiceFactory _serviceFactory = _config.getMahoutServiceFactory();
         private RomarCore _core = new RomarCore();
@@ -39,7 +42,7 @@ public final class RomarPathProcessFactory {
         private MahoutService _service = _serviceFactory.createService();
 
         @Override
-        protected RomarCore getInstance() {
+        public RomarCore getInstance() {
             _dispatcher.prepare();
             _core.setDispatcher(_dispatcher);
             _core.setService(_service);
@@ -47,39 +50,55 @@ public final class RomarPathProcessFactory {
         }
 
         @Override
-        protected void setRecommend(RequestPath path) {
+        public void setRecommend(RequestPath path) {
             _dispatcher.registerHandler(path, new RecommendHandler(_service));
         }
 
         @Override
-        protected void setUpdate(RequestPath path) {
+        public void setUpdate(RequestPath path) {
             _dispatcher.registerHandler(path, new UpdateHandler(_service));
         }
 
         @Override
-        protected void setRemove(RequestPath path) {
+        public void setRemove(RequestPath path) {
             _dispatcher.registerHandler(path, new RemoveHandler(_service));
         }
 
         @Override
-        protected void setCommit(RequestPath path) {
+        public void setCommit(RequestPath path) {
             _dispatcher.registerHandler(path, new CommitHandler(_service));
         }
 
         @Override
-        protected void setItemRecommend(RequestPath path) {
+        public void setItemRecommend(RequestPath path) {
             _dispatcher.registerHandler(path, new ItemRecommendHandler(_service));
         }
 
         @Override
-        protected void setCompact(RequestPath path) {
+        public void setOptimize(RequestPath path) {
             _dispatcher.registerHandler(path, new CompactHandler(_service));
         }
 
         @Override
-        protected void setEstimate(RequestPath path) {
+        public void setEstimate(RequestPath path) {
             _dispatcher.registerHandler(path, new EstimateHandler(_service));
         }
+
+        @Override
+        public void setRemoveUser(RequestPath path) {
+            _dispatcher.registerHandler(path, new RemoveUserHandler(_service));
+        }
+
+        @Override
+        public void setRemoveItem(RequestPath path) {
+            _dispatcher.registerHandler(path, new RemoveItemHandler(_service));
+        }
+
+        @Override
+        public void init() {
+
+        }
+
     }
 
     public static RomarCore createCore() {

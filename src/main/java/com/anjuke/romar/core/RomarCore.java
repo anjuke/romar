@@ -54,4 +54,8 @@ public class RomarCore {
         this._service = service;
     }
 
+    RomarDispatcher getDispatcher() {
+        return _dispatcher;
+    }
+
 }

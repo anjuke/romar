@@ -6,6 +6,8 @@ public enum RequestPath {
     UPDATE,
     REMOVE,
     COMMIT,
-    COMPACT,
-    ESTIMATE
+    OPTIMIZE,
+    ESTIMATE,
+    REMOVE_USER,
+    REMOVE_ITEM
 }

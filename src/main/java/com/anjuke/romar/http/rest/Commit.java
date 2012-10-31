@@ -5,9 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.anjuke.romar.core.CoreContainer;
 import com.anjuke.romar.core.RequestPath;
-import com.anjuke.romar.core.RomarCore;
 import com.anjuke.romar.core.impl.request.NoneContentRequest;
 import com.sun.jersey.spi.resource.Singleton;
 

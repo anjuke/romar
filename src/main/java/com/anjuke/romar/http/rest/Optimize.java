@@ -15,7 +15,7 @@ public class Optimize extends BaseResource {
 
     @POST
     public Response optimize() {
-        checkErrors(_romarCore.execute(new NoneContentRequest(RequestPath.COMPACT)));
+        checkErrors(_romarCore.execute(new NoneContentRequest(RequestPath.OPTIMIZE)));
         return Response.status(Status.ACCEPTED).build();
     }
 

@@ -24,6 +24,17 @@ url path
 
 需要注意的是在更新和删除操作之后，必须调用/commit才会对recommend的结果产生影响
 
+合并日志文件
+/optimize
+
+移除物品
+/item/remove?userId=1
+
+移除用户
+/user/remove?itemId=1
+
+估算用户对物品的评分
+/estmate?userId=1&itemId=1
 
 样例在script/test.sh中
 

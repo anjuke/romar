@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import org.apache.mahout.cf.taste.common.Refreshable;
 import org.apache.mahout.cf.taste.common.TasteException;
@@ -91,12 +90,12 @@ public class RecommenderWrapper implements MahoutService {
 
     @Override
     public void refresh(Collection<Refreshable> alreadyRefreshed) {
-//        _writeLock.lock();
-//        try {
+        _writeLock.lock();
+        try {
             _recommender.refresh(alreadyRefreshed);
-//        } finally {
-//            _writeLock.unlock();
-//        }
+        } finally {
+            _writeLock.unlock();
+        }
     }
 
     @Override
@@ -170,7 +169,6 @@ public class RecommenderWrapper implements MahoutService {
             for (long itemID : dataModel.getItemIDsFromUser(userID)) {
                 removePreference(userID, itemID);
             }
-            this.refresh(null);
         } finally {
             _writeLock.unlock();
         }
@@ -184,7 +182,6 @@ public class RecommenderWrapper implements MahoutService {
             for (Preference p : dataModel.getPreferencesForItem(itemID)) {
                 removePreference(p.getUserID(), itemID);
             }
-            this.refresh(null);
         } finally {
             _writeLock.unlock();
         }
