@@ -211,13 +211,11 @@ public class BDBDataModelTest {
             model.setPreference(5, 106, 4.0F);
 
             RecommendedItem ri1 = recommenderIntro(model);
-            _logger.info("Recommender: with new data model: " + ri1);
             Assert.assertEquals(104, ri1.getItemID());
             Assert.assertEquals(4.257081, ri1.getValue(), 0.001);
             model.close();
 
             BDBDataModel newModel = new BDBDataModel(dir.getAbsolutePath(), CACHE_SIZE);
-            _logger.info("Recommender: with exist data model: " + ri1);
             RecommendedItem ri2 = recommenderIntro(newModel);
             Assert.assertEquals(ri1, ri2);
             newModel.close();
