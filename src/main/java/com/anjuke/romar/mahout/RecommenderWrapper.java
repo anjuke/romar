@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import org.apache.mahout.cf.taste.common.Refreshable;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.model.DataModel;
+import org.apache.mahout.cf.taste.model.Preference;
 import org.apache.mahout.cf.taste.recommender.IDRescorer;
 import org.apache.mahout.cf.taste.recommender.ItemBasedRecommender;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
@@ -89,12 +91,12 @@ public class RecommenderWrapper implements MahoutService {
 
     @Override
     public void refresh(Collection<Refreshable> alreadyRefreshed) {
-        _writeLock.lock();
-        try {
+//        _writeLock.lock();
+//        try {
             _recommender.refresh(alreadyRefreshed);
-        } finally {
-            _writeLock.unlock();
-        }
+//        } finally {
+//            _writeLock.unlock();
+//        }
     }
 
     @Override
@@ -157,6 +159,34 @@ public class RecommenderWrapper implements MahoutService {
             }
         } else {
             throw new UnsupportedOperationException("UserBasedRecommender not supported");
+        }
+    }
+
+    @Override
+    public void removeUser(long userID) throws TasteException {
+        DataModel dataModel = _recommender.getDataModel();
+        _writeLock.lock();
+        try {
+            for (long itemID : dataModel.getItemIDsFromUser(userID)) {
+                removePreference(userID, itemID);
+            }
+            this.refresh(null);
+        } finally {
+            _writeLock.unlock();
+        }
+    }
+
+    @Override
+    public void removeItem(long itemID) throws TasteException {
+        DataModel dataModel = _recommender.getDataModel();
+        _writeLock.lock();
+        try {
+            for (Preference p : dataModel.getPreferencesForItem(itemID)) {
+                removePreference(p.getUserID(), itemID);
+            }
+            this.refresh(null);
+        } finally {
+            _writeLock.unlock();
         }
     }
 }

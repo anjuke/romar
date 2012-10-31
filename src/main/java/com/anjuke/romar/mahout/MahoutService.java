@@ -19,4 +19,8 @@ public interface MahoutService extends Recommender{
 
     long[] mostSimilarUserIDs(long userID, int howMany) throws TasteException;
 
+    void removeUser(long userID) throws TasteException;
+
+    void removeItem(long userID) throws TasteException;
+
 }

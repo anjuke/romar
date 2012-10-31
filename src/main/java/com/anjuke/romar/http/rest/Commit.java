@@ -14,13 +14,11 @@ import com.sun.jersey.spi.resource.Singleton;
 
 @Path("/commit")
 @Singleton
-public class Commit {
-     private final RomarCore _romarCore = CoreContainer.getCore();
-
+public class Commit extends BaseResource{
 
      @POST
      public Response commit(){
-         _romarCore.execute(new NoneContentRequest(RequestPath.COMMIT));
+         checkErrors(_romarCore.execute(new NoneContentRequest(RequestPath.COMMIT)));
          return Response.status(Status.ACCEPTED).build();
      }
 }
