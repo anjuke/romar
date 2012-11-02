@@ -1,45 +1,12 @@
 ###使用方法
 
-bin/start.sh 8080
+bin/start.sh 
 
-服务将监听8080端口处理http请求
+默认服务将监听8080端口处理http请求，修改端口请修改conf/romar.yaml
 
-url path
 
-推荐
-/recommend?userId=1
-可选参数：format=text,json,xml
-
-更新
-/update?userId=1&itemId=1&value=1
-
-删除
-/remove?userId=1&itemId=1
-
-提交更新
-/commit
-
-根据多个Item推荐，仅配置中选择ItemBasedRecommender才支持
-/item/recommend?itemId=1&itemId=2
-
-需要注意的是在更新和删除操作之后，必须调用/commit才会对recommend的结果产生影响
-
-合并日志文件
-/optimize
-
-移除物品
-/item/remove?userId=1
-
-移除用户
-/user/remove?itemId=1
-
-估算用户对物品的评分
-/estmate?userId=1&itemId=1
-
-查找相似用户，仅配置中选择UserBasedRecommender才支持
-/user/similar?userId=1
-
-样例在script/test.sh中
+rest api
+<https://github.com/anjuke/romar/wiki/Romar-API-v1>
 
 相关配置，修改romar.yaml
 
