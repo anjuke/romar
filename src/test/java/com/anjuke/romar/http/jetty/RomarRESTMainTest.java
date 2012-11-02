@@ -30,7 +30,8 @@ import com.sun.jersey.api.json.JSONConfiguration;
 
 public class RomarRESTMainTest {
     public static void main(String[] args) throws Exception {
-        RomarRESTMain.main(new String[] {"8080"});
+        System.setProperty("romar.config", "src/test/resources/testRomar.yaml");
+        RomarRESTMain.main(args);
     }
 
     static Thread jettyThread;

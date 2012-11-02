@@ -142,7 +142,9 @@ public final class RomarConfig {
             RomarConfigHolder defaultHolder = yaml.loadAs(isDefault,
                     RomarConfigHolder.class);
             RomarConfigHolder customHolder;
+            LOG.debug("custom conf path is "+path);
             if (path != null && !path.isEmpty()) {
+                LOG.info("loading config from "+path);
                 isCustom = new FileInputStream(path);
                 customHolder = yaml.loadAs(isCustom, RomarConfigHolder.class);
             } else {

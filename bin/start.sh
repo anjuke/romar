@@ -13,6 +13,6 @@ for f in $ROMAR_HOME/lib/*.jar; do
 	CLASSPATH=${CLASSPATH}:$f;
 done
 
-nohup java -Dromar.home=$ROMAR_HOME -Dlog4j.configuration=file://$ROMAR_HOME/conf/log4j.xml -Dromar.conf=$ROMAR_HOME/conf/romar.yaml -cp $CLASSPATH com.anjuke.romar.http.jetty.RomarRESTMain >$ROMAR_HOME/logs/romar.out 2>&1 &
+nohup java -Dromar.home=$ROMAR_HOME -Dlog4j.configuration=file://$ROMAR_HOME/conf/log4j.xml -Dromar.config=$ROMAR_HOME/conf/romar.yaml -cp $CLASSPATH com.anjuke.romar.http.jetty.RomarRESTMain >$ROMAR_HOME/logs/romar.out 2>&1 &
 
 

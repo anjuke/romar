@@ -2,15 +2,21 @@ package com.anjuke.romar.mahout.factory;
 
 import java.io.File;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.anjuke.romar.core.RomarConfig;
+import com.anjuke.romar.core.RomarCore;
 import com.anjuke.romar.mahout.PreferenceDataModel;
 import com.anjuke.romar.mahout.persistence.FilePreferenceSource;
 import com.anjuke.romar.mahout.persistence.PersistenceDataModelProxy;
 import com.anjuke.romar.mahout.persistence.PreferenceSource;
 
 public abstract class AbstractMahoutServiceFactory implements MahoutServiceFactory {
+    private static final Logger log = LoggerFactory.getLogger(RomarCore.class);
+
     protected PreferenceDataModel wrapDataModel(PreferenceDataModel dataModel) {
-        String persistencePath = RomarConfig.getInstance().getPersistencePath();
+        final String persistencePath = RomarConfig.getInstance().getPersistencePath();
         if (persistencePath == null || persistencePath.isEmpty()) {
             return dataModel;
         }
@@ -22,6 +28,7 @@ public abstract class AbstractMahoutServiceFactory implements MahoutServiceFacto
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
+                log.info("FilePreferenceSource on file "+persistencePath +" close");
                 source.close();
             }
         });
