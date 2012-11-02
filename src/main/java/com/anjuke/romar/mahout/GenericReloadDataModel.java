@@ -88,19 +88,19 @@ public class GenericReloadDataModel implements PreferenceDataModel {
      * until refresh called , these data will not be used
      */
     @Override
-    public void setPreference(long userID, long itemID, float preferenceValue)
+    public synchronized void setPreference(long userID, long itemID, float preferenceValue)
             throws TasteException {
         _data.add(new PreferenceValue(userID, itemID, preferenceValue));
     }
 
     /** See the warning at {@link #setPreference(long, long, float)}. */
     @Override
-    public void removePreference(long userID, long itemID) throws TasteException {
+    public synchronized void removePreference(long userID, long itemID) throws TasteException {
         _data.add(new PreferenceValue(userID, itemID));
     }
 
     @Override
-    public void refresh(Collection<Refreshable> alreadyRefreshed) {
+    public synchronized void refresh(Collection<Refreshable> alreadyRefreshed) {
         FastByIDMap<PreferenceArray> data = _currentModel.getRawUserData().clone();
         for (PreferenceValue value : _data) {
             if (value.isAdd()) {
