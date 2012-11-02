@@ -33,6 +33,9 @@
             <directory>logs</directory>
         </fileSet>
         <fileSet>
+            <directory>examples</directory>
+        </fileSet>
+        <fileSet>
             <directory>target</directory>
             <outputDirectory></outputDirectory>
             <includes>
