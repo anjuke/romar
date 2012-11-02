@@ -19,12 +19,6 @@ import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
 public class RecommenderWrapper implements MahoutService {
     private final Recommender _recommender;
 
-    private final ReadWriteLock _lock = new ReentrantReadWriteLock();
-
-    private final Lock _readLock = _lock.readLock();
-
-    private final Lock _writeLock = _lock.readLock();
-
     public RecommenderWrapper(Recommender recommender) {
         super();
         _recommender = recommender;
@@ -33,54 +27,29 @@ public class RecommenderWrapper implements MahoutService {
     @Override
     public List<RecommendedItem> recommend(long userID, int howMany)
             throws TasteException {
-        _readLock.lock();
-        try {
-            return _recommender.recommend(userID, howMany);
-        } finally {
-            _readLock.unlock();
-        }
+        return _recommender.recommend(userID, howMany);
     }
 
     @Override
     public List<RecommendedItem> recommend(long userID, int howMany, IDRescorer rescorer)
             throws TasteException {
-        _readLock.lock();
-        try {
-            return _recommender.recommend(userID, howMany, rescorer);
-        } finally {
-            _readLock.unlock();
-        }
+        return _recommender.recommend(userID, howMany, rescorer);
     }
 
     @Override
     public float estimatePreference(long userID, long itemID) throws TasteException {
-        _readLock.lock();
-        try {
-            return _recommender.estimatePreference(userID, itemID);
-        } finally {
-            _readLock.unlock();
-        }
+        return _recommender.estimatePreference(userID, itemID);
     }
 
     @Override
     public void setPreference(long userID, long itemID, float value)
             throws TasteException {
-        _writeLock.lock();
-        try {
-            _recommender.setPreference(userID, itemID, value);
-        } finally {
-            _writeLock.unlock();
-        }
+        _recommender.setPreference(userID, itemID, value);
     }
 
     @Override
     public void removePreference(long userID, long itemID) throws TasteException {
-        _writeLock.lock();
-        try {
-            _recommender.removePreference(userID, itemID);
-        } finally {
-            _writeLock.unlock();
-        }
+        _recommender.removePreference(userID, itemID);
     }
 
     @Override
@@ -90,25 +59,15 @@ public class RecommenderWrapper implements MahoutService {
 
     @Override
     public void refresh(Collection<Refreshable> alreadyRefreshed) {
-        _writeLock.lock();
-        try {
-            _recommender.refresh(alreadyRefreshed);
-        } finally {
-            _writeLock.unlock();
-        }
+        _recommender.refresh(alreadyRefreshed);
     }
 
     @Override
     public List<RecommendedItem> mostSimilarItems(long itemID, int howMany)
             throws TasteException {
         if (_recommender instanceof ItemBasedRecommender) {
-            _readLock.lock();
-            try {
-                return ((ItemBasedRecommender) _recommender).mostSimilarItems(itemID,
-                        howMany);
-            } finally {
-                _readLock.unlock();
-            }
+            return ((ItemBasedRecommender) _recommender)
+                    .mostSimilarItems(itemID, howMany);
         } else {
             throw new UnsupportedOperationException("ItemBasedRecommender not supported");
         }
@@ -118,13 +77,8 @@ public class RecommenderWrapper implements MahoutService {
     public List<RecommendedItem> mostSimilarItems(long[] itemIDs, int howMany)
             throws TasteException {
         if (_recommender instanceof ItemBasedRecommender) {
-            _readLock.lock();
-            try {
-                return ((ItemBasedRecommender) _recommender).mostSimilarItems(itemIDs,
-                        howMany);
-            } finally {
-                _readLock.unlock();
-            }
+            return ((ItemBasedRecommender) _recommender).mostSimilarItems(itemIDs,
+                    howMany);
         } else {
             throw new UnsupportedOperationException("ItemBasedRecommender not supported");
         }
@@ -134,13 +88,8 @@ public class RecommenderWrapper implements MahoutService {
     public List<RecommendedItem> mostSimilarItems(long[] itemIDs, int howMany,
             boolean excludeItemIfNotSimilarToAll) throws TasteException {
         if (_recommender instanceof ItemBasedRecommender) {
-            _readLock.lock();
-            try {
-                return ((ItemBasedRecommender) _recommender).mostSimilarItems(itemIDs,
-                        howMany, excludeItemIfNotSimilarToAll);
-            } finally {
-                _readLock.unlock();
-            }
+            return ((ItemBasedRecommender) _recommender).mostSimilarItems(itemIDs,
+                    howMany, excludeItemIfNotSimilarToAll);
         } else {
             throw new UnsupportedOperationException("ItemBasedRecommender not supported");
         }
@@ -149,13 +98,8 @@ public class RecommenderWrapper implements MahoutService {
     @Override
     public long[] mostSimilarUserIDs(long userID, int howMany) throws TasteException {
         if (_recommender instanceof UserBasedRecommender) {
-            _readLock.lock();
-            try {
-                return ((UserBasedRecommender) _recommender).mostSimilarUserIDs(userID,
-                        howMany);
-            } finally {
-                _readLock.unlock();
-            }
+            return ((UserBasedRecommender) _recommender).mostSimilarUserIDs(userID,
+                    howMany);
         } else {
             throw new UnsupportedOperationException("UserBasedRecommender not supported");
         }
@@ -164,26 +108,16 @@ public class RecommenderWrapper implements MahoutService {
     @Override
     public void removeUser(long userID) throws TasteException {
         DataModel dataModel = _recommender.getDataModel();
-        _writeLock.lock();
-        try {
-            for (long itemID : dataModel.getItemIDsFromUser(userID)) {
-                removePreference(userID, itemID);
-            }
-        } finally {
-            _writeLock.unlock();
+        for (long itemID : dataModel.getItemIDsFromUser(userID)) {
+            removePreference(userID, itemID);
         }
     }
 
     @Override
     public void removeItem(long itemID) throws TasteException {
         DataModel dataModel = _recommender.getDataModel();
-        _writeLock.lock();
-        try {
-            for (Preference p : dataModel.getPreferencesForItem(itemID)) {
-                removePreference(p.getUserID(), itemID);
-            }
-        } finally {
-            _writeLock.unlock();
+        for (Preference p : dataModel.getPreferencesForItem(itemID)) {
+            removePreference(p.getUserID(), itemID);
         }
     }
 }

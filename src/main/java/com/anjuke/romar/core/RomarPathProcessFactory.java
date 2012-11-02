@@ -8,6 +8,7 @@ import com.anjuke.romar.core.handlers.RecommendHandler;
 import com.anjuke.romar.core.handlers.RemoveHandler;
 import com.anjuke.romar.core.handlers.RemoveItemHandler;
 import com.anjuke.romar.core.handlers.RemoveUserHandler;
+import com.anjuke.romar.core.handlers.SimilarUserHandler;
 import com.anjuke.romar.core.handlers.UpdateHandler;
 import com.anjuke.romar.core.impl.SimpleRomarDispatcher;
 import com.anjuke.romar.mahout.MahoutService;
@@ -26,6 +27,7 @@ public final class RomarPathProcessFactory {
         factory.setRemove(RequestPath.REMOVE);
         factory.setCommit(RequestPath.COMMIT);
         factory.setItemRecommend(RequestPath.ITEM_RECOMMEND);
+        factory.setSimilarUser(RequestPath.SIMILAR_USER);
         factory.setOptimize(RequestPath.OPTIMIZE);
         factory.setEstimate(RequestPath.ESTIMATE);
         factory.setRemoveUser(RequestPath.REMOVE_USER);
@@ -95,9 +97,16 @@ public final class RomarPathProcessFactory {
         }
 
         @Override
+        public void setSimilarUser(RequestPath path) {
+            _dispatcher.registerHandler(path, new SimilarUserHandler(_service));
+
+        }
+
+        @Override
         public void init() {
 
         }
+
 
     }
 

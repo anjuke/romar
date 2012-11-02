@@ -15,6 +15,8 @@ public interface RomarDefaultPathFactory<T> {
 
     void setItemRecommend(RequestPath path);
 
+    void setSimilarUser(RequestPath path);
+
     void setOptimize(RequestPath path);
 
     void setEstimate(RequestPath path);

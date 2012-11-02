@@ -19,7 +19,7 @@ url path
 提交更新
 /commit
 
-根据多个Item推荐
+根据多个Item推荐，仅配置中选择ItemBasedRecommender才支持
 /item/recommend?itemId=1&itemId=2
 
 需要注意的是在更新和删除操作之后，必须调用/commit才会对recommend的结果产生影响
@@ -35,6 +35,9 @@ url path
 
 估算用户对物品的评分
 /estmate?userId=1&itemId=1
+
+查找相似用户，仅配置中选择UserBasedRecommender才支持
+/user/similar?userId=1
 
 样例在script/test.sh中
 

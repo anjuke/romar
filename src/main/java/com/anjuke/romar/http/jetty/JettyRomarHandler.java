@@ -1,11 +1,12 @@
 package com.anjuke.romar.http.jetty;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.eclipse.jetty.http.HttpStatus;
@@ -18,6 +19,7 @@ import com.anjuke.romar.core.RomarCore;
 import com.anjuke.romar.core.RomarRequest;
 import com.anjuke.romar.core.RomarResponse;
 import com.anjuke.romar.core.impl.response.ErrorResponse;
+import com.anjuke.romar.core.impl.response.MultiValueResponse;
 import com.anjuke.romar.core.impl.response.RecommendResultResponse;
 import com.anjuke.romar.core.impl.response.SuccessReplyNoneResponse;
 import com.anjuke.romar.core.impl.response.ValueResponse;
@@ -86,6 +88,13 @@ public class JettyRomarHandler extends AbstractHandler {
             response.setHeader("Cache-Control", "no-cache");
             response.setStatus(HttpStatus.OK_200);
             response.getWriter().println(((ValueResponse) romarResponse).getValue());
+            response.getWriter().flush();
+        }else if (romarResponse instanceof MultiValueResponse){
+            response.setContentType("text/plain");
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setStatus(HttpStatus.OK_200);
+            response.getWriter().println(((MultiValueResponse) romarResponse).getValues());
             response.getWriter().flush();
         }
 

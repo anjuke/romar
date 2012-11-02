@@ -25,6 +25,7 @@ public class RequestParser {
     private final static String UPDATE = "/update";
     private final static String REMOVE = "/remove";
     private final static String COMMIT = "/commit";
+    private final static String SIMILAR_USER="/user/similar";
     private final static String ITEM_RECOMMEND = "/item/recommend";
     private final static String COMPACT = "/optimize";
     private final static String ESTMATE = "/estmate";
@@ -110,6 +111,13 @@ public class RequestParser {
             _parser._stringToPathMap.put(REMOVE_ITEM, path);
             _parser.register(REMOVE_ITEM, PreferenceRomarRequest.class,
                     Arrays.asList("itemId"));
+        }
+
+        @Override
+        public void setSimilarUser(RequestPath path) {
+            _parser._stringToPathMap.put(SIMILAR_USER, path);
+            _parser.register(SIMILAR_USER, PreferenceRomarRequest.class,
+                    Arrays.asList("userId"));
         }
 
     }

@@ -141,7 +141,7 @@ public class RomarRESTMainTest {
     }
 
     @Test
-    public void testCommitPreference() throws InterruptedException {
+    public void testCommit() throws InterruptedException {
         WebResource webResource = client.resource("http://localhost:8080/commit");
         ClientResponse response = null;
         response = webResource.accept("application/json").post(ClientResponse.class);
@@ -178,5 +178,31 @@ public class RomarRESTMainTest {
         List<RecommendBean> list = response.getEntity(new ArrayList<RecommendBean>()
                 .getClass());
         assertTrue(list.size() > 0);
+    }
+
+    @Test
+    public void testUserSimilar() {
+        WebResource webResource = client.resource("http://localhost:8080/users/1/similars");
+        ClientResponse response = null;
+        response = webResource.accept("application/json").get(ClientResponse.class);
+        String result = response.getEntity(String.class);
+        System.out.println(result);
+    }
+
+
+    @Test
+    public void testUserRemove(){
+        WebResource webResource = client.resource("http://localhost:8080/users/1");
+        ClientResponse response = null;
+        response = webResource.accept("application/json").delete(ClientResponse.class);
+        assertEquals(202, response.getStatus());
+    }
+
+    @Test
+    public void testItemRemove(){
+        WebResource webResource = client.resource("http://localhost:8080/items/1");
+        ClientResponse response = null;
+        response = webResource.accept("application/json").delete(ClientResponse.class);
+        assertEquals(202, response.getStatus());
     }
 }
