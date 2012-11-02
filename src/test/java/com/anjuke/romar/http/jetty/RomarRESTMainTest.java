@@ -19,8 +19,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.anjuke.romar.http.rest.bean.PreferenceBean;
 import com.anjuke.romar.http.rest.bean.RecommendBean;
+import com.anjuke.romar.http.rest.bean.ValueBean;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -86,57 +86,41 @@ public class RomarRESTMainTest {
     public void testSetPreference() throws JsonGenerationException, JsonMappingException,
             IOException {
 
-        WebResource webResource = client.resource("http://localhost:8080/preferences");
+        WebResource webResource;
+        ValueBean value=new ValueBean();
+        value.setValue(1.0f);
 
-        PreferenceBean bean = new PreferenceBean();
-        bean.setUser(1);
-        bean.setItem(1);
-        bean.setValue(1.0f);
+        webResource = client.resource("http://localhost:8080/preferences/1/1");
         ClientResponse response = null;
         response = webResource.accept("application/json")
-                .entity(mapper.writeValueAsString(bean), MediaType.APPLICATION_JSON_TYPE)
+                .entity(value, MediaType.APPLICATION_JSON_TYPE)
                 .put(ClientResponse.class);
         assertEquals(202, response.getStatus());
-        bean = new PreferenceBean();
-        bean.setUser(1);
-        bean.setItem(2);
-        bean.setValue(1.0f);
+        webResource = client.resource("http://localhost:8080/preferences/1/2");
         response = webResource.accept("application/json")
-                .entity(bean, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
+                .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
         assertEquals(202, response.getStatus());
 
-        bean = new PreferenceBean();
-        bean.setUser(2);
-        bean.setItem(1);
-        bean.setValue(1.0f);
+        webResource = client.resource("http://localhost:8080/preferences/2/1");
         response = webResource.accept("application/json")
-                .entity(bean, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
+                .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
 
         assertEquals(202, response.getStatus());
 
-        bean = new PreferenceBean();
-        bean.setUser(2);
-        bean.setItem(2);
-        bean.setValue(1);
+        webResource = client.resource("http://localhost:8080/preferences/2/2");
         response = webResource.accept("application/json")
-                .entity(bean, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
+                .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
 
         assertEquals(202, response.getStatus());
-        bean = new PreferenceBean();
-        bean.setUser(2);
-        bean.setItem(3);
-        bean.setValue(1.0f);
+        webResource = client.resource("http://localhost:8080/preferences/2/3");
         response = null;
         response = webResource.accept("application/json")
-                .entity(bean, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
+                .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
         assertEquals(202, response.getStatus());
-        bean = new PreferenceBean();
-        bean.setUser(2);
-        bean.setItem(4);
-        bean.setValue(1.0f);
+        webResource = client.resource("http://localhost:8080/preferences/2/4");
         response = null;
         response = webResource.accept("application/json")
-                .entity(bean, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
+                .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
 
         assertEquals(202, response.getStatus());
     }
@@ -205,5 +189,17 @@ public class RomarRESTMainTest {
         ClientResponse response = null;
         response = webResource.accept("application/json").delete(ClientResponse.class);
         assertEquals(202, response.getStatus());
+    }
+
+    @Test
+    public void testMultiSetPrefs(){
+         WebResource webResource;
+
+         webResource = client.resource("http://localhost:8080/preferences");
+         ClientResponse response = null;
+         response = webResource.accept("application/json")
+                 .entity(new long[][]{new long[]{1,1,1},new long[]{1,1,1}}, MediaType.APPLICATION_JSON_TYPE)
+                 .put(ClientResponse.class);
+         assertEquals(202, response.getStatus());
     }
 }

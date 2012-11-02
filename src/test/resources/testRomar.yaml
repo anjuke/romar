@@ -31,5 +31,5 @@
 
   userNeighborhoodNearestN: 50
 
-  persistencePath: /tmp/romar
+  persistencePath:
 
