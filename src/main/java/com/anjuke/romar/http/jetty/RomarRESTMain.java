@@ -4,6 +4,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import com.anjuke.romar.core.RomarConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 public final class RomarRESTMain {
@@ -12,11 +13,16 @@ public final class RomarRESTMain {
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length != 1) {
-            System.out.println("usage :  java classname $port");
-            return;
+        java.util.logging.Logger rootLogger = java.util.logging.LogManager
+                .getLogManager().getLogger("");
+        java.util.logging.Handler[] handlers = rootLogger.getHandlers();
+        for (int i = 0; i < handlers.length; i++) {
+            rootLogger.removeHandler(handlers[i]);
         }
-        Server server = new Server(Integer.parseInt(args[0]));
+        org.slf4j.bridge.SLF4JBridgeHandler.install();
+        RomarConfig config = RomarConfig.getInstance();
+
+        Server server = new Server(config.getServerPort());
         ServletContextHandler context = new ServletContextHandler(
                 ServletContextHandler.NO_SESSIONS);
         ServletHolder servletHolder = new ServletHolder(new ServletContainer());

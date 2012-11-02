@@ -37,6 +37,7 @@ public final class RomarConfig {
     private static final String CONF_PATH_KEY = "romar.config";
 
     public static class RomarConfigHolder {
+        private Integer _serverPort;
         private RecommendType _recommendType;
         private Boolean _useSimilarityCache;
         private Integer _similarityCacheSize;
@@ -47,6 +48,14 @@ public final class RomarConfig {
         private CommonRecommenderClass _commonRecommenderClass;
         private String _persistencePath;
 
+        public Integer getServerPort() {
+            return _serverPort;
+        }
+
+        public void setServerPort(Integer serverPort) {
+            _serverPort = serverPort;
+        }
+
         public RecommendType getRecommendType() {
             return _recommendType;
         }
@@ -55,7 +64,7 @@ public final class RomarConfig {
             _recommendType = recommendType;
         }
 
-        public Boolean isUseSimilarityCache() {
+        public Boolean getUseSimilarityCache() {
             return _useSimilarityCache;
         }
 
@@ -119,6 +128,7 @@ public final class RomarConfig {
         public void setPersistencePath(String persistencePath) {
             _persistencePath = persistencePath;
         }
+
     }
 
     static {
@@ -259,6 +269,13 @@ public final class RomarConfig {
         super();
         _defaultHolder = defaultHolder;
         _customerHolder = customerHolder;
+    }
+
+    public int getServerPort() {
+        if (_customerHolder._serverPort != null) {
+            return _customerHolder._serverPort;
+        }
+        return _defaultHolder._serverPort;
     }
 
     public MahoutServiceFactory getMahoutServiceFactory() {

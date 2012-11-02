@@ -2,8 +2,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.anjuke.romar</groupId>
-    <artifactId>core</artifactId>
-    <version>dev-snapshot</version>
+    <artifactId>romar-core</artifactId>
+    <version>1.0.0-snapshot</version>
     <packaging>jar</packaging>
 
 
@@ -22,22 +22,13 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -50,19 +41,36 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <artifactId>maven-source-plugin</artifactId>
                 <version>2.2.1</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <id>attach-sources</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assemble/all.xml
+                    </descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assembly</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -117,6 +125,11 @@
             <version>1.6.1</version>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.4</version>
@@ -137,9 +150,9 @@
             <groupId>com.sleepycat</groupId>
             <artifactId>je</artifactId>
             <version>5.0.58</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey</groupId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
             <version>1.9</version>
         </dependency>
@@ -151,20 +164,6 @@
         </dependency>
     </dependencies>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>office-mirrors</id>
-            <name>Maven Plugin Repository Office Mirrors</name>
-            <url>http://maven.dev.aifang.com/nexus/content/groups/public</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
     <repositories>
         <repository>
             <id>Sonatype-public</id>

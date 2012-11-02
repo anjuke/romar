@@ -1,3 +1,6 @@
+
+  serverPort: 8080
+
 #value can only be item,user or common
   recommendType: item
 
