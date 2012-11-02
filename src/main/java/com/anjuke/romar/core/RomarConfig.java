@@ -30,8 +30,7 @@ import com.anjuke.romar.mahout.factory.MahoutServiceUserRecommendFactory;
 
 public final class RomarConfig {
 
-    private static final Logger LOG = LoggerFactory
-            .getLogger(RomarConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RomarConfig.class);
 
     private static final RomarConfig INSTANCE;
 
@@ -39,12 +38,12 @@ public final class RomarConfig {
 
     public static class RomarConfigHolder {
         private RecommendType _recommendType;
-        private boolean _useSimilarityCache;
-        private int _similarityCacheSize;
+        private Boolean _useSimilarityCache;
+        private Integer _similarityCacheSize;
         private ItemSimilarityClass _itemSimilarityClass;
         private UserSimilarityClass _userSimilarityClass;
         private UserNeighborhoodClass _userNeighborhoodClass;
-        private int _userNeighborhoodNearestN;
+        private Integer _userNeighborhoodNearestN;
         private CommonRecommenderClass _commonRecommenderClass;
         private String _persistencePath;
 
@@ -56,19 +55,19 @@ public final class RomarConfig {
             _recommendType = recommendType;
         }
 
-        public boolean isUseSimilarityCache() {
+        public Boolean isUseSimilarityCache() {
             return _useSimilarityCache;
         }
 
-        public void setUseSimilarityCache(boolean useSimilarityCache) {
+        public void setUseSimilarityCache(Boolean useSimilarityCache) {
             _useSimilarityCache = useSimilarityCache;
         }
 
-        public int getSimilarityCacheSize() {
+        public Integer getSimilarityCacheSize() {
             return _similarityCacheSize;
         }
 
-        public void setSimilarityCacheSize(int similarityCacheSize) {
+        public void setSimilarityCacheSize(Integer similarityCacheSize) {
             _similarityCacheSize = similarityCacheSize;
         }
 
@@ -76,8 +75,7 @@ public final class RomarConfig {
             return _itemSimilarityClass;
         }
 
-        public void setItemSimilarityClass(
-                ItemSimilarityClass itemSimilarityClass) {
+        public void setItemSimilarityClass(ItemSimilarityClass itemSimilarityClass) {
             _itemSimilarityClass = itemSimilarityClass;
         }
 
@@ -85,8 +83,7 @@ public final class RomarConfig {
             return _userSimilarityClass;
         }
 
-        public void setUserSimilarityClass(
-                UserSimilarityClass userSimilarityClass) {
+        public void setUserSimilarityClass(UserSimilarityClass userSimilarityClass) {
             _userSimilarityClass = userSimilarityClass;
         }
 
@@ -94,16 +91,15 @@ public final class RomarConfig {
             return _userNeighborhoodClass;
         }
 
-        public void setUserNeighborhoodClass(
-                UserNeighborhoodClass userNeighborhoodClass) {
+        public void setUserNeighborhoodClass(UserNeighborhoodClass userNeighborhoodClass) {
             _userNeighborhoodClass = userNeighborhoodClass;
         }
 
-        public int getUserNeighborhoodNearestN() {
+        public Integer getUserNeighborhoodNearestN() {
             return _userNeighborhoodNearestN;
         }
 
-        public void setUserNeighborhoodNearestN(int userNeighborhoodNearestN) {
+        public void setUserNeighborhoodNearestN(Integer userNeighborhoodNearestN) {
             _userNeighborhoodNearestN = userNeighborhoodNearestN;
         }
 
@@ -129,24 +125,36 @@ public final class RomarConfig {
         Yaml yaml = new Yaml();
         String path = System.getProperty(CONF_PATH_KEY);
 
-        InputStream is = null;
+        InputStream isDefault = null;
+        InputStream isCustom = null;
         try {
-            if (path == null || path.isEmpty()) {
-                is = RomarConfig.class.getResourceAsStream("/romar.yaml");
+            isDefault = RomarConfig.class.getResourceAsStream("/romar.default.yaml");
+            RomarConfigHolder defaultHolder = yaml.loadAs(isDefault,
+                    RomarConfigHolder.class);
+            RomarConfigHolder customHolder;
+            if (path != null && !path.isEmpty()) {
+                isCustom = new FileInputStream(path);
+                customHolder = yaml.loadAs(isCustom, RomarConfigHolder.class);
             } else {
-                is = new FileInputStream(path);
+                customHolder = new RomarConfigHolder();
             }
 
-            RomarConfigHolder holder = yaml.loadAs(is, RomarConfigHolder.class);
-            INSTANCE = new RomarConfig(holder);
+            INSTANCE = new RomarConfig(defaultHolder, customHolder);
 
         } catch (Exception e) {
             e.printStackTrace();
             throw new Error(e);
         } finally {
-            if (is != null) {
+            if (isDefault != null) {
                 try {
-                    is.close();
+                    isDefault.close();
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+            if (isCustom != null) {
+                try {
+                    isCustom.close();
                 } catch (Exception e) {
                     LOG.error(e.getMessage(), e);
                 }
@@ -243,46 +251,86 @@ public final class RomarConfig {
         }
     }
 
-    private final RomarConfigHolder _holder;
+    private final RomarConfigHolder _defaultHolder;
 
-    private RomarConfig(RomarConfigHolder holder) {
-        _holder = holder;
+    private final RomarConfigHolder _customerHolder;
+
+    public RomarConfig(RomarConfigHolder defaultHolder, RomarConfigHolder customerHolder) {
+        super();
+        _defaultHolder = defaultHolder;
+        _customerHolder = customerHolder;
     }
 
     public MahoutServiceFactory getMahoutServiceFactory() {
-        return _holder._recommendType._factory;
+        if (_customerHolder._recommendType != null) {
+            return _customerHolder._recommendType._factory;
+        }
+
+        return _defaultHolder._recommendType._factory;
     }
 
     public boolean isUseSimilariyCache() {
-        return _holder._useSimilarityCache;
+        if (_customerHolder._useSimilarityCache != null) {
+            return _customerHolder._useSimilarityCache;
+        }
+
+        return _defaultHolder._useSimilarityCache;
     }
 
     public int getSimilarityCacheSize() {
-        return _holder._similarityCacheSize;
+        if (_customerHolder._similarityCacheSize != null) {
+            return _customerHolder._similarityCacheSize;
+        }
+
+        return _defaultHolder._similarityCacheSize;
     }
 
     public Class<? extends ItemSimilarity> getItemSimilarityClass() {
-        return _holder._itemSimilarityClass.getClazz();
+        if (_customerHolder._itemSimilarityClass != null) {
+            return _customerHolder._itemSimilarityClass.getClazz();
+        }
+
+        return _defaultHolder._itemSimilarityClass.getClazz();
     }
 
     public Class<? extends UserSimilarity> getUserSimilarityClass() {
-        return _holder._userSimilarityClass.getClazz();
+        if (_customerHolder._userSimilarityClass != null) {
+            return _customerHolder._userSimilarityClass.getClazz();
+        }
+
+        return _defaultHolder._userSimilarityClass.getClazz();
     }
 
     public Class<? extends UserNeighborhood> getUserNeighborhoodClass() {
-        return _holder._userNeighborhoodClass.getClazz();
+        if (_customerHolder._userNeighborhoodClass != null) {
+            return _customerHolder._userNeighborhoodClass.getClazz();
+        }
+
+        return _defaultHolder._userNeighborhoodClass.getClazz();
     }
 
     public int getUserNeighborhoodNearestN() {
-        return _holder._userNeighborhoodNearestN;
+        if (_customerHolder._userNeighborhoodNearestN != null) {
+            return _customerHolder._userNeighborhoodNearestN;
+        }
+
+        return _defaultHolder._userNeighborhoodNearestN;
     }
 
     public Class<? extends Recommender> getCommonRecommenderClass() {
-        return _holder._commonRecommenderClass.getClazz();
+        if (_customerHolder._commonRecommenderClass != null) {
+            return _customerHolder._commonRecommenderClass.getClazz();
+        }
+
+        return _defaultHolder._commonRecommenderClass.getClazz();
     }
 
     public String getPersistencePath() {
-        return _holder._persistencePath;
+        if (_customerHolder._persistencePath != null) {
+            return _customerHolder._persistencePath;
+        }
+
+        return _defaultHolder._persistencePath;
     }
 
     public static void main(String[] args) {

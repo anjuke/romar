@@ -25,7 +25,7 @@ public class RequestParser {
     private final static String UPDATE = "/update";
     private final static String REMOVE = "/remove";
     private final static String COMMIT = "/commit";
-    private final static String SIMILAR_USER="/user/similar";
+    private final static String SIMILAR_USER = "/user/similar";
     private final static String ITEM_RECOMMEND = "/item/recommend";
     private final static String COMPACT = "/optimize";
     private final static String ESTMATE = "/estmate";
@@ -94,7 +94,7 @@ public class RequestParser {
         public void setEstimate(RequestPath path) {
             _parser._stringToPathMap.put(ESTMATE, path);
             _parser.register(ESTMATE, PreferenceRomarRequest.class,
-                    Arrays.asList("userId","itemId"));
+                    Arrays.asList("userId", "itemId"));
 
         }
 

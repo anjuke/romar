@@ -1,0 +1,6 @@
+#value can only be item,user or common
+  recommendType: item
+
+  useSimilarityCache: true
+
+  similarityCacheSize: 10240

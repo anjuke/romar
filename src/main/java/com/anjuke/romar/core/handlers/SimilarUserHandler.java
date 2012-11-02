@@ -9,7 +9,7 @@ import com.anjuke.romar.core.impl.request.PreferenceRomarRequest;
 import com.anjuke.romar.core.impl.response.MultiValueResponse;
 import com.anjuke.romar.mahout.MahoutService;
 
-public class SimilarUserHandler extends PreferenceBaseHandler{
+public class SimilarUserHandler extends PreferenceBaseHandler {
 
     public SimilarUserHandler(MahoutService service) {
         super(service);
@@ -17,7 +17,7 @@ public class SimilarUserHandler extends PreferenceBaseHandler{
 
     @Override
     public RomarResponse process(PreferenceRomarRequest request) throws Exception {
-        long[] ids=_service.mostSimilarUserIDs(request.getUserId(), DEFAULT_HOW_MANY);
+        long[] ids = _service.mostSimilarUserIDs(request.getUserId(), DEFAULT_HOW_MANY);
         return new MultiValueResponse(Arrays.asList(ArrayUtils.toObject(ids)));
     }
 
