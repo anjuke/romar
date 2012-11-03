@@ -37,6 +37,7 @@ public final class RomarConfig {
     private static final String CONF_PATH_KEY = "romar.config";
 
     public static class RomarConfigHolder {
+        private Boolean _allowStringID;
         private Integer _serverPort;
         private RecommendType _recommendType;
         private Boolean _useSimilarityCache;
@@ -47,6 +48,14 @@ public final class RomarConfig {
         private Integer _userNeighborhoodNearestN;
         private CommonRecommenderClass _commonRecommenderClass;
         private String _persistencePath;
+
+        public Boolean getAllowStringID() {
+            return _allowStringID;
+        }
+
+        public void setAllowStringID(Boolean value) {
+            _allowStringID = value;
+        }
 
         public Integer getServerPort() {
             return _serverPort;
@@ -350,6 +359,14 @@ public final class RomarConfig {
         }
 
         return _defaultHolder._persistencePath;
+    }
+
+    public boolean isAllowStringID() {
+        Boolean allowStringID = _customerHolder.getAllowStringID();
+        if (allowStringID != null) {
+            return allowStringID;
+        }
+        return _defaultHolder._allowStringID;
     }
 
     public static void main(String[] args) {
