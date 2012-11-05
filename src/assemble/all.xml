@@ -34,6 +34,9 @@
         </fileSet>
         <fileSet>
             <directory>examples</directory>
+		</fileSet>
+		<fileSet>
+            <directory>doc</directory>
         </fileSet>
         <fileSet>
             <directory>target</directory>
