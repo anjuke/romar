@@ -1,5 +1,7 @@
 package com.anjuke.romar.core;
 
+import java.io.File;
+
 import com.anjuke.romar.core.handlers.CommitHandler;
 import com.anjuke.romar.core.handlers.CompactHandler;
 import com.anjuke.romar.core.handlers.EstimateHandler;
@@ -13,6 +15,8 @@ import com.anjuke.romar.core.handlers.UpdateHandler;
 import com.anjuke.romar.core.impl.SimpleRomarDispatcher;
 import com.anjuke.romar.mahout.MahoutService;
 import com.anjuke.romar.mahout.factory.MahoutServiceFactory;
+import com.anjuke.romar.mahout.model.BDBIDMigrator;
+import com.anjuke.romar.mahout.model.RomarMemoryIDMigrator;
 
 public final class RomarPathProcessFactory {
 
@@ -46,6 +50,21 @@ public final class RomarPathProcessFactory {
         @Override
         public RomarCore getInstance() {
             _dispatcher.prepare();
+            if (_config.isAllowStringID()) {
+                String path = _config.getPersistencePath();
+                if (path != null && !path.isEmpty()) {
+                    _core.setUserIdMigrator(new BDBIDMigrator(_config
+                            .getPersistencePath() + File.pathSeparator + "user_id",
+                            _config.getSimilarityCacheSize()));
+                    _core.setItemIdMigrator(new BDBIDMigrator(_config
+                            .getPersistencePath() + File.pathSeparator + "item_id",
+                            _config.getSimilarityCacheSize()));
+                }else{
+                     _core.setUserIdMigrator(new RomarMemoryIDMigrator());
+                     _core.setItemIdMigrator(new RomarMemoryIDMigrator());
+                }
+            }
+
             _core.setDispatcher(_dispatcher);
             _core.setService(_service);
             return _core;
@@ -106,7 +125,6 @@ public final class RomarPathProcessFactory {
         public void init() {
 
         }
-
 
     }
 

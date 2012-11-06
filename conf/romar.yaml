@@ -35,3 +35,6 @@
 
 #empty value will not use file persistence
 #  persistencePath: /tmp/romar
+
+#if true,you can submit user or item value with string type
+#  allowStringID: false

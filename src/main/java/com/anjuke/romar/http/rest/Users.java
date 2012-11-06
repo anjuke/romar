@@ -14,8 +14,8 @@ import javax.ws.rs.core.Response.Status;
 import com.anjuke.romar.core.RequestPath;
 import com.anjuke.romar.core.RomarResponse;
 import com.anjuke.romar.core.impl.request.PreferenceRomarRequest;
+import com.anjuke.romar.core.impl.response.MultiValueResponse;
 import com.anjuke.romar.core.impl.response.RecommendResultResponse;
-import com.anjuke.romar.http.rest.bean.RecommendBean;
 import com.sun.jersey.spi.resource.Singleton;
 
 @Path("/users")
@@ -25,22 +25,22 @@ public class Users extends BaseResource {
     @GET
     @Path("/{user}/recommendations")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response recommend(@PathParam("user") long user) {
+    public Response recommend(@PathParam("user") String userString) {
         PreferenceRomarRequest request = new PreferenceRomarRequest(RequestPath.RECOMMEND);
-        request.setUserId(user);
+        request.setUserId(getUser(userString));
         RomarResponse response = _romarCore.execute(request);
         checkErrors(response);
         RecommendResultResponse recommendResponse = (RecommendResultResponse) response;
-        List<RecommendBean> result = RestResponseUtil
-                .wrapRecommendItem(recommendResponse);
+        List<?> result = wrapRecommendItem(recommendResponse);
         return Response.ok().entity(result).build();
     }
 
     @DELETE
     @Path("/{user}")
-    public Response remove(@PathParam("user") long user) {
-        PreferenceRomarRequest request = new PreferenceRomarRequest(RequestPath.REMOVE_USER);
-        request.setUserId(user);
+    public Response remove(@PathParam("user") String userString) {
+        PreferenceRomarRequest request = new PreferenceRomarRequest(
+                RequestPath.REMOVE_USER);
+        request.setUserId(getUser(userString));
         RomarResponse response = _romarCore.execute(request);
         checkErrors(response);
         return Response.status(Status.ACCEPTED).build();
@@ -48,13 +48,13 @@ public class Users extends BaseResource {
 
     @GET
     @Path("/{user}/similars")
-    public Response similarUser(@PathParam("user") long user){
-        PreferenceRomarRequest request = new PreferenceRomarRequest(RequestPath.SIMILAR_USER);
-        request.setUserId(user);
+    public Response similarUser(@PathParam("user") String userString) {
+        PreferenceRomarRequest request = new PreferenceRomarRequest(
+                RequestPath.SIMILAR_USER);
+        request.setUserId(getUser(userString));
         RomarResponse response = _romarCore.execute(request);
         checkErrors(response);
-        return Response.ok().entity(response).build();
+        MultiValueResponse res = wrapMultiUserValues((MultiValueResponse) response);
+        return Response.ok().entity(res).build();
     }
-
-
 }

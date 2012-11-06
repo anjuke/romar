@@ -201,6 +201,6 @@ public class GenericReloadDataModel implements PreferenceDataModel {
 
     @Override
     public void compact() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("operation not support");
     }
 }

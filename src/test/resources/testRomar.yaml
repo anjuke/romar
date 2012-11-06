@@ -33,3 +33,4 @@
 
   persistencePath:
 
+  allowStringID: true

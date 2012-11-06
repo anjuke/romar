@@ -36,3 +36,5 @@
 
   persistencePath:
 
+  allowStringID: false
+

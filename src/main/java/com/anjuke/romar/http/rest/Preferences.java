@@ -26,8 +26,12 @@ public class Preferences extends BaseResource {
     @PUT
     @Path("/{user}/{item}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response setPreference(@PathParam("user") long user,
-            @PathParam("item") long item, ValueBean bean) {
+    public Response setPreference(@PathParam("user") String userString,
+            @PathParam("item") String itemString, ValueBean bean) {
+        long[] tmp = getUserAndItem(userString, itemString);
+        long user = tmp[0];
+        long item = tmp[1];
+
         PreferenceRomarRequest request = new PreferenceRomarRequest(RequestPath.UPDATE);
         request.setUserId(user);
         request.setItemId(item);
@@ -39,8 +43,11 @@ public class Preferences extends BaseResource {
 
     @DELETE
     @Path("/{user}/{item}")
-    public Response removePreference(@PathParam("user") long user,
-            @PathParam("item") long item) {
+    public Response removePreference(@PathParam("user") String userString,
+            @PathParam("item") String itemString) {
+        long[] tmp = getUserAndItem(userString, itemString);
+        long user = tmp[0];
+        long item = tmp[1];
         PreferenceRomarRequest request = new PreferenceRomarRequest(RequestPath.REMOVE);
         request.setUserId(user);
         request.setItemId(item);
@@ -51,8 +58,11 @@ public class Preferences extends BaseResource {
 
     @GET
     @Path("/{user}/{item}")
-    public Response estimatePreference(@PathParam("user") long user,
-            @PathParam("item") long item) {
+    public Response estimatePreference(@PathParam("user") String userString,
+            @PathParam("item") String itemString) {
+        long[] tmp = getUserAndItem(userString, itemString);
+        long user = tmp[0];
+        long item = tmp[1];
         PreferenceRomarRequest request = new PreferenceRomarRequest(RequestPath.ESTIMATE);
         request.setUserId(user);
         request.setItemId(item);
@@ -63,22 +73,27 @@ public class Preferences extends BaseResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response setPreference(List<List<Number>> values) {
+    public Response setPreference(List<List<String>> values) {
         if (values.size() == 0) {
             return Response.status(Status.ACCEPTED).build();
         }
-        for (List<Number> list : values) {
+        for (List<String> list : values) {
             if (list.size() != _paramSize) {
                 return Response.status(Status.BAD_REQUEST).build();
             }
         }
 
-        for (List<Number> pref : values) {
+        for (List<String> pref : values) {
             PreferenceRomarRequest request = new PreferenceRomarRequest(
                     RequestPath.UPDATE);
-            request.setUserId(pref.get(0).longValue());
-            request.setItemId(pref.get(1).longValue());
-            request.setValue(pref.get(2).floatValue());
+            String userString = pref.get(0);
+            String itemString = pref.get(1);
+            long[] tmp = getUserAndItem(userString, itemString);
+            long user = tmp[0];
+            long item = tmp[1];
+            request.setUserId(user);
+            request.setItemId(item);
+            request.setValue(Float.parseFloat(pref.get(2)));
             RomarResponse response = _romarCore.execute(request);
             checkErrors(response);
         }
