@@ -46,6 +46,7 @@ public final class RomarPathProcessFactory {
         private RomarCore _core = new RomarCore();
         private SimpleRomarDispatcher _dispatcher = new SimpleRomarDispatcher();
         private MahoutService _service = _serviceFactory.createService();
+        private final static int BDB_CACHE_SIZE = 102400;
 
         @Override
         public RomarCore getInstance() {
@@ -53,15 +54,23 @@ public final class RomarPathProcessFactory {
             if (_config.isAllowStringID()) {
                 String path = _config.getPersistencePath();
                 if (path != null && !path.isEmpty()) {
-                    _core.setUserIdMigrator(new BDBIDMigrator(_config
-                            .getPersistencePath() + File.pathSeparator + "user_id",
-                            _config.getSimilarityCacheSize()));
-                    _core.setItemIdMigrator(new BDBIDMigrator(_config
-                            .getPersistencePath() + File.pathSeparator + "item_id",
-                            _config.getSimilarityCacheSize()));
-                }else{
-                     _core.setUserIdMigrator(new RomarMemoryIDMigrator());
-                     _core.setItemIdMigrator(new RomarMemoryIDMigrator());
+                    File userPath = new File(_config.getPersistencePath()
+                            + File.separator + "user_id");
+                    if (!userPath.exists()) {
+                        userPath.mkdirs();
+                    }
+                    _core.setUserIdMigrator(new BDBIDMigrator(userPath.getPath(),
+                            BDB_CACHE_SIZE));
+                    File itemPath = new File(_config.getPersistencePath()
+                            + File.separator + "item_id");
+                    if (!itemPath.exists()) {
+                        itemPath.mkdirs();
+                    }
+                    _core.setItemIdMigrator(new BDBIDMigrator(itemPath.getPath(),
+                            BDB_CACHE_SIZE));
+                } else {
+                    _core.setUserIdMigrator(new RomarMemoryIDMigrator());
+                    _core.setItemIdMigrator(new RomarMemoryIDMigrator());
                 }
             }
 
