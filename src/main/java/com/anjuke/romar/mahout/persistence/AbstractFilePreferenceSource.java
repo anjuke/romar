@@ -22,8 +22,7 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
                         + path.getAbsolutePath());
             }
         } else if (!path.isDirectory()) {
-            throw new IllegalStateException(path.getAbsolutePath()
-                    + " must be directory");
+            throw new IllegalStateException(path.getAbsolutePath() + " must be directory");
         }
         _path = path;
         verifyNewestVersion();
@@ -113,8 +112,7 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
 
             @Override
             public int compare(File f1, File f2) {
-                return Double.compare(getLogFileVersion(f1),
-                        getLogFileVersion(f2));
+                return Double.compare(getLogFileVersion(f1), getLogFileVersion(f2));
             }
         });
         return Arrays.asList(files);
@@ -122,9 +120,9 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
 
     protected long getLogFileVersion(File file) {
         String name = file.getName();
-        long version= Long.parseLong(name.substring(LOG_FILE_PREFIX.length()));
-        if(file.length()==0){
-            version=version-1;
+        long version = Long.parseLong(name.substring(LOG_FILE_PREFIX.length()));
+        if (file.length() == 0) {
+            version = version - 1;
         }
         return version;
     }
