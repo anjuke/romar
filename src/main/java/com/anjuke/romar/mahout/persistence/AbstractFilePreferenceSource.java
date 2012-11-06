@@ -122,7 +122,11 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
 
     protected long getLogFileVersion(File file) {
         String name = file.getName();
-        return Long.parseLong(name.substring(LOG_FILE_PREFIX.length()));
+        long version= Long.parseLong(name.substring(LOG_FILE_PREFIX.length()));
+        if(file.length()==0){
+            version=version-1;
+        }
+        return version;
     }
 
     protected long getSnapshotFileVersion(File file) {
