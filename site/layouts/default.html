@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en-us" />
+  <meta http-equiv="imagetoolbar" content="false" />
+  <meta name="MSSmartTagsPreventParsing" content="true" />
+  <title><%= @item[:title] %></title>
+  <link href="<%=base_url%>/css/reset.css" rel="stylesheet" type="text/css" />
+  <link href="<%=base_url%>/css/960.css" rel="stylesheet" type="text/css" />
+  <link href="<%=base_url%>/css/documentation.css" media="screen" rel="stylesheet" type="text/css">
+  <link href="<%=base_url%>/css/pygments.css" media="screen" rel="stylesheet" type="text/css">
+</head>
+<body class="api">
+    <div id="header-wrapper">
+      <div id="header">
+        <div>
+          <ul class="nav">
+            <li><a href="<%=base_url%>/api/">API</a></li>
+            <li><a
+              href="https://github.com/anjuke/romar/issues">Issues</a></li>
+          </ul>
+        </div>
+      </div><!-- #header -->
+    </div><!-- #header-wrapper -->
+
+    <div id="wrapper">
+      <div class="content">
+    <%= yield %>
+      </div>
+    </div><!-- #wrapper -->
+
+</body>
+</html>
