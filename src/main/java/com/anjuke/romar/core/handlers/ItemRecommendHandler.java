@@ -19,8 +19,11 @@ public class ItemRecommendHandler extends BaseHandler {
     @Override
     public RomarResponse process(RomarRequest request) throws Exception {
         MultiItemIdRequest mr = (MultiItemIdRequest) request;
-        List<RecommendedItem> list = _service
-                .mostSimilarItems(mr.getItemId(), PreferenceBaseHandler.DEFAULT_HOW_MANY);
+        int howMany = mr.getLimit();
+        if (howMany <= 0) {
+            howMany = PreferenceBaseHandler.DEFAULT_HOW_MANY;
+        }
+        List<RecommendedItem> list = _service.mostSimilarItems(mr.getItemId(), howMany);
         return new RecommendResultResponse(list);
     }
 

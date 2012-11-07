@@ -17,7 +17,11 @@ public class SimilarUserHandler extends PreferenceBaseHandler {
 
     @Override
     public RomarResponse process(PreferenceRomarRequest request) throws Exception {
-        long[] ids = _service.mostSimilarUserIDs(request.getUserId(), DEFAULT_HOW_MANY);
+        int howMany = request.getLimit();
+        if (howMany <= 0) {
+            howMany = DEFAULT_HOW_MANY;
+        }
+        long[] ids = _service.mostSimilarUserIDs(request.getUserId(), howMany);
         return new MultiValueResponse(Arrays.asList(ArrayUtils.toObject(ids)));
     }
 

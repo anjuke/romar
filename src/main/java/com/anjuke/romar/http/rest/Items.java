@@ -1,5 +1,6 @@
 package com.anjuke.romar.http.rest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.DELETE;
@@ -25,14 +26,23 @@ public class Items extends BaseResource {
     @GET
     @Path("/similars")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response similar(@QueryParam("item") List<String> items) {
+    public Response similar(@QueryParam("item") List<String> items,
+            @QueryParam("limit") int limit) {
         MultiItemIdRequest request = new MultiItemIdRequest(RequestPath.ITEM_RECOMMEND);
         request.setItemId(getItemIds(items));
+        request.setLimit(limit);
         RomarResponse response = _romarCore.execute(request);
         checkErrors(response);
         RecommendResultResponse recommendResponse = (RecommendResultResponse) response;
         List<?> result = wrapRecommendItem(recommendResponse);
         return Response.ok().entity(result).build();
+    }
+
+    @GET
+    @Path("/{item}/similars")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response similar(@PathParam("item") String item, @QueryParam("limit") int limit) {
+        return similar(Arrays.asList(item), limit);
     }
 
     @DELETE

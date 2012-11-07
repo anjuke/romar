@@ -7,6 +7,7 @@ public class PreferenceRomarRequest  extends BaseRequest implements RomarRequest
     private long _userId;
     private long _itemId;
     private float _value;
+    private int _limit;
 
     public PreferenceRomarRequest(RequestPath path) {
         super(path);
@@ -35,4 +36,13 @@ public class PreferenceRomarRequest  extends BaseRequest implements RomarRequest
     public void setValue(float preference) {
         _value = preference;
     }
+
+    public int getLimit() {
+        return _limit;
+    }
+
+    public void setLimit(int limit) {
+        _limit = limit;
+    }
+
 }

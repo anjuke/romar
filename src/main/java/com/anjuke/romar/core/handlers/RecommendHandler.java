@@ -16,9 +16,12 @@ public class RecommendHandler extends PreferenceBaseHandler {
     }
 
     @Override
-    public RomarResponse process(PreferenceRomarRequest request)
-            throws Exception {
-        List<RecommendedItem> list = _service.recommend(request.getUserId(), DEFAULT_HOW_MANY);
+    public RomarResponse process(PreferenceRomarRequest request) throws Exception {
+        int howMany = request.getLimit();
+        if (howMany <= 0) {
+            howMany = DEFAULT_HOW_MANY;
+        }
+        List<RecommendedItem> list = _service.recommend(request.getUserId(), howMany);
         return new RecommendResultResponse(list);
     }
 

@@ -7,6 +7,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -25,9 +26,11 @@ public class Users extends BaseResource {
     @GET
     @Path("/{user}/recommendations")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response recommend(@PathParam("user") String userString) {
+    public Response recommend(@PathParam("user") String userString,
+            @QueryParam("limit") int limit) {
         PreferenceRomarRequest request = new PreferenceRomarRequest(RequestPath.RECOMMEND);
         request.setUserId(getUser(userString));
+        request.setLimit(limit);
         RomarResponse response = _romarCore.execute(request);
         checkErrors(response);
         RecommendResultResponse recommendResponse = (RecommendResultResponse) response;
@@ -48,10 +51,12 @@ public class Users extends BaseResource {
 
     @GET
     @Path("/{user}/similars")
-    public Response similarUser(@PathParam("user") String userString) {
+    public Response similarUser(@PathParam("user") String userString,
+            @QueryParam("limit") int limit) {
         PreferenceRomarRequest request = new PreferenceRomarRequest(
                 RequestPath.SIMILAR_USER);
         request.setUserId(getUser(userString));
+        request.setLimit(limit);
         RomarResponse response = _romarCore.execute(request);
         checkErrors(response);
         MultiValueResponse res = wrapMultiUserValues((MultiValueResponse) response);
