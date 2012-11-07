@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Language" content="en-us" />
+  <meta http-equiv="imagetoolbar" content="false" />
+  <meta name="MSSmartTagsPreventParsing" content="true" />
+  <title>Romar v1.0 API</title>
+  <link href="/romar/css/reset.css" rel="stylesheet" type="text/css" />
+  <link href="/romar/css/960.css" rel="stylesheet" type="text/css" />
+  <link href="/romar/css/documentation.css" media="screen" rel="stylesheet" type="text/css">
+  <link href="/romar/css/pygments.css" media="screen" rel="stylesheet" type="text/css">
+</head>
+<body class="api">
+    <div id="header-wrapper">
+      <div id="header">
+        <div>
+          <ul class="nav">
+            <li><a href="/romar/api/">API</a></li>
+            <li><a
+              href="https://github.com/anjuke/romar/issues">Issues</a></li>
+          </ul>
+        </div>
+      </div><!-- #header -->
+    </div><!-- #header-wrapper -->
+
+    <div id="wrapper">
+      <div class="content">
+    <h1 id="romar-v10-api">Romar v1.0 API</h1>
+
+<p>推荐引擎的REST接口</p>
+
+<ul id="markdown-toc">
+<li><a href="#section">设置用户对物品的偏好</a></li>
+  <li><a href="#section-1">删除用户对物品的偏好</a></li>
+  <li><a href="#section-2">获取或估计用户对物品的偏好</a></li>
+  <li><a href="#section-3">获取相似的物品</a></li>
+  <li><a href="#section-4">删除物品</a></li>
+  <li><a href="#section-5">个性化推荐</a></li>
+  <li><a href="#section-6">获取相似的用户</a></li>
+  <li><a href="#section-7">删除用户</a></li>
+  <li><a href="#commit">commit</a></li>
+  <li><a href="#optimize">optimize</a></li>
+</ul><h2 id="section">设置用户对物品的偏好</h2>
+
+<pre><code>PUT /preferences/:user/:item
+</code></pre>
+
+<h3 id="input">Input</h3>
+
+<dl>
+<dt>value</dt>
+  <dd>偏好得分, <strong>float</strong>
+</dd>
+</dl><pre class="highlight"><code class="language-javascript"><span class="p">{</span>
+  <span class="s2">"value"</span><span class="o">:</span> <span class="mf">3.0</span>
+<span class="p">}</span></code></pre>
+
+<h3 id="response">Response</h3>
+
+<pre class="headers"><code>Status: 202 Accepted</code></pre>
+
+<p>如果需要批量添加或修改用户对物品的偏好，可以使用以下方法，而不需要循环调用上述接口</p>
+
+<pre><code>PUT /preferences
+</code></pre>
+
+<h3 id="input-1">Input</h3>
+
+<p>输入内容为用户对物品偏好的列表，列表内的元素为<code>[:user, :item, :value]</code>，例如</p>
+
+<pre class="highlight"><code class="language-javascript"><span class="p">[</span>
+  <span class="p">[</span>
+    <span class="mi">173213</span><span class="p">,</span>
+    <span class="mi">23711131</span><span class="p">,</span>
+    <span class="mf">0.96</span>
+  <span class="p">],</span>
+  <span class="p">[</span>
+    <span class="mi">173213</span><span class="p">,</span>
+    <span class="mi">17192329</span><span class="p">,</span>
+    <span class="mf">0.84</span>
+  <span class="p">],</span>
+  <span class="p">[</span>
+    <span class="mi">173214</span><span class="p">,</span>
+    <span class="mi">19232931</span><span class="p">,</span>
+    <span class="mf">0.84</span>
+  <span class="p">]</span>
+<span class="p">]</span></code></pre>
+
+<h2 id="section-1">删除用户对物品的偏好</h2>
+
+<pre><code>DELETE /preferences/:user/:item
+</code></pre>
+
+<h3 id="response-1">Response</h3>
+
+<pre class="headers"><code>Status: 202 Accepted</code></pre>
+
+<h2 id="section-2">获取或估计用户对物品的偏好</h2>
+
+<pre><code>GET /preferences/:user/:item
+</code></pre>
+
+<h3 id="response-2">Response</h3>
+
+<pre class="headers"><code>Status: 200 OK</code></pre>
+
+<pre class="highlight"><code class="language-javascript"><span class="p">{</span>
+  <span class="s2">"value"</span><span class="o">:</span> <span class="mf">0.94</span>
+<span class="p">}</span></code></pre>
+
+<h2 id="section-3">获取相似的物品</h2>
+
+<pre><code>GET /items/:item/similars
+</code></pre>
+
+<p>需要查找与多个物品相似的物品，可以使用以下方式，将多个物品以参数形式传入。</p>
+
+<pre><code>GET /items/similars
+</code></pre>
+
+<h3 id="paramaters">Paramaters</h3>
+
+<dl>
+<dt>item</dt>
+  <dd>物品编号, 发送多个同名参数来获取多个物品的相似物品</dd>
+  <dt>limit</dt>
+  <dd>最多返回多少结果, <strong>int</strong>, 缺省值为5</dd>
+</dl><h3 id="response-3">Response</h3>
+
+<p>返回最相似的物品列表，每个结果包含相似的物品编号与相似度得分。例如:</p>
+
+<pre class="headers"><code>Status: 200 OK</code></pre>
+
+<pre class="highlight"><code class="language-javascript"><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">"item"</span><span class="o">:</span> <span class="mi">23711131</span><span class="p">,</span>
+    <span class="s2">"value"</span><span class="o">:</span> <span class="mf">0.96</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="s2">"item"</span><span class="o">:</span> <span class="mi">17192329</span><span class="p">,</span>
+    <span class="s2">"value"</span><span class="o">:</span> <span class="mf">0.84</span>
+  <span class="p">}</span>
+<span class="p">]</span></code></pre>
+
+<h2 id="section-4">删除物品</h2>
+
+<pre><code>DELETE /items/:item
+</code></pre>
+
+<p>当物品下线时可以删除所有与该物品关联的偏好设置</p>
+
+<h3 id="response-4">Response</h3>
+
+<pre class="headers"><code>Status: 202 Accepted</code></pre>
+
+<h2 id="section-5">个性化推荐</h2>
+
+<pre><code>GET /users/:user/recommendations
+</code></pre>
+
+<h3 id="parameters">Parameters</h3>
+
+<dl>
+<dt>limit</dt>
+  <dd>最多返回多少推荐结果, <strong>int</strong>, 缺省值为5</dd>
+</dl><h3 id="response-5">Response</h3>
+
+<p>返回推荐结果的列表，每个推荐结果包含物品编号与偏好得分。例如:</p>
+
+<pre class="headers"><code>Status: 200 OK</code></pre>
+
+<pre class="highlight"><code class="language-javascript"><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">"item"</span><span class="o">:</span> <span class="mi">23711131</span><span class="p">,</span>
+    <span class="s2">"value"</span><span class="o">:</span> <span class="mf">0.96</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="s2">"item"</span><span class="o">:</span> <span class="mi">17192329</span><span class="p">,</span>
+    <span class="s2">"value"</span><span class="o">:</span> <span class="mf">0.84</span>
+  <span class="p">}</span>
+<span class="p">]</span></code></pre>
+
+<h2 id="section-6">获取相似的用户</h2>
+
+<pre><code>GET /users/:user/similars
+</code></pre>
+
+<h3 id="paramaters-1">Paramaters</h3>
+
+<dl>
+<dt>limit</dt>
+  <dd>最多返回多少推荐结果, <strong>int</strong>, 缺省值为5</dd>
+</dl><h3 id="response-6">Response</h3>
+
+<p>返回最相似的用户列表，每个结果包含相似用户编号与相似度得分。例如:</p>
+
+<pre class="headers"><code>Status: 200 OK</code></pre>
+
+<pre class="highlight"><code class="language-javascript"><span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">"user"</span><span class="o">:</span> <span class="mi">173213</span><span class="p">,</span>
+    <span class="s2">"value"</span><span class="o">:</span> <span class="mf">0.96</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="s2">"user"</span><span class="o">:</span> <span class="mi">173214</span><span class="p">,</span>
+    <span class="s2">"value"</span><span class="o">:</span> <span class="mf">0.84</span>
+  <span class="p">}</span>
+<span class="p">]</span></code></pre>
+
+<h2 id="section-7">删除用户</h2>
+
+<pre><code>DELETE /users/:user
+</code></pre>
+
+<p>当用户不再使用时可以删除所有该用户的偏好设置</p>
+
+<h3 id="response-7">Response</h3>
+
+<pre class="headers"><code>Status: 202 Accepted</code></pre>
+
+<h2 id="commit">commit</h2>
+
+<pre><code>POST /commit
+</code></pre>
+
+<p>所有用户对货物偏好的改变不会立即生效，都需要调用<strong>commit</strong>之后才会影响到查询的结果。</p>
+
+<h3 id="response-8">Response</h3>
+
+<pre class="headers"><code>Status: 202 Accepted</code></pre>
+
+<h2 id="optimize">optimize</h2>
+
+<pre><code>POST /optimize
+</code></pre>
+
+<h3 id="response-9">Response</h3>
+
+<pre class="headers"><code>Status: 202 Accepted</code></pre>
+      </div>
+    </div><!-- #wrapper -->
+
+</body>
+</html>
