@@ -22,8 +22,8 @@ PUT /preferences/:user/:item
 
 ### Response
 
->```javascript
-{}
+```
+HTTP 202
 ```
 
 使用以下方法可以批量添加或修改用户对物品的偏好，而不需要循环调用上述接口
@@ -44,6 +44,12 @@ PUT /preferences
 ]
 ```
 
+###Response
+```
+HTTP 202
+```
+
+
 ## 删除用户对物品的偏好
 
 ```
@@ -52,8 +58,8 @@ DELETE /preferences/:user/:item
 
 ### Response
 
->```javascript
-{}
+```
+HTTP 202
 ```
 
 ## 获取用户对物品的偏好
@@ -64,7 +70,7 @@ GET /preferences/:user/:item
 
 ### Response
 
->```
+>```javascript
 {"value": 0.94}
 ```
 
@@ -108,8 +114,8 @@ DELETE /items/:item
 
 ### Response
 
->```javascript
-{}
+```
+HTTP 202
 ```
 
 ----
@@ -167,8 +173,8 @@ DELETE /users/:user
 
 ### Response
 
->```javascript
-{}
+```
+HTTP 202
 ```
 
 ----
@@ -183,8 +189,8 @@ POST /commit
 
 ### Response
 
->```javascript
-{}
+```
+HTTP 202
 ```
 
 ## optimize
@@ -195,6 +201,20 @@ POST /optimize
 
 ### Response
 
->```javascript
-{}
+```
+HTTP 202
+```
+
+##错误消息
+
+###internal error
+```
+HTTP 500
+internal error: error message
+```
+
+###no such user/item id
+```
+HTTP 500
+no such user/item id
 ```
