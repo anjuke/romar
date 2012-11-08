@@ -54,6 +54,29 @@ http://anjuke.github.com/romar/api/
     $ cd romar
     $ mvn
 
+## Ingestion
+使用Movielens 1M数据，从 http://www.grouplens.org/node/12 下载并解压
+
+
+    $ cat ratings.dat | sed s/::/,/g | cut -d, -f1,2,3 > romar.log.0
+
+
+将文件放入$ROMAR_HOME/data目录里启动romar，请求
+
+    $ curl -H "Accept: application/json" 'localhost:8080/users/1/recommendations'
+
+
+返回
+>```javascript
+[
+	{"value":4.7291574,"item":3890},
+	{"value":4.692892,"item":3530},
+	{"value":4.662457,"item":989},
+	{"value":4.6365013,"item":127},
+	{"value":4.6365013,"item":3323}
+]
+```
+
 ## Copyright & License
 
 Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
