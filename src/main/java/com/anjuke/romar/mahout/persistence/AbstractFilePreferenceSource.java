@@ -43,12 +43,12 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
         verifyNewestVersion();
     }
 
-    protected synchronized void verifyNewestVersion() {
+    private synchronized void verifyNewestVersion() {
         List<File> logFileList = listLogFileNamesAndSorted();
         if (logFileList.isEmpty()) {
             _version = -1;
         } else {
-            _version = getLogFileVersion(logFileList.get(logFileList.size() - 1));
+            _version = getInitFileVersion(logFileList.get(logFileList.size() - 1));
         }
     }
 
@@ -133,12 +133,17 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
         return Arrays.asList(files);
     }
 
+    private long getInitFileVersion(File file){
+        long version=getLogFileVersion(file);
+         if (file.length() == 0) {
+             version = version - 1;
+         }
+         return version;
+    }
+
     protected long getLogFileVersion(File file) {
         String name = file.getName();
         long version = Long.parseLong(name.substring(LOG_FILE_PREFIX.length()));
-        if (file.length() == 0) {
-            version = version - 1;
-        }
         return version;
     }
 
