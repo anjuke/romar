@@ -18,11 +18,11 @@
     </dependencySets>
 
     <fileSets>
-    <fileSet>
-        <includes>
-          <include>${basedir}/*.md</include>
-        </includes>
-      </fileSet>
+        <fileSet>
+            <includes>
+                <include>${basedir}/*.md</include>
+            </includes>
+        </fileSet>
         <fileSet>
             <directory>bin</directory>
         </fileSet>
@@ -35,9 +35,6 @@
         <fileSet>
             <directory>examples</directory>
 		</fileSet>
-		<fileSet>
-            <directory>doc</directory>
-        </fileSet>
         <fileSet>
             <directory>target</directory>
             <outputDirectory></outputDirectory>
