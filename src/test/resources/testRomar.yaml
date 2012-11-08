@@ -1,3 +1,5 @@
+  serverPort: 22787
+
 #value can only be item,user or common
   recommendType: item
 
