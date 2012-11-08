@@ -20,7 +20,7 @@ import java.util.Random;
 
 import com.anjuke.romar.mahout.persistence.FilePreferenceSource;
 
-public class PressureTest {
+public class PressureTestData {
     public static void main(String[] args) {
         Random random = new Random();
         FilePreferenceSource source = new FilePreferenceSource(new File("/data1/romar"));
