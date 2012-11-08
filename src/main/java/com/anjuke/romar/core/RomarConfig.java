@@ -166,9 +166,9 @@ public final class RomarConfig {
             RomarConfigHolder defaultHolder = yaml.loadAs(isDefault,
                     RomarConfigHolder.class);
             RomarConfigHolder customHolder;
-            LOG.debug("custom conf path is "+path);
+            LOG.debug("custom conf path is " + path);
             if (path != null && !path.isEmpty()) {
-                LOG.info("loading config from "+path);
+                LOG.info("loading config from " + path);
                 isCustom = new FileInputStream(path);
                 customHolder = yaml.loadAs(isCustom, RomarConfigHolder.class);
             } else {
@@ -369,11 +369,20 @@ public final class RomarConfig {
     }
 
     public String getPersistencePath() {
+        String path;
         if (_customerHolder._persistencePath != null) {
-            return _customerHolder._persistencePath;
+            path = _customerHolder._persistencePath;
+        } else {
+            path = _defaultHolder._persistencePath;
         }
-
-        return _defaultHolder._persistencePath;
+        if (path == null) {
+            return null;
+        }
+        if (path.startsWith("/")) {
+            return path;
+        } else {
+            return System.getProperty("romar.home", "/tmp/romar") + "/" + path;
+        }
     }
 
     public boolean isAllowStringID() {

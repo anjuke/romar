@@ -14,6 +14,7 @@
 #  CityBlockSimilarity
 #  LogLikelihoodSimilarity
 #  TanimotoCoefficientSimilarity
+#
 #  itemSimilarityClass: TanimotoCoefficientSimilarity
 
 #user similarity can only be
@@ -24,6 +25,7 @@
 #  LogLikelihoodSimilarity
 #  TanimotoCoefficientSimilarity
 #  SpearmanCorrelationSimilarity
+#
 #  userSimilarityClass: PearsonCorrelationSimilarity
 
 #  NearestNUserNeighborhood
@@ -34,7 +36,7 @@
 
 
 #empty value will not use file persistence
-#  persistencePath: /tmp/romar
+  persistencePath: data
 
-#if true,you can submit user or item value with string type
+#if true, you can submit user or item value with string type
 #  allowStringID: false
