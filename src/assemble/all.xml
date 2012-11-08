@@ -30,11 +30,15 @@
             <directory>conf</directory>
         </fileSet>
         <fileSet>
-            <directory>logs</directory>
+            <directory>bin</directory>
+            <outputDirectory>/logs</outputDirectory>
+            <excludes>
+                <exclude>*</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>examples</directory>
-		</fileSet>
+        </fileSet>
         <fileSet>
             <directory>target</directory>
             <outputDirectory></outputDirectory>
