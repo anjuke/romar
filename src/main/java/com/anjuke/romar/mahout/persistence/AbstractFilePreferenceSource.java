@@ -133,12 +133,12 @@ public abstract class AbstractFilePreferenceSource implements PreferenceSource {
         return Arrays.asList(files);
     }
 
-    private long getInitFileVersion(File file){
-        long version=getLogFileVersion(file);
-         if (file.length() == 0) {
-             version = version - 1;
-         }
-         return version;
+    private long getInitFileVersion(File file) {
+        long version = getLogFileVersion(file);
+        if (file.length() == 0) {
+            version = version - 1;
+        }
+        return version;
     }
 
     protected long getLogFileVersion(File file) {

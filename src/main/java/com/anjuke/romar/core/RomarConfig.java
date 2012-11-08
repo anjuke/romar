@@ -384,8 +384,4 @@ public final class RomarConfig {
         return _defaultHolder._allowStringID;
     }
 
-    public static void main(String[] args) {
-        System.out.println(RomarConfig.getInstance());
-    }
-
 }
