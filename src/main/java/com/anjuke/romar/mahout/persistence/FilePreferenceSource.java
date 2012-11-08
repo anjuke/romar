@@ -39,13 +39,11 @@ import org.apache.mahout.cf.taste.model.PreferenceArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.anjuke.romar.http.jetty.JettyRomarHandler;
 import com.anjuke.romar.mahout.util.Util;
 
-public class FilePreferenceSource extends AbstractFilePreferenceSource
-        implements PreferenceSource {
-    private static final Logger LOG = LoggerFactory
-            .getLogger(JettyRomarHandler.class);
+public class FilePreferenceSource extends AbstractFilePreferenceSource implements
+        PreferenceSource {
+    private static final Logger LOG = LoggerFactory.getLogger(FilePreferenceSource.class);
     private PrintWriter _writer;
     private long _logCount = 0;
     private final Object _snapshotWriterLock = new Object();
@@ -322,8 +320,7 @@ public class FilePreferenceSource extends AbstractFilePreferenceSource
         } else {
             version = getSnapshotFileVersion(snapshotFile);
         }
-        final List<File> list = new ArrayList<File>(
-                getLogFileListFromVersion(version));
+        final List<File> list = new ArrayList<File>(getLogFileListFromVersion(version));
         if (snapshotFile != null) {
             list.add(0, snapshotFile);
         }
