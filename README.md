@@ -1,31 +1,61 @@
-###使用方法
+# Romar
 
-bin/start.sh 
+A Simple Recommendation Web Service
 
-默认服务将监听8080端口处理http请求，修改端口请修改conf/romar.yaml
+## Quick Start
 
+### Download and install
 
-rest api
-<https://github.com/anjuke/romar/wiki/Romar-API-v1>
+    $ curl https://github.com/anjuke/romar/downloads/...
+    $ tar xzf ...
 
-相关配置，修改romar.yaml
+### Running
 
+    $ cd romar
+    $ bin/start.sh
 
-### License
-```
-/**
- * Copyright 2012 Anjuke Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-```
+默认服务将监听8080端口处理http请求，修改端口请修改`conf/romar.yaml`
+
+### API
+
+http://anjuke.github.com/romar/api/
+
+## Config
+
+ * **serverPort**  
+   服务端口，缺省值`8080`
+
+ * **recommendType**  
+   允许`item`或`user`，表示Itembased或Userbased的协同过滤.
+
+ * **itemSimilarityClass**  
+   物品相似度算法。缺省值`TanimotoCoefficientSimilarity`
+
+ * **userSimilarityClass**  
+   用户相似度算法。缺省值`PearsonCorrelationSimilarity`
+
+ * **userNeighborhoodClass**  
+   相邻用户算法。缺省值`NearestNUserNeighborhood`
+
+ * **userNeighborhoodNearestN**  
+   缺省为`50`
+
+ * **persistencePath**  
+   持久化数据的存储路径，缺省为空表示不持久化
+
+ * **allowStringID**
+   是否支持字符串形式的itemID或userID，缺省只允许整数形式的ID
+
+具体查看`conf/romar.yaml`文件
+
+## Build
+
+    $ git clone git@github.com:anjuke/romar.git
+    $ cd romar
+    $ mvn
+
+## Copyright & License
+
+Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+
+*Copyright 2012 Anjuke Inc.*
