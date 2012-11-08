@@ -14,6 +14,10 @@
         <dependencySet>
             <outputDirectory>/lib</outputDirectory>
             <scope>runtime</scope>
+            <excludes>
+                <exclude>com.anjuke.romar:romar-core</exclude>
+            </excludes>
+
         </dependencySet>
     </dependencySets>
 
@@ -32,6 +36,13 @@
         <fileSet>
             <directory>bin</directory>
             <outputDirectory>/logs</outputDirectory>
+            <excludes>
+                <exclude>*</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>bin</directory>
+            <outputDirectory>/data</outputDirectory>
             <excludes>
                 <exclude>*</exclude>
             </excludes>

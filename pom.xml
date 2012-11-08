@@ -51,7 +51,7 @@
                 <executions>
                     <execution>
                         <id>attach-sources</id>
-                        <phase>package</phase>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -61,8 +61,9 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
-                        <descriptor>src/assemble/all.xml
+                        <descriptor>src/assembly/all.xml
                     </descriptor>
                     </descriptors>
                 </configuration>
@@ -70,7 +71,7 @@
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>assembly</goal>
+                            <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
