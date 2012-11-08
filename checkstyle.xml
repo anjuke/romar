@@ -73,6 +73,20 @@
         <module name="LineLength">
             <property name="max" value="120" />
         </module>
+        <module name="Regexp">
+            <property name="format" value=" * Copyright 2012 Anjuke Inc."/>
+            <property name="duplicateLimit" value="0"/>
+        </module>
+        <module name="Regexp">
+            <property name="format" value="System\.out\.println"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="ignoreComments" value="true"/>
+        </module>
+        <module name="Regexp">
+            <property name="format" value="[ \t]+$"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="message" value="Trailing whitespace"/>
+        </module>
     </module>
     <module name="FileLength" />
     <module name="FileTabCharacter" />
