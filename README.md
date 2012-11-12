@@ -4,21 +4,45 @@ A Simple Recommendation Web Service
 
 ## Quick Start
 
-### Download and install
+### 下载、安装
 
-    $ curl https://github.com/anjuke/romar/downloads/...
-    $ tar xzf ...
+    $ curl https://github.com/anjuke/romar/downloads/romar-core-1.0.0-snapshot.tar.gz
+    $ tar xzf romar-core-1.0.0-snapshot.tar.gz
 
-### Running
+### 下载测试数据
 
-    $ cd romar
+使用Movielens 1M数据，从 http://www.grouplens.org/node/12 下载并解压。然后将ratings.dat文件转换一下，参考如下命令。
+
+    $ cat ratings.dat | sed s/::/,/g | cut -d, -f1,2,3 > romar.log.0
+
+将生成的文件`romar.log.0`放入`$ROMAR_HOME/data`目录里。
+
+### 启动
+
     $ bin/start.sh
 
 默认服务将监听8080端口处理http请求，修改端口请修改`conf/romar.yaml`
 
-### API
+### 测试
 
-http://anjuke.github.com/romar/api/
+然后执行
+
+    $ curl "http://localhost:8080/users/1/recommendations"
+
+>```javascript
+[
+	{"value":4.7291574, "item":3890},
+	{"value":4.692892, "item":3530},
+	{"value":4.662457, "item":989},
+	{"value":4.6365013, "item":127},
+	{"value":4.6365013, "item":3323}
+]
+```
+如果看到类似上述返回信息，那么romar安装成功。
+
+## API
+
+详见: http://anjuke.github.com/romar/api/
 
 ## Config
 
@@ -53,29 +77,6 @@ http://anjuke.github.com/romar/api/
     $ git clone git@github.com:anjuke/romar.git
     $ cd romar
     $ mvn
-
-## Ingestion
-使用Movielens 1M数据，从 http://www.grouplens.org/node/12 下载并解压
-
-
-    $ cat ratings.dat | sed s/::/,/g | cut -d, -f1,2,3 > romar.log.0
-
-
-将文件放入$ROMAR_HOME/data目录里启动romar，请求
-
-    $ curl -H "Accept: application/json" 'localhost:8080/users/1/recommendations'
-
-
-返回
->```javascript
-[
-	{"value":4.7291574,"item":3890},
-	{"value":4.692892,"item":3530},
-	{"value":4.662457,"item":989},
-	{"value":4.6365013,"item":127},
-	{"value":4.6365013,"item":3323}
-]
-```
 
 ## Copyright & License
 
