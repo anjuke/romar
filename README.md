@@ -13,7 +13,7 @@ A Simple Recommendation Web Service
 
 使用Movielens 1M数据，从 http://www.grouplens.org/node/12 下载并解压。然后将ratings.dat文件转换一下，参考如下命令。
 
-    $ cat ratings.dat | sed s/::/,/g | cut -d, -f1,2,3 > romar.log.0
+    $ awk -F '::' '{printf "%s\t%s\t%s\n", $1, $2, $3}' ratings.dat > romar.log.0
 
 将生成的文件`romar.log.0`放入`$ROMAR_HOME/data`目录里。
 
