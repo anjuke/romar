@@ -6,7 +6,9 @@ A Simple Recommendation Web Service
 
 ### 下载、安装
 
-    $ curl https://github.com/anjuke/romar/downloads/romar-core-1.0.0-snapshot.tar.gz
+    下载地址: https://github.com/anjuke/romar/downloads
+
+    $ curl https://github.com/anjuke/romar/downloads/romar-core-1.0.0.tar.gz
     $ tar xzf romar-core-1.0.0-snapshot.tar.gz
 
 ### 下载测试数据
