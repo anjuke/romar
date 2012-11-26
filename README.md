@@ -2,6 +2,8 @@
 
 A Simple Recommendation Web Service
 
+[![Build Status](https://travis-ci.org/anjuke/romar.png)](https://travis-ci.org/anjuke/romar)
+
 ## Quick Start
 
 ### 下载、安装
