@@ -39,4 +39,6 @@
   persistencePath: data
 
 #if true, you can submit user or item value with string type
-#  allowStringID: false
+#  allowUserStringID: false
+
+#  allowItemStringID: false
