@@ -17,6 +17,8 @@ package com.anjuke.romar.core;
 
 import java.io.File;
 
+import org.apache.mahout.cf.taste.model.IDMigrator;
+
 import com.anjuke.romar.core.handlers.CommitHandler;
 import com.anjuke.romar.core.handlers.CompactHandler;
 import com.anjuke.romar.core.handlers.EstimateHandler;
@@ -63,31 +65,32 @@ public final class RomarPathProcessFactory {
         private MahoutService _service = _serviceFactory.createService();
         private final static int BDB_CACHE_SIZE = 102400;
 
+
+        private IDMigrator getIdMigrator(String type){
+            String path = _config.getPersistencePath();
+            if (path != null && !path.isEmpty()) {
+                File userPath = new File(_config.getPersistencePath()
+                        + File.separator + type);
+                if (!userPath.exists()) {
+                    userPath.mkdirs();
+                }
+                return new BDBIDMigrator(userPath.getPath(),
+                        BDB_CACHE_SIZE);
+            } else {
+                return new RomarMemoryIDMigrator();
+            }
+        }
+
         @Override
         public RomarCore getInstance() {
             _dispatcher.prepare();
-            if (_config.isAllowStringID()) {
-                String path = _config.getPersistencePath();
-                if (path != null && !path.isEmpty()) {
-                    File userPath = new File(_config.getPersistencePath()
-                            + File.separator + "user_id");
-                    if (!userPath.exists()) {
-                        userPath.mkdirs();
-                    }
-                    _core.setUserIdMigrator(new BDBIDMigrator(userPath.getPath(),
-                            BDB_CACHE_SIZE));
-                    File itemPath = new File(_config.getPersistencePath()
-                            + File.separator + "item_id");
-                    if (!itemPath.exists()) {
-                        itemPath.mkdirs();
-                    }
-                    _core.setItemIdMigrator(new BDBIDMigrator(itemPath.getPath(),
-                            BDB_CACHE_SIZE));
-                } else {
-                    _core.setUserIdMigrator(new RomarMemoryIDMigrator());
-                    _core.setItemIdMigrator(new RomarMemoryIDMigrator());
-                }
+            if (_config.isAllowUserStringID()) {
+               _core.setUserIdMigrator(getIdMigrator("user_id"));
             }
+
+            if (_config.isAllowItemStringID()) {
+                _core.setItemIdMigrator(getIdMigrator("item_id"));
+             }
 
             _core.setDispatcher(_dispatcher);
             _core.setService(_service);

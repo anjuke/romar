@@ -35,4 +35,6 @@
 
   persistencePath:
 
-  allowStringID: true
+  allowUserStringID: true
+
+  allowItemStringID: true

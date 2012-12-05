@@ -39,7 +39,9 @@ abstract class BaseResource {
 
     protected final RomarCore _romarCore = CoreContainer.getCore();
 
-    private final boolean _allowStringID = RomarConfig.getInstance().isAllowStringID();
+    private final boolean _allowUserStringID = RomarConfig.getInstance().isAllowUserStringID();
+
+    private final boolean _allowItemStringID = RomarConfig.getInstance().isAllowItemStringID();
 
     long[] getItemIds(List<String> itemStrings) {
         try {
@@ -47,7 +49,7 @@ abstract class BaseResource {
             long[] items = new long[length];
             for (int i = 0; i < length; i++) {
                 String value = itemStrings.get(i);
-                if (_allowStringID) {
+                if (_allowItemStringID) {
                     items[i] = _romarCore.getItemIdMigrator().toLongID(value);
                 } else {
                     items[i] = Long.parseLong(value);
@@ -66,7 +68,7 @@ abstract class BaseResource {
         List<RecommendedItem> list = recommendResponse.getList();
         List<Object> result = new ArrayList<Object>();
         for (RecommendedItem item : list) {
-            if (_allowStringID) {
+            if (_allowItemStringID) {
                 RecommendStringBean bean = new RecommendStringBean();
                 bean.setItem(getItemString(item.getItemID()));
                 bean.setValue(item.getValue());
@@ -104,7 +106,7 @@ abstract class BaseResource {
     long getItem(String itemString) {
         long item;
         try {
-            if (_allowStringID) {
+            if (_allowItemStringID) {
                 item = _romarCore.getItemIdMigrator().toLongID(itemString);
             } else {
                 item = Long.parseLong(itemString);
@@ -120,7 +122,7 @@ abstract class BaseResource {
     long getUser(String userString) {
         long user;
         try {
-            if (_allowStringID) {
+            if (_allowUserStringID) {
                 user = _romarCore.getUserIdMigrator().toLongID(userString);
             } else {
                 user = Long.parseLong(userString);
@@ -137,11 +139,15 @@ abstract class BaseResource {
         long user;
         long item;
         try {
-            if (_allowStringID) {
+            if (_allowUserStringID) {
                 user = _romarCore.getUserIdMigrator().toLongID(userString);
-                item = _romarCore.getItemIdMigrator().toLongID(itemString);
             } else {
                 user = Long.parseLong(userString);
+            }
+
+            if (_allowItemStringID) {
+                item = _romarCore.getItemIdMigrator().toLongID(itemString);
+            } else {
                 item = Long.parseLong(itemString);
             }
             return new long[] {user, item};
@@ -153,7 +159,7 @@ abstract class BaseResource {
     }
 
     MultiValueResponse wrapMultiUserValues(MultiValueResponse response) {
-        if (_allowStringID) {
+        if (_allowUserStringID) {
             List<Long> values = (List<Long>) response.getValues();
             List<String> result = new ArrayList<String>(values.size());
             try {
