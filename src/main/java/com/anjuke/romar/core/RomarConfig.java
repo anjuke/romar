@@ -52,7 +52,8 @@ public final class RomarConfig {
     private static final String CONF_PATH_KEY = "romar.config";
 
     public static class RomarConfigHolder {
-        private Boolean _allowStringID;
+        private Boolean _allowUserStringID;
+        private Boolean _allowItemStringID;
         private Integer _serverPort;
         private RecommendType _recommendType;
         private Boolean _useSimilarityCache;
@@ -64,12 +65,20 @@ public final class RomarConfig {
         private CommonRecommenderClass _commonRecommenderClass;
         private String _persistencePath;
 
-        public Boolean getAllowStringID() {
-            return _allowStringID;
+        public Boolean getAllowUserStringID() {
+            return _allowUserStringID;
         }
 
-        public void setAllowStringID(Boolean value) {
-            _allowStringID = value;
+        public void setAllowUserStringID(Boolean allowUserStringID) {
+            _allowUserStringID = allowUserStringID;
+        }
+
+        public Boolean getAllowItemStringID() {
+            return _allowItemStringID;
+        }
+
+        public void setAllowItemStringID(Boolean allowItemStringID) {
+            _allowItemStringID = allowItemStringID;
         }
 
         public Integer getServerPort() {
@@ -385,12 +394,20 @@ public final class RomarConfig {
         }
     }
 
-    public boolean isAllowStringID() {
-        Boolean allowStringID = _customerHolder.getAllowStringID();
+    public boolean isAllowUserStringID() {
+        Boolean allowStringID = _customerHolder.getAllowUserStringID();
         if (allowStringID != null) {
             return allowStringID;
         }
-        return _defaultHolder._allowStringID;
+        return _defaultHolder._allowUserStringID;
+    }
+
+    public boolean isAllowItemStringID() {
+        Boolean allowStringID = _customerHolder.getAllowItemStringID();
+        if (allowStringID != null) {
+            return allowStringID;
+        }
+        return _defaultHolder._allowItemStringID;
     }
 
 }
