@@ -71,7 +71,7 @@ A Simple Recommendation Web Service
  * **persistencePath**  
    持久化数据的存储路径，缺省为空表示不持久化
 
- * **allowStringID**
+ * **allowUserStringID**, **allowItemStringID**  
    是否支持字符串形式的itemID或userID，缺省只允许整数形式的ID
 
 具体查看`conf/romar.yaml`文件
