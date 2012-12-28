@@ -10,3 +10,6 @@ target
 *.iml
 *.ipr
 *.iws
+
+
+logs

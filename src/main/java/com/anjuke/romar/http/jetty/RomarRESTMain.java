@@ -15,14 +15,20 @@
  */
 package com.anjuke.romar.http.jetty;
 
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+
+import ch.qos.logback.access.jetty.RequestLogImpl;
 
 import com.anjuke.romar.core.RomarConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 public final class RomarRESTMain {
+    private final static String ACCESS_LOG_CONF_FILE = "access.xml";
 
     private RomarRESTMain() {
     }
@@ -30,9 +36,9 @@ public final class RomarRESTMain {
     public static void main(String[] args) throws Exception {
         java.util.logging.Logger rootLogger = java.util.logging.LogManager
                 .getLogManager().getLogger("");
-        java.util.logging.Handler[] handlers = rootLogger.getHandlers();
-        for (int i = 0; i < handlers.length; i++) {
-            rootLogger.removeHandler(handlers[i]);
+        java.util.logging.Handler[] logHandlers = rootLogger.getHandlers();
+        for (int i = 0; i < logHandlers.length; i++) {
+            rootLogger.removeHandler(logHandlers[i]);
         }
         org.slf4j.bridge.SLF4JBridgeHandler.install();
         RomarConfig config = RomarConfig.getInstance();
@@ -45,8 +51,23 @@ public final class RomarRESTMain {
                 "com.anjuke.romar.http.rest;org.codehaus.jackson.jaxrs");
         servletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature",
                 "true");
+
+        HandlerCollection handlers = new HandlerCollection();
+        RequestLogHandler requestLogHandler = new RequestLogHandler();
+        RequestLogImpl requestLog = new RequestLogImpl();
+        String romarHome = System.getProperty("romar.home");
+        if (romarHome == null) {
+            requestLog.setResource("/" + ACCESS_LOG_CONF_FILE);
+        } else {
+            requestLog.setFileName(romarHome + "/conf/" + ACCESS_LOG_CONF_FILE);
+        }
+
+        requestLogHandler.setRequestLog(requestLog);
+
+        handlers.setHandlers(new Handler[] {context, requestLogHandler});
+
         context.addServlet(servletHolder, "/*");
-        server.setHandler(context);
+        server.setHandler(handlers);
         server.start();
         server.join();
     }
