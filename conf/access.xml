@@ -6,7 +6,7 @@
         class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/access.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>access.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<fileNamePattern>logs/access.%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
 
         <encoder>
