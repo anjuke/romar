@@ -10,13 +10,13 @@
     </appender>
 
     <logger name="com.anjuke">
-        <level value="debug" />
+        <level value="info" />
     </logger>
     <logger name="org.apache.mahout.cf.taste.impl.common">
         <level value="warn" />
     </logger>
     <root>
-        <priority value="debug" />
+        <priority value="info" />
         <appender-ref ref="console" />
     </root>
 

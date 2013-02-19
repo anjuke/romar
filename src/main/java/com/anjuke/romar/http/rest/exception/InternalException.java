@@ -23,10 +23,14 @@ import com.anjuke.romar.core.impl.response.ErrorResponse;
 public class InternalException extends WebApplicationException {
 
     private static final long serialVersionUID = -9174551498572603831L;
+    private final ErrorResponse errorResponse;
 
-    public InternalException(ErrorResponse response) {
-        super(Response.status(response.getCode()).entity(response.getMessage())
-                .type("text/plain").build());
+    public InternalException(ErrorResponse errorResponse) {
+        this.errorResponse = errorResponse;
+    }
+
+    public ErrorResponse getErrorResponse() {
+        return errorResponse;
     }
 
 }

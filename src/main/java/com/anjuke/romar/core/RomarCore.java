@@ -48,13 +48,13 @@ public class RomarCore {
         try {
             return handler.process(request);
         } catch (NoSuchUserException e) {
-            log.info(e.getMessage(), e);
-            return new ErrorResponse(ErrorResponse.INTERNAL_ERROR, "no such user id "
-                    + e.getMessage());
+            String msg = "no such user id " + e.getMessage();
+            log.info(msg);
+            return new ErrorResponse(ErrorResponse.INTERNAL_ERROR, msg);
         } catch (NoSuchItemException e) {
-            log.info(e.getMessage(), e);
-            return new ErrorResponse(ErrorResponse.INTERNAL_ERROR, "no such item id "
-                    + e.getMessage());
+            String msg = "no such item id " + e.getMessage();
+            log.info(msg);
+            return new ErrorResponse(ErrorResponse.INTERNAL_ERROR, msg);
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
             return new ErrorResponse(ErrorResponse.INTERNAL_ERROR, "internal error: "

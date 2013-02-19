@@ -48,7 +48,7 @@ public final class RomarRESTMain {
                 ServletContextHandler.NO_SESSIONS);
         ServletHolder servletHolder = new ServletHolder(new ServletContainer());
         servletHolder.setInitParameter("com.sun.jersey.config.property.packages",
-                "com.anjuke.romar.http.rest;org.codehaus.jackson.jaxrs");
+                "com.anjuke.romar.http.rest;org.codehaus.jackson.jaxrs;com.anjuke.romar.http.rest.exception");
         servletHolder.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature",
                 "true");
 
