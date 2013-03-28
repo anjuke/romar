@@ -30,9 +30,12 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.anjuke.romar.core.RomarConfig;
 import com.anjuke.romar.http.rest.bean.RecommendBean;
@@ -45,6 +48,9 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 
 public class RomarRESTMainTest {
+
+
+    private static final Logger LOG=LoggerFactory.getLogger(RomarRESTMainTest.class);
     public static void main(String[] args) throws Exception {
         System.setProperty("romar.config", "src/test/resources/testRomar.yaml");
         RomarRESTMain.main(args);
@@ -58,6 +64,11 @@ public class RomarRESTMainTest {
     @BeforeClass
     public static void beforeClass() throws Exception {
         System.setProperty("romar.config", "src/test/resources/testRomar.yaml");
+
+    }
+
+    @Before
+    public void setUp() throws Exception {
         jettyThread = new Thread() {
             @Override
             public void run() {
@@ -71,15 +82,6 @@ public class RomarRESTMainTest {
         jettyThread.start();
         Thread.sleep(2000);
         port = RomarConfig.getInstance().getServerPort();
-    }
-
-    public static void afterClass() throws InterruptedException {
-        jettyThread.interrupt();
-        jettyThread.join();
-    }
-
-    @Before
-    public void setUp() throws Exception {
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
                 Boolean.TRUE);
@@ -89,7 +91,12 @@ public class RomarRESTMainTest {
     @After
     public void tearDown() throws Exception {
         client.destroy();
+        jettyThread.interrupt();
+        jettyThread.join();
+        Thread.sleep(2000);
     }
+
+
 
     @Test
     public void testDeletePreference() {
@@ -97,10 +104,10 @@ public class RomarRESTMainTest {
                 + "/preferences/1/2");
         ClientResponse response = null;
         response = webResource.accept("application/json").delete(ClientResponse.class);
+        traceResponse(response);
         assertEquals(202, response.getStatus());
     }
 
-    @Test
     public void testSetPreference() throws JsonGenerationException, JsonMappingException,
             IOException {
 
@@ -112,46 +119,52 @@ public class RomarRESTMainTest {
         ClientResponse response = null;
         response = webResource.accept("application/json")
                 .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
+        traceResponse(response);
         assertEquals(202, response.getStatus());
         webResource = client.resource("http://localhost:" + port + "/preferences/1/2");
         response = webResource.accept("application/json")
                 .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
+        traceResponse(response);
         assertEquals(202, response.getStatus());
 
         webResource = client.resource("http://localhost:" + port + "/preferences/2/1");
         response = webResource.accept("application/json")
                 .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
-
+        traceResponse(response);
         assertEquals(202, response.getStatus());
 
         webResource = client.resource("http://localhost:" + port + "/preferences/2/2");
         response = webResource.accept("application/json")
                 .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
-
+        traceResponse(response);
         assertEquals(202, response.getStatus());
         webResource = client.resource("http://localhost:" + port + "/preferences/2/3");
         response = null;
         response = webResource.accept("application/json")
                 .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
+        traceResponse(response);
         assertEquals(202, response.getStatus());
         webResource = client.resource("http://localhost:" + port + "/preferences/2/4");
         response = null;
         response = webResource.accept("application/json")
                 .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
-
+        traceResponse(response);
         assertEquals(202, response.getStatus());
     }
 
     @Test
-    public void testCommit() throws InterruptedException {
+    public void testCommit() throws InterruptedException, JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client.resource("http://localhost:" + port + "/commit");
         ClientResponse response = null;
         response = webResource.accept("application/json").post(ClientResponse.class);
+        traceResponse(response);
         assertEquals(202, response.getStatus());
     }
 
     @Test
-    public void testEstimatePreference() {
+    public void testEstimatePreference() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client.resource("http://localhost:" + port
                 + "/preferences/1/2");
         ClientResponse response = null;
@@ -162,7 +175,8 @@ public class RomarRESTMainTest {
     }
 
     @Test
-    public void testRecommend() {
+    public void testRecommend() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client.resource("http://localhost:" + port
                 + "/users/1/recommendations");
         ClientResponse response = null;
@@ -173,7 +187,8 @@ public class RomarRESTMainTest {
     }
 
     @Test
-    public void testItemSimilar() {
+    public void testItemSimilar() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client.resource("http://localhost:" + port
                 + "/items/similars?item=1&item=2");
         ClientResponse response = null;
@@ -184,30 +199,34 @@ public class RomarRESTMainTest {
     }
 
     @Test
-    public void testUserSimilar() {
+    public void testUserSimilar() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client.resource("http://localhost:" + port
                 + "/users/1/similars");
         ClientResponse response = null;
         response = webResource.accept("application/json").get(ClientResponse.class);
-        String result = response.getEntity(String.class);
-        System.out.println(result);
+        traceResponse(response);
     }
 
     @Test
-    public void testUserRemove() {
+    public void testUserRemove() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client
                 .resource("http://localhost:" + port + "/users/1");
         ClientResponse response = null;
         response = webResource.accept("application/json").delete(ClientResponse.class);
+        traceResponse(response);
         assertEquals(202, response.getStatus());
     }
 
     @Test
-    public void testItemRemove() {
+    public void testItemRemove() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client
                 .resource("http://localhost:" + port + "/items/1");
         ClientResponse response = null;
         response = webResource.accept("application/json").delete(ClientResponse.class);
+        traceResponse(response);
         assertEquals(202, response.getStatus());
     }
 
@@ -221,6 +240,14 @@ public class RomarRESTMainTest {
                 .accept("application/json")
                 .entity(new long[][] {new long[] {1, 1, 1}, new long[] {1, 1, 1}},
                         MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
+        traceResponse(response);
         assertEquals(202, response.getStatus());
+    }
+
+
+    private void traceResponse(ClientResponse response){
+        LOG.info("===========Response with code "+response.getStatus()+"================");
+        LOG.info(response.getEntity(String.class));
+        LOG.info("<<<<<<<<<<<<<<Response END>>>>>>>>>>>>>>");
     }
 }
