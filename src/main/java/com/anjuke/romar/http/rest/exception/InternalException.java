@@ -16,21 +16,20 @@
 package com.anjuke.romar.http.rest.exception;
 
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 
 import com.anjuke.romar.core.impl.response.ErrorResponse;
 
 public class InternalException extends WebApplicationException {
 
     private static final long serialVersionUID = -9174551498572603831L;
-    private final ErrorResponse errorResponse;
+    private final ErrorResponse _errorResponse;
 
     public InternalException(ErrorResponse errorResponse) {
-        this.errorResponse = errorResponse;
+        this._errorResponse = errorResponse;
     }
 
     public ErrorResponse getErrorResponse() {
-        return errorResponse;
+        return _errorResponse;
     }
 
 }

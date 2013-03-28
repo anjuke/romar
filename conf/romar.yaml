@@ -3,9 +3,18 @@
 #value can only be item,user or common
   recommendType: item
 
+# when use file similairty, these config will no be used
   useSimilarityCache: true
 
   similarityCacheSize: 10240
+
+
+  useFileSimilarity: false
+
+  similarityFile: data/similarity
+
+# true to use binary file  long,long,double
+  binarySimilarityFile: false
 
 #item similarity can only be
 #  EuclideanDistanceSimilarity
