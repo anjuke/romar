@@ -15,8 +15,11 @@
  */
 package com.anjuke.romar.mahout.factory;
 
+import java.io.File;
+
 import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
 import org.apache.mahout.cf.taste.impl.similarity.CachingUserSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.GenericUserSimilarity.UserUserSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
 import org.apache.mahout.cf.taste.recommender.Recommender;
@@ -27,29 +30,56 @@ import com.anjuke.romar.core.RomarConfig;
 import com.anjuke.romar.mahout.GenericReloadDataModel;
 import com.anjuke.romar.mahout.MahoutService;
 import com.anjuke.romar.mahout.RecommenderWrapper;
+import com.anjuke.romar.mahout.similarity.RomarFileUserSimilarity;
+import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator;
+import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator.IteratorBuiler;
 
-public class MahoutServiceUserRecommendFactory
-        extends AbstractMahoutServiceFactory  implements MahoutServiceFactory {
+public class MahoutServiceUserRecommendFactory extends AbstractMahoutServiceFactory
+        implements MahoutServiceFactory {
     @Override
     public MahoutService createService() {
         RomarConfig config = RomarConfig.getInstance();
         Recommender recommender;
         DataModel dataModel = wrapDataModel(new GenericReloadDataModel());
-        UserSimilarity similarity = ClassUtils.instantiateAs(
-                config.getUserSimilarityClass(), UserSimilarity.class,
-                new Class<?>[] {DataModel.class}, new Object[] {dataModel});
-        if (config.isUseSimilariyCache()){
-            similarity = new CachingUserSimilarity(similarity,
-                    config.getSimilarityCacheSize());
+
+        UserSimilarity similarity;
+        if (config.isUseFileSimilarity()) {
+            File file = new File(config.getSimilarityFile());
+            if (!file.exists()) {
+                throw new IllegalArgumentException("similairy file not exists");
+            }
+
+            if (!file.isFile()) {
+                throw new IllegalArgumentException("similairy file is a directory");
+            }
+
+            IteratorBuiler<UserUserSimilarity> iteratorBuilder;
+            if (config.isBinarySimilarityFile()) {
+                iteratorBuilder = RomarFileSimilarityIterator
+                        .dataFileUserIteratorBuilder();
+            } else {
+                iteratorBuilder = RomarFileSimilarityIterator
+                        .lineFileUserIteratorBuilder();
+            }
+            similarity = new RomarFileUserSimilarity(file, iteratorBuilder);
+        } else {
+            similarity = ClassUtils.instantiateAs(config.getUserSimilarityClass(),
+                    UserSimilarity.class, new Class<?>[] {DataModel.class},
+                    new Object[] {dataModel});
+            if (config.isUseSimilariyCache()) {
+                similarity = new CachingUserSimilarity(similarity,
+                        config.getSimilarityCacheSize());
+            }
         }
-        UserNeighborhood neighborhood = ClassUtils.instantiateAs(
-                config.getUserNeighborhoodClass(), UserNeighborhood.class,
-                new Class<?>[] {int.class, UserSimilarity.class,
-                        DataModel.class},
-                new Object[] {config.getUserNeighborhoodNearestN(),
-                        similarity, dataModel});
-        recommender = new GenericUserBasedRecommender(dataModel, neighborhood,
-                similarity);
+
+        UserNeighborhood neighborhood = ClassUtils
+                .instantiateAs(
+                        config.getUserNeighborhoodClass(),
+                        UserNeighborhood.class,
+                        new Class<?>[] {int.class, UserSimilarity.class, DataModel.class},
+                        new Object[] {config.getUserNeighborhoodNearestN(), similarity,
+                                dataModel});
+        recommender = new GenericUserBasedRecommender(dataModel, neighborhood, similarity);
 
         return new RecommenderWrapper(recommender);
     }

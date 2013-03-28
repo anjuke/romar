@@ -64,6 +64,9 @@ public final class RomarConfig {
         private Integer _userNeighborhoodNearestN;
         private CommonRecommenderClass _commonRecommenderClass;
         private String _persistencePath;
+        private Boolean _useFileSimilarity;
+        private Boolean _binarySimilarityFile;
+        private String _similarityFile;
 
         public Boolean getAllowUserStringID() {
             return _allowUserStringID;
@@ -161,6 +164,33 @@ public final class RomarConfig {
         public void setPersistencePath(String persistencePath) {
             _persistencePath = persistencePath;
         }
+
+        public Boolean getUseFileSimilarity() {
+            return _useFileSimilarity;
+        }
+
+        public void setUseFileSimilarity(Boolean useFileSimilarity) {
+            _useFileSimilarity = useFileSimilarity;
+        }
+
+        public Boolean getBinarySimilarityFile() {
+            return _binarySimilarityFile;
+        }
+
+        public void setBinarySimilarityFile(Boolean binarySimilarityFile) {
+            _binarySimilarityFile = binarySimilarityFile;
+        }
+
+        public String getSimilarityFile() {
+            return _similarityFile;
+        }
+
+        public void setSimilarityFile(String similarityFile) {
+            _similarityFile = similarityFile;
+        }
+
+
+
 
     }
 
@@ -408,6 +438,30 @@ public final class RomarConfig {
             return allowStringID;
         }
         return _defaultHolder._allowItemStringID;
+    }
+
+    public Boolean isUseFileSimilarity() {
+        Boolean useFileSimilarity = _customerHolder.getUseFileSimilarity();
+        if (useFileSimilarity != null) {
+            return useFileSimilarity;
+        }
+        return _defaultHolder._useFileSimilarity;
+    }
+
+    public Boolean isBinarySimilarityFile() {
+         Boolean binarySimilarityFile = _customerHolder.getBinarySimilarityFile();
+         if (binarySimilarityFile != null) {
+             return binarySimilarityFile;
+         }
+         return _defaultHolder._binarySimilarityFile;
+    }
+
+    public String getSimilarityFile(){
+        String similarityFile = _customerHolder.getSimilarityFile();
+        if (similarityFile != null) {
+            return similarityFile;
+        }
+        return _defaultHolder._similarityFile;
     }
 
 }
