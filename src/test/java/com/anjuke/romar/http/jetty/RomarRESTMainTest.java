@@ -64,6 +64,11 @@ public class RomarRESTMainTest {
     @BeforeClass
     public static void beforeClass() throws Exception {
         System.setProperty("romar.config", "src/test/resources/testRomar.yaml");
+
+    }
+
+    @Before
+    public void setUp() throws Exception {
         jettyThread = new Thread() {
             @Override
             public void run() {
@@ -77,15 +82,6 @@ public class RomarRESTMainTest {
         jettyThread.start();
         Thread.sleep(2000);
         port = RomarConfig.getInstance().getServerPort();
-    }
-    @AfterClass
-    public static void afterClass() throws InterruptedException {
-        jettyThread.interrupt();
-        jettyThread.join();
-    }
-
-    @Before
-    public void setUp() throws Exception {
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,
                 Boolean.TRUE);
@@ -95,6 +91,9 @@ public class RomarRESTMainTest {
     @After
     public void tearDown() throws Exception {
         client.destroy();
+        jettyThread.interrupt();
+        jettyThread.join();
+        Thread.sleep(2000);
     }
 
 
@@ -109,7 +108,6 @@ public class RomarRESTMainTest {
         assertEquals(202, response.getStatus());
     }
 
-    @Test
     public void testSetPreference() throws JsonGenerationException, JsonMappingException,
             IOException {
 
@@ -155,7 +153,8 @@ public class RomarRESTMainTest {
     }
 
     @Test
-    public void testCommit() throws InterruptedException {
+    public void testCommit() throws InterruptedException, JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client.resource("http://localhost:" + port + "/commit");
         ClientResponse response = null;
         response = webResource.accept("application/json").post(ClientResponse.class);
@@ -164,43 +163,44 @@ public class RomarRESTMainTest {
     }
 
     @Test
-    public void testEstimatePreference() {
+    public void testEstimatePreference() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client.resource("http://localhost:" + port
                 + "/preferences/1/2");
         ClientResponse response = null;
         response = webResource.accept("application/json").get(ClientResponse.class);
-        traceResponse(response);
-//        Map<String, Float> map = response.getEntity(new HashMap<String, Float>()
-//                .getClass());
-//        assertEquals(1.0f, ((Number) map.get("value")).floatValue(), 0f);
+        Map<String, Float> map = response.getEntity(new HashMap<String, Float>()
+                .getClass());
+        assertEquals(1.0f, ((Number) map.get("value")).floatValue(), 0f);
     }
 
     @Test
-    public void testRecommend() {
+    public void testRecommend() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client.resource("http://localhost:" + port
                 + "/users/1/recommendations");
         ClientResponse response = null;
         response = webResource.accept("application/json").get(ClientResponse.class);
-        traceResponse(response);
-//        List<RecommendBean> list = response.getEntity(new ArrayList<RecommendBean>()
-//                .getClass());
-//        assertTrue(list.size() > 0);
+        List<RecommendBean> list = response.getEntity(new ArrayList<RecommendBean>()
+                .getClass());
+        assertTrue(list.size() > 0);
     }
 
     @Test
-    public void testItemSimilar() {
+    public void testItemSimilar() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client.resource("http://localhost:" + port
                 + "/items/similars?item=1&item=2");
         ClientResponse response = null;
         response = webResource.accept("application/json").get(ClientResponse.class);
-        traceResponse(response);
-//        List<RecommendBean> list = response.getEntity(new ArrayList<RecommendBean>()
-//                .getClass());
-//        assertTrue(list.size() > 0);
+        List<RecommendBean> list = response.getEntity(new ArrayList<RecommendBean>()
+                .getClass());
+        assertTrue(list.size() > 0);
     }
 
     @Test
-    public void testUserSimilar() {
+    public void testUserSimilar() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client.resource("http://localhost:" + port
                 + "/users/1/similars");
         ClientResponse response = null;
@@ -209,7 +209,8 @@ public class RomarRESTMainTest {
     }
 
     @Test
-    public void testUserRemove() {
+    public void testUserRemove() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client
                 .resource("http://localhost:" + port + "/users/1");
         ClientResponse response = null;
@@ -219,7 +220,8 @@ public class RomarRESTMainTest {
     }
 
     @Test
-    public void testItemRemove() {
+    public void testItemRemove() throws JsonGenerationException, JsonMappingException, IOException {
+        testSetPreference();
         WebResource webResource = client
                 .resource("http://localhost:" + port + "/items/1");
         ClientResponse response = null;
@@ -246,7 +248,6 @@ public class RomarRESTMainTest {
     private void traceResponse(ClientResponse response){
         LOG.info("===========Response with code "+response.getStatus()+"================");
         LOG.info(response.getEntity(String.class));
-
         LOG.info("<<<<<<<<<<<<<<Response END>>>>>>>>>>>>>>");
     }
 }
