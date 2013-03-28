@@ -51,6 +51,8 @@ public final class RomarFileSimilarityIterator<T> extends ForwardingIterator<T> 
             public T apply(String input) {
                 String[] tokens = SEPARATOR.split(input);
                 double value = Double.parseDouble(tokens[2]);
+
+                //fix for mahout hadoop compute some value like 1.00000000002
                 if (value > 1.0 && value - 1.0 < 0.00001) {
                     value = 1.0;
                 }
