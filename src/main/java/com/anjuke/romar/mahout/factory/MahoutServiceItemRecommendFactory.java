@@ -15,8 +15,11 @@
  */
 package com.anjuke.romar.mahout.factory;
 
+import java.io.File;
+
 import org.apache.mahout.cf.taste.impl.recommender.GenericItemBasedRecommender;
 import org.apache.mahout.cf.taste.impl.similarity.CachingItemSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.GenericItemSimilarity.ItemItemSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
@@ -26,6 +29,9 @@ import com.anjuke.romar.core.RomarConfig;
 import com.anjuke.romar.mahout.GenericReloadDataModel;
 import com.anjuke.romar.mahout.MahoutService;
 import com.anjuke.romar.mahout.RecommenderWrapper;
+import com.anjuke.romar.mahout.similarity.RomarFileItemSimilarity;
+import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator;
+import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator.IteratorBuiler;
 
 public class MahoutServiceItemRecommendFactory extends
         AbstractMahoutServiceFactory implements MahoutServiceFactory {
@@ -35,13 +41,32 @@ public class MahoutServiceItemRecommendFactory extends
         RomarConfig config = RomarConfig.getInstance();
         Recommender recommender;
         DataModel dataModel = wrapDataModel(new GenericReloadDataModel());
+        ItemSimilarity similarity;
+        if(config.isUseFileSimilarity()){
+            File  file=new File(config.getSimilarityFile());
+            if(!file.exists()){
+                throw new IllegalArgumentException("similairy file not exists");
+            }
 
-        ItemSimilarity similarity = ClassUtils.instantiateAs(
-                config.getItemSimilarityClass(), ItemSimilarity.class,
-                new Class<?>[] {DataModel.class}, new Object[] {dataModel});
-        if (config.isUseSimilariyCache()) {
-            similarity = new CachingItemSimilarity(similarity,
-                    config.getSimilarityCacheSize());
+            if(!file.isFile()){
+                throw new IllegalArgumentException("similairy file is a directory");
+            }
+
+            IteratorBuiler<ItemItemSimilarity> iteratorBuilder;
+            if(config.isBinarySimilarityFile()){
+                iteratorBuilder=RomarFileSimilarityIterator.dataFileItemIteratorBuilder();
+            }else{
+                iteratorBuilder=RomarFileSimilarityIterator.lineFileItemIteratorBuilder();
+            }
+            similarity=new RomarFileItemSimilarity(file,iteratorBuilder);
+        }else{
+            similarity = ClassUtils.instantiateAs(
+                    config.getItemSimilarityClass(), ItemSimilarity.class,
+                    new Class<?>[] {DataModel.class}, new Object[] {dataModel});
+            if (config.isUseSimilariyCache()) {
+                similarity = new CachingItemSimilarity(similarity,
+                        config.getSimilarityCacheSize());
+            }
         }
         recommender = new GenericItemBasedRecommender(dataModel, similarity);
         return new RecommenderWrapper(recommender);

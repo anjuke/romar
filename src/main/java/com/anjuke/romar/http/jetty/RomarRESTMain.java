@@ -24,6 +24,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 
 import ch.qos.logback.access.jetty.RequestLogImpl;
 
+import com.anjuke.romar.core.CoreContainer;
 import com.anjuke.romar.core.RomarConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
@@ -42,7 +43,8 @@ public final class RomarRESTMain {
         }
         org.slf4j.bridge.SLF4JBridgeHandler.install();
         RomarConfig config = RomarConfig.getInstance();
-
+        //fast fail init
+        CoreContainer.getCore();
         Server server = new Server(config.getServerPort());
         ServletContextHandler context = new ServletContextHandler(
                 ServletContextHandler.NO_SESSIONS);

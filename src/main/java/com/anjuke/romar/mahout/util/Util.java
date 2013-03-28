@@ -15,6 +15,8 @@
  */
 package com.anjuke.romar.mahout.util;
 
+import java.util.Iterator;
+
 import org.apache.mahout.cf.taste.impl.common.FastByIDMap;
 import org.apache.mahout.cf.taste.impl.model.GenericUserPreferenceArray;
 import org.apache.mahout.cf.taste.model.Preference;
@@ -22,6 +24,16 @@ import org.apache.mahout.cf.taste.model.PreferenceArray;
 
 public final class Util {
     private Util() {
+    }
+
+    public static <T> Iterable<T> iterable(final Iterator<T> itrator){
+        return new Iterable<T>() {
+
+            @Override
+            public Iterator<T> iterator() {
+                return itrator;
+            }
+        };
     }
 
     public static void applyAdd(FastByIDMap<PreferenceArray> data,
