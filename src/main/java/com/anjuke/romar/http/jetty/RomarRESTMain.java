@@ -71,6 +71,11 @@ public final class RomarRESTMain {
         context.addServlet(servletHolder, "/*");
         server.setHandler(handlers);
         server.start();
-        server.join();
+        try{
+            server.join();
+        }finally{
+            server.stop();
+            server.destroy();
+        }
     }
 }
