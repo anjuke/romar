@@ -30,16 +30,16 @@ import com.google.common.io.Closeables;
 
 public class DataFileIterator extends AbstractIterator<byte[]> implements Closeable {
 
-    private final DataInputStream inputStream;
-    private final int dataSize;
+    private final DataInputStream _inputStream;
+    private final int _dataSize;
 
     public DataFileIterator(File file, int dataSize) throws IOException {
         this(getFileInputStream(file), dataSize);
     }
 
     public DataFileIterator(InputStream is, int dataSize) throws IOException {
-        this.inputStream = new DataInputStream(is);
-        this.dataSize = dataSize;
+        this._inputStream = new DataInputStream(is);
+        this._dataSize = dataSize;
 
     }
 
@@ -57,12 +57,12 @@ public class DataFileIterator extends AbstractIterator<byte[]> implements Closea
 
     @Override
     protected byte[] computeNext() {
-        byte[] data = new byte[dataSize];
+        byte[] data = new byte[_dataSize];
         try {
-            inputStream.readFully(data);
+            _inputStream.readFully(data);
         } catch (EOFException eof) {
             close();
-            data=null;
+            data = null;
         } catch (IOException ioe) {
             close();
             throw new IllegalStateException(ioe);
@@ -73,7 +73,7 @@ public class DataFileIterator extends AbstractIterator<byte[]> implements Closea
     @Override
     public void close() {
         endOfData();
-        Closeables.closeQuietly(inputStream);
+        Closeables.closeQuietly(_inputStream);
     }
 
 }

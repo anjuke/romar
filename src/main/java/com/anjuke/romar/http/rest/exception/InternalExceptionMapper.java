@@ -34,9 +34,9 @@ public class InternalExceptionMapper implements ExceptionMapper<InternalExceptio
         if (LOG.isDebugEnabled()) {
             LOG.warn(exception.getMessage(), exception);
         }
-        ErrorResponse errorResponse=exception.getErrorResponse();
-        return Response.status(errorResponse.getCode()).entity(errorResponse.getMessage())
-        .type("text/plain").build();
+        ErrorResponse errorResponse = exception.getErrorResponse();
+        return Response.status(errorResponse.getCode())
+                .entity(errorResponse.getMessage()).type("text/plain").build();
     }
 
 }

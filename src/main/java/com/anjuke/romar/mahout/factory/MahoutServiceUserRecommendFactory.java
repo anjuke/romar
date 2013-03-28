@@ -34,8 +34,8 @@ import com.anjuke.romar.mahout.similarity.RomarFileUserSimilarity;
 import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator;
 import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator.IteratorBuiler;
 
-public class MahoutServiceUserRecommendFactory
-        extends AbstractMahoutServiceFactory  implements MahoutServiceFactory {
+public class MahoutServiceUserRecommendFactory extends AbstractMahoutServiceFactory
+        implements MahoutServiceFactory {
     @Override
     public MahoutService createService() {
         RomarConfig config = RomarConfig.getInstance();
@@ -43,41 +43,43 @@ public class MahoutServiceUserRecommendFactory
         DataModel dataModel = wrapDataModel(new GenericReloadDataModel());
 
         UserSimilarity similarity;
-        if(config.isUseFileSimilarity()){
-            File  file=new File(config.getSimilarityFile());
-            if(!file.exists()){
+        if (config.isUseFileSimilarity()) {
+            File file = new File(config.getSimilarityFile());
+            if (!file.exists()) {
                 throw new IllegalArgumentException("similairy file not exists");
             }
 
-            if(!file.isFile()){
+            if (!file.isFile()) {
                 throw new IllegalArgumentException("similairy file is a directory");
             }
 
             IteratorBuiler<UserUserSimilarity> iteratorBuilder;
-            if(config.isBinarySimilarityFile()){
-                iteratorBuilder=RomarFileSimilarityIterator.dataFileUserIteratorBuilder();
-            }else{
-                iteratorBuilder=RomarFileSimilarityIterator.lineFileUserIteratorBuilder();
+            if (config.isBinarySimilarityFile()) {
+                iteratorBuilder = RomarFileSimilarityIterator
+                        .dataFileUserIteratorBuilder();
+            } else {
+                iteratorBuilder = RomarFileSimilarityIterator
+                        .lineFileUserIteratorBuilder();
             }
-            similarity=new RomarFileUserSimilarity(file,iteratorBuilder);
-        }else{
-            similarity  = ClassUtils.instantiateAs(
-                    config.getUserSimilarityClass(), UserSimilarity.class,
-                    new Class<?>[] {DataModel.class}, new Object[] {dataModel});
-            if (config.isUseSimilariyCache()){
+            similarity = new RomarFileUserSimilarity(file, iteratorBuilder);
+        } else {
+            similarity = ClassUtils.instantiateAs(config.getUserSimilarityClass(),
+                    UserSimilarity.class, new Class<?>[] {DataModel.class},
+                    new Object[] {dataModel});
+            if (config.isUseSimilariyCache()) {
                 similarity = new CachingUserSimilarity(similarity,
                         config.getSimilarityCacheSize());
             }
         }
 
-        UserNeighborhood neighborhood = ClassUtils.instantiateAs(
-                config.getUserNeighborhoodClass(), UserNeighborhood.class,
-                new Class<?>[] {int.class, UserSimilarity.class,
-                        DataModel.class},
-                new Object[] {config.getUserNeighborhoodNearestN(),
-                        similarity, dataModel});
-        recommender = new GenericUserBasedRecommender(dataModel, neighborhood,
-                similarity);
+        UserNeighborhood neighborhood = ClassUtils
+                .instantiateAs(
+                        config.getUserNeighborhoodClass(),
+                        UserNeighborhood.class,
+                        new Class<?>[] {int.class, UserSimilarity.class, DataModel.class},
+                        new Object[] {config.getUserNeighborhoodNearestN(), similarity,
+                                dataModel});
+        recommender = new GenericUserBasedRecommender(dataModel, neighborhood, similarity);
 
         return new RecommenderWrapper(recommender);
     }

@@ -33,8 +33,8 @@ import com.anjuke.romar.mahout.similarity.RomarFileItemSimilarity;
 import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator;
 import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator.IteratorBuiler;
 
-public class MahoutServiceItemRecommendFactory extends
-        AbstractMahoutServiceFactory implements MahoutServiceFactory {
+public class MahoutServiceItemRecommendFactory extends AbstractMahoutServiceFactory
+        implements MahoutServiceFactory {
 
     @Override
     public MahoutService createService() {
@@ -42,27 +42,29 @@ public class MahoutServiceItemRecommendFactory extends
         Recommender recommender;
         DataModel dataModel = wrapDataModel(new GenericReloadDataModel());
         ItemSimilarity similarity;
-        if(config.isUseFileSimilarity()){
-            File  file=new File(config.getSimilarityFile());
-            if(!file.exists()){
+        if (config.isUseFileSimilarity()) {
+            File file = new File(config.getSimilarityFile());
+            if (!file.exists()) {
                 throw new IllegalArgumentException("similairy file not exists");
             }
 
-            if(!file.isFile()){
+            if (!file.isFile()) {
                 throw new IllegalArgumentException("similairy file is a directory");
             }
 
             IteratorBuiler<ItemItemSimilarity> iteratorBuilder;
-            if(config.isBinarySimilarityFile()){
-                iteratorBuilder=RomarFileSimilarityIterator.dataFileItemIteratorBuilder();
-            }else{
-                iteratorBuilder=RomarFileSimilarityIterator.lineFileItemIteratorBuilder();
+            if (config.isBinarySimilarityFile()) {
+                iteratorBuilder = RomarFileSimilarityIterator
+                        .dataFileItemIteratorBuilder();
+            } else {
+                iteratorBuilder = RomarFileSimilarityIterator
+                        .lineFileItemIteratorBuilder();
             }
-            similarity=new RomarFileItemSimilarity(file,iteratorBuilder);
-        }else{
-            similarity = ClassUtils.instantiateAs(
-                    config.getItemSimilarityClass(), ItemSimilarity.class,
-                    new Class<?>[] {DataModel.class}, new Object[] {dataModel});
+            similarity = new RomarFileItemSimilarity(file, iteratorBuilder);
+        } else {
+            similarity = ClassUtils.instantiateAs(config.getItemSimilarityClass(),
+                    ItemSimilarity.class, new Class<?>[] {DataModel.class},
+                    new Object[] {dataModel});
             if (config.isUseSimilariyCache()) {
                 similarity = new CachingItemSimilarity(similarity,
                         config.getSimilarityCacheSize());

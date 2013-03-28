@@ -29,14 +29,14 @@ import com.google.common.base.Function;
 import com.google.common.collect.ForwardingIterator;
 import com.google.common.collect.Iterators;
 
-public class RomarFileSimilarityIterator<T> extends ForwardingIterator<T> {
-    private static final Pattern SEPARATOR = Pattern.compile("[,	]");
-    private final Iterator<T> delegate;
+public final class RomarFileSimilarityIterator<T> extends ForwardingIterator<T> {
+    private static final Pattern SEPARATOR = Pattern.compile("[,\t]");
     static final int DATA_SIZE = (2 * Long.SIZE + Double.SIZE) / Byte.SIZE;
+    private final Iterator<T> _delegate;
 
     private RomarFileSimilarityIterator(DataFileIterator fileIterator,
             final SimilarityBuilder<T> builder) {
-        delegate = Iterators.transform(fileIterator, new Function<byte[], T>() {
+        _delegate = Iterators.transform(fileIterator, new Function<byte[], T>() {
             public T apply(byte[] input) {
                 ByteBuffer buffer = ByteBuffer.wrap(input);
                 return builder.create(buffer.getLong(), buffer.getLong(),
@@ -47,7 +47,7 @@ public class RomarFileSimilarityIterator<T> extends ForwardingIterator<T> {
 
     private RomarFileSimilarityIterator(FileLineIterator fileIterator,
             final SimilarityBuilder<T> builder) {
-        delegate = Iterators.transform(fileIterator, new Function<String, T>() {
+        _delegate = Iterators.transform(fileIterator, new Function<String, T>() {
             public T apply(String input) {
                 String[] tokens = SEPARATOR.split(input);
                 double value = Double.parseDouble(tokens[2]);
@@ -63,10 +63,10 @@ public class RomarFileSimilarityIterator<T> extends ForwardingIterator<T> {
 
     @Override
     protected Iterator<T> delegate() {
-        return delegate;
+        return _delegate;
     }
 
-    private static interface SimilarityBuilder<T> {
+    private interface SimilarityBuilder<T> {
         T create(long id1, long id2, double value);
     }
 
@@ -79,7 +79,7 @@ public class RomarFileSimilarityIterator<T> extends ForwardingIterator<T> {
 
     }
 
-    public static interface IteratorBuiler<T> {
+    public interface IteratorBuiler<T> {
         Iterator<T> build(File file);
     }
 

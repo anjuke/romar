@@ -44,7 +44,7 @@ public class RomarFileSimilarityIteratorTest {
     }
 
     private void initLineFile() throws IOException {
-        Files.write("1,3,0.8".getBytes(), file);
+        Files.write("1,3,0.8\n1	3	0.8".getBytes(), file);
     }
 
     private void initDataFile() throws IOException {
@@ -73,6 +73,10 @@ public class RomarFileSimilarityIteratorTest {
         assertEquals(1, s.getItemID1());
         assertEquals(3, s.getItemID2());
         assertEquals(0.8, s.getValue(), 0.00001);
+        s = it.next();
+        assertEquals(1, s.getItemID1());
+        assertEquals(3, s.getItemID2());
+        assertEquals(0.8, s.getValue(), 0.00001);
         assertFalse(it.hasNext());
     }
 
@@ -96,6 +100,10 @@ public class RomarFileSimilarityIteratorTest {
                 .lineFileUserIterator(file);
         assertTrue(it.hasNext());
         UserUserSimilarity s = it.next();
+        assertEquals(1, s.getUserID1());
+        assertEquals(3, s.getUserID2());
+        assertEquals(0.8, s.getValue(), 0.00001);
+        s = it.next();
         assertEquals(1, s.getUserID1());
         assertEquals(3, s.getUserID2());
         assertEquals(0.8, s.getValue(), 0.00001);
