@@ -150,6 +150,12 @@ public class RomarRESTMainTest {
                 .entity(value, MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class);
         traceResponse(response);
         assertEquals(202, response.getStatus());
+
+        webResource = client.resource("http://localhost:" + port + "/commit");
+        response = null;
+        response = webResource.accept("application/json").post(ClientResponse.class);
+        traceResponse(response);
+        assertEquals(202, response.getStatus());
     }
 
     @Test
