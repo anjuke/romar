@@ -15,8 +15,12 @@
  */
 package com.anjuke.romar.mahout.factory;
 
+import org.apache.mahout.cf.taste.model.DataModel;
+
 import com.anjuke.romar.mahout.MahoutService;
+import com.anjuke.romar.mahout.similarity.ReadableSimilarity;
 
 public interface MahoutServiceFactory {
     MahoutService createService();
+    ReadableSimilarity createReadableSimilarity(DataModel dataModel);
 }

@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anjuke.romar.mahout.similarity;
+package com.anjuke.romar.mahout.similarity.file;
 
-import org.apache.mahout.cf.taste.similarity.UserSimilarity;
+import java.io.Closeable;
+import java.io.IOException;
 
-public interface ReadableGenericUserSimilarity extends UserSimilarity, ReadableSimilarity {
+public interface SimilarityFileWriter extends Closeable {
+    void write(long id1, long id2, double similairty) throws IOException;
 
 }

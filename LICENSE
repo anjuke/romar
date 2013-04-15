@@ -13,10 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anjuke.romar.mahout.similarity;
-
-import org.apache.mahout.cf.taste.similarity.UserSimilarity;
-
-public interface ReadableGenericUserSimilarity extends UserSimilarity, ReadableSimilarity {
-
-}
