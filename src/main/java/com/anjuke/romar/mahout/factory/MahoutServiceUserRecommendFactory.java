@@ -17,8 +17,10 @@ package com.anjuke.romar.mahout.factory;
 
 import java.io.File;
 
+import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
 import org.apache.mahout.cf.taste.impl.similarity.CachingUserSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.GenericUserSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.GenericUserSimilarity.UserUserSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
@@ -27,20 +29,20 @@ import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.apache.mahout.common.ClassUtils;
 
 import com.anjuke.romar.core.RomarConfig;
-import com.anjuke.romar.mahout.GenericReloadDataModel;
 import com.anjuke.romar.mahout.MahoutService;
 import com.anjuke.romar.mahout.RecommenderWrapper;
+import com.anjuke.romar.mahout.similarity.ReadableGenericSimilarityProxy;
+import com.anjuke.romar.mahout.similarity.ReadableSimilarity;
 import com.anjuke.romar.mahout.similarity.RomarFileUserSimilarity;
 import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator;
 import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator.IteratorBuiler;
 
-public class MahoutServiceUserRecommendFactory extends AbstractMahoutServiceFactory
-        implements MahoutServiceFactory {
+public class MahoutServiceUserRecommendFactory implements MahoutServiceFactory {
     @Override
     public MahoutService createService() {
         RomarConfig config = RomarConfig.getInstance();
         Recommender recommender;
-        DataModel dataModel = wrapDataModel(new GenericReloadDataModel());
+        DataModel dataModel = PersistenceDataModelFactory.createDataModel(config);
 
         UserSimilarity similarity;
         if (config.isUseFileSimilarity()) {
@@ -63,9 +65,7 @@ public class MahoutServiceUserRecommendFactory extends AbstractMahoutServiceFact
             }
             similarity = new RomarFileUserSimilarity(file, iteratorBuilder);
         } else {
-            similarity = ClassUtils.instantiateAs(config.getUserSimilarityClass(),
-                    UserSimilarity.class, new Class<?>[] {DataModel.class},
-                    new Object[] {dataModel});
+            similarity = createSimilarity(config, dataModel);
             if (config.isUseSimilariyCache()) {
                 similarity = new CachingUserSimilarity(similarity,
                         config.getSimilarityCacheSize());
@@ -82,5 +82,25 @@ public class MahoutServiceUserRecommendFactory extends AbstractMahoutServiceFact
         recommender = new GenericUserBasedRecommender(dataModel, neighborhood, similarity);
 
         return new RecommenderWrapper(recommender);
+    }
+
+    @Override
+    public ReadableSimilarity createReadableSimilarity(DataModel dataModel) {
+        RomarConfig config = RomarConfig.getInstance();
+        UserSimilarity similarity = createSimilarity(config,
+                dataModel);
+        try {
+            return ReadableGenericSimilarityProxy
+                    .proxySimilarity(new GenericUserSimilarity(similarity, dataModel));
+        } catch (TasteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private UserSimilarity createSimilarity(RomarConfig config, DataModel dataModel) {
+        UserSimilarity similarity = ClassUtils.instantiateAs(
+                config.getUserSimilarityClass(), UserSimilarity.class,
+                new Class<?>[] {DataModel.class}, new Object[] {dataModel});
+        return similarity;
     }
 }

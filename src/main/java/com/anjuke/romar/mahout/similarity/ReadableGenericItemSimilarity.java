@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anjuke.romar.mahout.factory;
+package com.anjuke.romar.mahout.similarity;
 
-import org.apache.mahout.cf.taste.model.DataModel;
+import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 
-import com.anjuke.romar.mahout.MahoutService;
-import com.anjuke.romar.mahout.similarity.ReadableSimilarity;
-
-public interface MahoutServiceFactory {
-    MahoutService createService();
-    ReadableSimilarity createReadableSimilarity(DataModel dataModel);
+public interface ReadableGenericItemSimilarity extends ItemSimilarity, ReadableSimilarity {
 }

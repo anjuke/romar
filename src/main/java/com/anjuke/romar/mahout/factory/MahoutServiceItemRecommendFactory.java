@@ -17,8 +17,10 @@ package com.anjuke.romar.mahout.factory;
 
 import java.io.File;
 
+import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.recommender.GenericItemBasedRecommender;
 import org.apache.mahout.cf.taste.impl.similarity.CachingItemSimilarity;
+import org.apache.mahout.cf.taste.impl.similarity.GenericItemSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.GenericItemSimilarity.ItemItemSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.recommender.Recommender;
@@ -26,21 +28,21 @@ import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.common.ClassUtils;
 
 import com.anjuke.romar.core.RomarConfig;
-import com.anjuke.romar.mahout.GenericReloadDataModel;
 import com.anjuke.romar.mahout.MahoutService;
 import com.anjuke.romar.mahout.RecommenderWrapper;
+import com.anjuke.romar.mahout.similarity.ReadableGenericSimilarityProxy;
+import com.anjuke.romar.mahout.similarity.ReadableSimilarity;
 import com.anjuke.romar.mahout.similarity.RomarFileItemSimilarity;
 import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator;
 import com.anjuke.romar.mahout.similarity.file.RomarFileSimilarityIterator.IteratorBuiler;
 
-public class MahoutServiceItemRecommendFactory extends AbstractMahoutServiceFactory
-        implements MahoutServiceFactory {
+public class MahoutServiceItemRecommendFactory implements MahoutServiceFactory {
 
     @Override
     public MahoutService createService() {
         RomarConfig config = RomarConfig.getInstance();
         Recommender recommender;
-        DataModel dataModel = wrapDataModel(new GenericReloadDataModel());
+        DataModel dataModel = PersistenceDataModelFactory.createDataModel(config);
         ItemSimilarity similarity;
         if (config.isUseFileSimilarity()) {
             File file = new File(config.getSimilarityFile());
@@ -62,16 +64,34 @@ public class MahoutServiceItemRecommendFactory extends AbstractMahoutServiceFact
             }
             similarity = new RomarFileItemSimilarity(file, iteratorBuilder);
         } else {
-            similarity = ClassUtils.instantiateAs(config.getItemSimilarityClass(),
-                    ItemSimilarity.class, new Class<?>[] {DataModel.class},
-                    new Object[] {dataModel});
+            similarity = createSimilarity(config, dataModel);
             if (config.isUseSimilariyCache()) {
                 similarity = new CachingItemSimilarity(similarity,
                         config.getSimilarityCacheSize());
             }
+
         }
         recommender = new GenericItemBasedRecommender(dataModel, similarity);
         return new RecommenderWrapper(recommender);
+    }
+
+    private ItemSimilarity createSimilarity(RomarConfig config, DataModel dataModel) {
+        ItemSimilarity similarity = ClassUtils.instantiateAs(
+                config.getItemSimilarityClass(), ItemSimilarity.class,
+                new Class<?>[] {DataModel.class}, new Object[] {dataModel});
+        return similarity;
+    }
+
+    @Override
+    public ReadableSimilarity createReadableSimilarity(DataModel dataModel) {
+        RomarConfig config = RomarConfig.getInstance();
+        ItemSimilarity similarity = createSimilarity(config, dataModel);
+        try {
+            return ReadableGenericSimilarityProxy
+                    .proxySimilarity(new GenericItemSimilarity(similarity, dataModel));
+        } catch (TasteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

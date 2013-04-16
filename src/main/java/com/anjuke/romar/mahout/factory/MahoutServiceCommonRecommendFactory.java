@@ -20,21 +20,26 @@ import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.common.ClassUtils;
 
 import com.anjuke.romar.core.RomarConfig;
-import com.anjuke.romar.mahout.GenericReloadDataModel;
 import com.anjuke.romar.mahout.MahoutService;
 import com.anjuke.romar.mahout.RecommenderWrapper;
+import com.anjuke.romar.mahout.similarity.ReadableSimilarity;
 
 public class MahoutServiceCommonRecommendFactory
-        extends AbstractMahoutServiceFactory implements MahoutServiceFactory {
+         implements MahoutServiceFactory {
     @Override
     public MahoutService createService() {
         RomarConfig config = RomarConfig.getInstance();
         Recommender recommender;
-        DataModel dataModel = wrapDataModel(new GenericReloadDataModel());
+        DataModel dataModel = PersistenceDataModelFactory.createDataModel(config);
 
         recommender = ClassUtils.instantiateAs(
                 config.getCommonRecommenderClass(), Recommender.class,
                 new Class<?>[] {DataModel.class}, new Object[] {dataModel});
         return new RecommenderWrapper(recommender);
+    }
+
+    @Override
+    public ReadableSimilarity createReadableSimilarity(DataModel dataModel) {
+        throw new UnsupportedOperationException();
     }
 }
