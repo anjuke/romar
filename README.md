@@ -82,6 +82,13 @@ A Simple Recommendation Web Service
     $ cd romar
     $ mvn
 
+## Compute Item Similarity with HADOOP
+
+    $ run bin/runHadoop.sh
+默认使用Hadoop local方式执行<br/>
+将core-site.xml hdfs-site.xml mapred-site.xml 放在conf/目录下即可提交任务到Hadoop集群执行
+
+
 ## Copyright & License
 
 Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)

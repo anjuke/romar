@@ -80,7 +80,7 @@ public class RomarRESTMainTest {
             }
         };
         jettyThread.start();
-        Thread.sleep(2000);
+        Thread.sleep(4000);
         port = RomarConfig.getInstance().getServerPort();
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,

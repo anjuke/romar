@@ -17,7 +17,6 @@
             <excludes>
                 <exclude>com.anjuke.romar:romar-core</exclude>
             </excludes>
-
         </dependencySet>
     </dependencySets>
 
@@ -55,6 +54,8 @@
             <outputDirectory></outputDirectory>
             <includes>
                 <include>${project.build.finalName}.jar</include>
+                <include>${project.build.finalName}-jar-with-dependencies.jar
+                </include>
             </includes>
         </fileSet>
     </fileSets>

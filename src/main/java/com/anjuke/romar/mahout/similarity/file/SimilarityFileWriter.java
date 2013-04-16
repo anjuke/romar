@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.anjuke.romar.mahout.factory;
+package com.anjuke.romar.mahout.similarity.file;
 
-import org.apache.mahout.cf.taste.model.DataModel;
+import java.io.Closeable;
+import java.io.IOException;
 
-import com.anjuke.romar.mahout.MahoutService;
-import com.anjuke.romar.mahout.similarity.ReadableSimilarity;
+public interface SimilarityFileWriter extends Closeable {
+    void write(long id1, long id2, double similairty) throws IOException;
 
-public interface MahoutServiceFactory {
-    MahoutService createService();
-    ReadableSimilarity createReadableSimilarity(DataModel dataModel);
 }
