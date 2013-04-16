@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.anjuke.romar</groupId>
     <artifactId>romar-core</artifactId>
-    <version>1.1.0-snapshot</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
     <name>romar</name>
     <url>https://github.com/erning/romar</url>
