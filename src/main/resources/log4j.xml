@@ -12,6 +12,10 @@
     <logger name="com.anjuke">
         <level value="info" />
     </logger>
+
+    <logger name="com.anjuke.romar.http.rest">
+        <level value="debug" />
+    </logger>
     <logger name="org.apache.mahout.cf.taste.impl.common">
         <level value="warn" />
     </logger>

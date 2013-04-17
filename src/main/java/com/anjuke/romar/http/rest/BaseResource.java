@@ -39,9 +39,11 @@ abstract class BaseResource {
 
     protected final RomarCore _romarCore = CoreContainer.getCore();
 
-    private final boolean _allowUserStringID = RomarConfig.getInstance().isAllowUserStringID();
+    private final boolean _allowUserStringID = RomarConfig.getInstance()
+            .isAllowUserStringID();
 
-    private final boolean _allowItemStringID = RomarConfig.getInstance().isAllowItemStringID();
+    private final boolean _allowItemStringID = RomarConfig.getInstance()
+            .isAllowItemStringID();
 
     long[] getItemIds(List<String> itemStrings) {
         try {
@@ -56,8 +58,12 @@ abstract class BaseResource {
                 }
             }
             return items;
+        } catch (InternalException e) {
+            throw e;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            if (log.isDebugEnabled()) {
+                log.error(e.getMessage(), e);
+            }
             throw new InternalException(new ErrorResponse(ErrorResponse.INTERNAL_ERROR,
                     "internal error: " + e.getMessage()));
         }
@@ -86,8 +92,12 @@ abstract class BaseResource {
     String getItemString(long item) {
         try {
             return _romarCore.getItemIdMigrator().toStringID(item);
+        } catch (InternalException e) {
+            throw e;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            if (log.isDebugEnabled()) {
+                log.error(e.getMessage(), e);
+            }
             throw new InternalException(new ErrorResponse(ErrorResponse.INTERNAL_ERROR,
                     "internal error: " + e.getMessage()));
         }
@@ -96,24 +106,32 @@ abstract class BaseResource {
     String getUserString(long user) {
         try {
             return _romarCore.getUserIdMigrator().toStringID(user);
+        } catch (InternalException e) {
+            throw e;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            if (log.isDebugEnabled()) {
+                log.error(e.getMessage(), e);
+            }
             throw new InternalException(new ErrorResponse(ErrorResponse.INTERNAL_ERROR,
                     "internal error: " + e.getMessage()));
         }
     }
 
     long getItem(String itemString) {
-        long item;
         try {
+            long item;
             if (_allowItemStringID) {
                 item = _romarCore.getItemIdMigrator().toLongID(itemString);
             } else {
                 item = Long.parseLong(itemString);
             }
             return item;
+        } catch (InternalException e) {
+            throw e;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            if (log.isDebugEnabled()) {
+                log.error(e.getMessage(), e);
+            }
             throw new InternalException(new ErrorResponse(ErrorResponse.INTERNAL_ERROR,
                     "internal error: " + e.getMessage()));
         }
@@ -128,8 +146,12 @@ abstract class BaseResource {
                 user = Long.parseLong(userString);
             }
             return user;
+        } catch (InternalException e) {
+            throw e;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            if (log.isDebugEnabled()) {
+                log.error(e.getMessage(), e);
+            }
             throw new InternalException(new ErrorResponse(ErrorResponse.INTERNAL_ERROR,
                     "internal error: " + e.getMessage()));
         }
@@ -151,8 +173,12 @@ abstract class BaseResource {
                 item = Long.parseLong(itemString);
             }
             return new long[] {user, item};
+        } catch (InternalException e) {
+            throw e;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            if (log.isDebugEnabled()) {
+                log.error(e.getMessage(), e);
+            }
             throw new InternalException(new ErrorResponse(ErrorResponse.INTERNAL_ERROR,
                     "internal error: " + e.getMessage()));
         }
@@ -167,8 +193,12 @@ abstract class BaseResource {
                     result.add(getUserString(userId));
                 }
                 return new MultiValueResponse(result);
+            } catch (InternalException e) {
+                throw e;
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                if (log.isDebugEnabled()) {
+                    log.error(e.getMessage(), e);
+                }
                 throw new InternalException(
                         new ErrorResponse(ErrorResponse.INTERNAL_ERROR,
                                 "internal error: " + e.getMessage()));
