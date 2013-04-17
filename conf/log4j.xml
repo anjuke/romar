@@ -2,15 +2,19 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-	<appender name="ROMAR" class="org.apache.log4j.FileAppender">
-		<param name="File" value="${romar.home}/logs/romar.log" />
+    <appender name="ROMAR" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="${romar.home}/logs/romar.log" />
+        <param name="DatePattern" value=".yyyy-MM-dd" />
         <param name="Append" value="true" />
         <layout class="org.apache.log4j.PatternLayout">
-	        <param name="ConversionPattern" value="%-5p %d [%t] %c{1} - %m%n" />
-	    </layout>
+            <param name="ConversionPattern" value="%-5p %d [%t] %c{1} - %m%n" />
+        </layout>
     </appender>
 
     <logger name="com.anjuke">
+        <level value="info" />
+    </logger>
+    <logger name="com.anjuke.romar.http.rest">
         <level value="info" />
     </logger>
     <logger name="org.apache.mahout.cf.taste.impl.common">
